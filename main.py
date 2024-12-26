@@ -1,5 +1,5 @@
-from place import Place
-from player import Player
+from location import Place
+from entities import Player
 from item import Item
 
 class Game():
