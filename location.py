@@ -101,10 +101,11 @@ class ColourSwitch(Minigame):
             sleep(2)
         else:
             os.system("clear")
-            print("You reacted to slowly and lost 100 health and 5 attack")
+            print("You reacted too slowly and lost 100 health and 5 attack")
             player.atk -= self.reward[1]
             player.health[0] -= self.reward[0]
             player.health[1] -= self.reward[0]
+            sleep(2)
 
         return player
 
@@ -227,12 +228,12 @@ box.room[1][0] = colored("@", 'red')
 colour = ColourSwitch()
 colour.room[1][0] = colored("@", 'red')
 
-box = BoxPush()
-box.room[1][0] = colored("@", 'red')
-player = box.play(player)
+# box = BoxPush()dd
+# box.room[1][0] = colored("@", 'red')
+# player = box.play(player)
 
-# while True:
-#     os.system("clear")
-#     colour.show_room()
-#     direction = getch()
-#     player.move(direction, colour)
+while True:
+    os.system("clear")
+    colour.show_room()
+    direction = getch()
+    player.move(direction, colour)
