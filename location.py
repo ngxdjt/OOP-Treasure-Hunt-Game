@@ -85,18 +85,20 @@ class ColourSwitch(Minigame):
     def play(self, player):
         os.system("clear")
         print("Press any button when this message changes colour")
-        time.sleep(randint(1,5))
+        sleep(randint(1,5))
         start = time()
         print(colored("\033[FPress any button when this message changes colour", 'red'))
         input = getch()
         end = time()
 
         if end-start < 1:
-            print("\033[FYou succeeded!")
+            os.system("clear")
+            print("You succeeded!")
             print("You gained 100 health and 5 attack")
             player.atk += self.reward[1]
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
+            sleep(2)
 
         return player
 
@@ -111,6 +113,11 @@ class BoxPush(Minigame):
                           ["x","x", "x", "x", "x", "x", "x"]], (40, 40))
         
     def play(self, player):
+        print("Push the boxes over the flames to put them out")
+        print("Be careful as setpping on the flames will kill you")
+        sleep(2)
+        os.system("clear")
+
         while any("'" in row for row in self.room):
             if self.room[1][5] != "#":
                 self.room[1][5] = "'"
@@ -119,19 +126,24 @@ class BoxPush(Minigame):
             if self.room[2][4] != "#":
                 self.room[2][4] = "'"
             
+            os.system("clear")
             self.show_room()
             direction = getch()
             player.move(direction, self)
             os.system("clear")
+            self.show_room()
 
             if player.currentPos == [5, 6]:
                 break
             if player.currentPos == [1, 5] or player.currentPos == [2, 5] or player.currentPos == [2, 4]:
                 player.health[1] = 0
+                sleep(0.5)
+                os.system("clear")
                 print("You died by stepping in the fire")
                 break
         
         if not any("'" in row for row in self.room):
+            sleep(0.5)
             os.system("clear")
             print("You succeeded!")
             print("You gained 40 health and 40 attack")
@@ -196,6 +208,7 @@ class Combat:
 
         return self.player
 
+os.system("clear")
 player = Player("Bob", [100,100], ["Fire"], [100,100], 20, 10, [50,50], ["Fireball"])
 maze = Maze(51)
 maze.generate_maze()
@@ -205,4 +218,15 @@ maze.load_npcs()
 maze.room[1][0] = colored("@", 'red')
 box = BoxPush()
 box.room[1][0] = colored("@", 'red')
+colour = ColourSwitch()
+colour.room[1][0] = colored("@", 'red')
+
+box = BoxPush()
+box.room[1][0] = colored("@", 'red')
 player = box.play(player)
+
+# while True:
+#     os.system("clear")
+#     colour.show_room()
+#     direction = getch()
+#     player.move(direction, colour)

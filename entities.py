@@ -171,6 +171,9 @@ class Player(Entity):
             if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]+1] != "x" and location.room[self.currentPos[0]][self.currentPos[1]+1] != "#":
                 location.room[self.currentPos[0]][self.currentPos[1]+1] = "#"
 
+        if location.room[self.currentPos[0]][self.currentPos[1]] == colored("P", 'light_yellow'):
+            self = location.play(self)
+
         location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
     
     def learn(self, ability):
