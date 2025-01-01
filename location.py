@@ -1,8 +1,9 @@
-from random import shuffle, choice, randint, uniform
+from random import shuffle, choice, randint
 from entities import *
 from getch import getch
 from time import sleep
 from termcolor import colored
+import os
 
 class MazeDimensionError(Exception):
     pass
@@ -116,10 +117,15 @@ class Combat():
                 while summon.exp[1] > summon.exp[0]:
                     summon.levelUp()
 
-
+player = Player("Bob", [100,100], ["Fire"], [100,100], 20, 10, [50,50], ["Fireball"])
 maze = Location("Maze", 51)
 maze.generate_maze()
 maze.load_enemies()
 maze.load_items()
 maze.load_npcs()
-maze.show_room()
+maze.room[1][0] = colored("@", 'red')
+while True:
+    maze.show_room()
+    direction = getch()
+    player.move(direction, maze)
+    os.system("clear")

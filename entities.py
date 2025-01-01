@@ -2,6 +2,7 @@ from math import floor
 from getch import getch
 from time import sleep
 from random import randint
+from termcolor import colored
 
 class Entity:
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
@@ -120,32 +121,34 @@ class Enemy(Entity):
         print(f"{self.name} has leveled up to level {self.lvl}!")
 
 class Player(Entity):
-    def __init__(self, name:str, icon: str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
+    def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
         super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, {})
         self.inventory = []
-        self.icon = icon
         self.currentPos = [1,0]
         self.summons = []
         self.reputation = 50
 
     def move(self, direction, location):
+        location.room[self.currentPos[0]][self.currentPos[1]] = " "
+        
         if direction == "w":
-            self.currentPos[0] += 1
-            if location[self.currentPos[0]][self.currentPos[1]] == "x":
-                self.currentPos[0] -= 1
+            self.currentPos[0] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
+                self.currentPos[0] += 1
         if direction == "a":
             self.currentPos[1] -= 1
-            if location[self.currentPos[0]][self.currentPos[1]] == "x":
-                self.currentPos[0] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
+                self.currentPos[1] += 1
         if direction == "s":
-            self.currentPos[0] -= 1
-            if location[self.currentPos[0]][self.currentPos[1]] == "x":
-                self.currentPos[0] += 1
+            self.currentPos[0] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
+                self.currentPos[0] -= 1
         if direction == "d":
             self.currentPos[1] += 1
-            if location[self.currentPos[0]][self.currentPos[1]] == "x":
-                self.currentPos[0] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
+                self.currentPos[1] -= 1
 
+        location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
         return self.currentPos
     
     def learn(self, ability):

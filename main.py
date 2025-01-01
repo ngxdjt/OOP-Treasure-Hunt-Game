@@ -1,6 +1,7 @@
 from location import Place
 from entities import Player
 from item import Item
+import os
 
 class Game():
     def __init__(self):
