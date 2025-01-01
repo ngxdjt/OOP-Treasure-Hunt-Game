@@ -202,7 +202,7 @@ class Combat:
                 print("\033[F\033[K\033[F\033[K")
                 if action == 1:
                     for number, ability in enumerate(current.abilities):
-                        print(number+1, ability.name)
+                        print(f"{number+1} {ability.name} ({ability.cost})")
                     print("What move do you want to use?")
                     num = int(getch())
                     while num not in range(1,len(self.player.abilities)+1):
