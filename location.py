@@ -4,6 +4,7 @@ from getch import getch
 from time import sleep
 from termcolor import colored
 import os
+from ability import Ability
 
 class MazeDimensionError(Exception):
     pass
@@ -164,79 +165,128 @@ class Combat:
     def __init__(self, player, enemy):
         self.player = player
         self.enemy = enemy
-        self.turnOrder = sorted(player.summons.extend([player, enemy]), key=lambda x: x.speed)
+        self.savedEnemy = enemy
         self.exp = enemy.exp[0]
 
     def start(self):
-        for entity in self.turnOrder:
+        turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
+        for entity in turnOrder:
             entity.sp[1] = entity.sp[0]
-            
+
         while self.player.health[1] > 0 and self.enemy.health[1] > 0:
-            current = self.turnOrder.pop(0)
+            os.system("clear")
+            print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
+            print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
+            print()
+
+            current = turnOrder.pop(0)
 
             if current.broken:
                 current.unBreak()
                 continue
 
             if type(current) is Player:
-                for number, ability in enumerate(current.abilities):
-                    print(number+1, ability.name)
-                print("What move do you want to use?")
-                num = int(getch())
-                while num not in range(1,6):
+                print("Do you want to attack (1), wait (2) or rest (3)?")
+                action = int(getch())
+                while action not in range(1,4):
                     print("Invalid input", end="\r")
                     sleep(1)
                     print("\033[K")
+                    action = int(getch())
+                print("\033[F\033[K\033[F\033[K")
+                if action == 1:
+                    for number, ability in enumerate(current.abilities):
+                        print(number+1, ability.name)
+                    print("What move do you want to use?")
                     num = int(getch())
-                self.enemy = current.attack(self.enemy, ability[num-1])
+                    while num not in range(1,len(self.player.abilities)+1):
+                        print("Invalid input", end="\r")
+                        sleep(1)
+                        print("\033[K\033[F")
+                        num = int(getch())
+                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                    self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
+                    sleep(1)
+                elif action == 2:
+                    self.player.wait()
+                    sleep(1)
+                elif action == 3:
+                    self.player.rest()
+                    sleep(1)
             else:
-                moves = shuffle(current.abilities)
-                for move in moves:
+                shuffle(current.abilities)
+                for move in current.abilities:
                     if move.cost <= current.sp[1]:
                         if current.isSummon:
                             self.enemy = current.attack(self.enemy, move)
+                            sleep(1)
+                            break
                         else:
-                            target = choice(self.turnOrder)
+                            target = choice(turnOrder)
                             target = current.attack(target, move)
+                            sleep(1)
+                            break
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
                         current.rest()
+                        sleep(1)
                     else:
                         current.wait()
+                        sleep(1)
 
-            self.turnOrder.append(current)
+            turnOrder.append(current)
 
         if self.enemy.health[1] <= 0:
+            os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
             for summon in self.player.summons:
                 summon.exp[1] += self.exp
                 summon.weaknessBar[1] = summon.weaknessBar[0]
                 while summon.exp[1] > summon.exp[0]:
                     summon.levelUp()
+            print(f"You have defeated the {self.enemy.name}")
+            print("Do you want to absorb it (1) or necromance it (2)")
+            input = int(getch())
+            while input != 1 and input != 2:
+                print("Invalid input", end="\r")
+                sleep(1)
+                print("\033[K")
+                input = int(getch())
+            if input == 1:
+                self.player.absorb(self.savedEnemy)
+            elif input == 2:
+                self.player.necromance(self.savedEnemy)
         else:
+            os.system("clear")
             self.player.alive = False
+            print("You died")
 
         return self.player
 
+Fireball = Ability("Fireball", 1.5, "Fire", 30, 20)
 os.system("clear")
-player = Player("Bob", [100,100], ["Fire"], [100,100], 20, 10, [50,50], ["Fireball"])
-maze = Maze(51)
-maze.generate_maze()
-maze.load_enemies()
-maze.load_items()
-maze.load_npcs()
-maze.room[1][0] = colored("@", 'red')
-box = BoxPush()
-box.room[1][0] = colored("@", 'red')
-colour = ColourSwitch()
-colour.room[1][0] = colored("@", 'red')
+enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball}, [100,0], 11)
+player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
+# maze = Maze(51)
+# maze.generate_maze()
+# maze.load_enemies()
+# maze.load_items()
+# maze.load_npcs()
+# maze.room[1][0] = colored("@", 'red')
+# box = BoxPush()
+# box.room[1][0] = colored("@", 'red')
+# colour = ColourSwitch()
+# colour.room[1][0] = colored("@", 'red')
 
 # box = BoxPush()dd
 # box.room[1][0] = colored("@", 'red')
 # player = box.play(player)
 
-while True:
-    os.system("clear")
-    colour.show_room()
-    direction = getch()
-    player.move(direction, colour)
+# while True:
+#     os.system("clear")
+#     colour.show_room()
+#     direction = getch()
+#     player.move(direction, colour)
+
+combat = Combat(player, enemy)
+player = combat.start()

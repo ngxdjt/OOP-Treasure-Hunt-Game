@@ -43,9 +43,9 @@ class Entity:
             self.resting = False
 
             if target.resting:
-                target.health[1] -= floor(ability.damage*self.atk)*1.5
+                target.health[1] -= floor(floor(ability.multiplier*self.atk)*1.5)
             else:
-                target.health[1] -= floor(ability.damage*self.atk)
+                target.health[1] -= floor(ability.multiplier*self.atk)
         else:
             print("You flailed out of exhaustion")
             print(f"{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
@@ -117,6 +117,8 @@ class Enemy(Entity):
 
     def becomeSummon(self):
         self.isSummon = True
+
+        return self
 
     def levelUp(self):
         self.lvl += 1
@@ -234,14 +236,14 @@ class Player(Entity):
             if ability not in self.abilityList.values() and randint(1,4) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully learned {ability.name}")
-        self.health[0] += floor(enemy.health*0.25)
-        self.health[1] += floor(enemy.health*0.25)
+        self.health[0] += floor(enemy.health[0]*0.25)
+        self.health[1] += floor(enemy.health[0]*0.25)
         self.atk += floor(enemy.atk*0.25)
         self.speed += floor(enemy.speed*0.25)
         self.sp[0] += floor(enemy.sp[0]*0.25)
 
     def necromance(self, enemy):
-        print(f"You have lost {floor(self.health[0]*0.33)} to necromance {enemy.name}")
+        print(f"You have lost {floor(self.health[0]*0.33)} health to necromance the {enemy.name}")
         self.health[1] -= floor(self.health[0]*0.33)
         enemy.becomeSummon()
         self.summons.append(enemy)
