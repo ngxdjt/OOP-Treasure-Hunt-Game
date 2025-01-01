@@ -4,6 +4,7 @@ from time import sleep, time
 from random import randint
 from termcolor import colored
 from item import Item
+import os
 
 class Entity:
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
@@ -172,6 +173,10 @@ class Player(Entity):
                 location.room[self.currentPos[0]][self.currentPos[1]+1] = "#"
 
         if location.room[self.currentPos[0]][self.currentPos[1]] == colored("P", 'light_yellow'):
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+            os.system("clear")
+            location.show_room()
+            sleep(0.5)
             self = location.play(self)
 
         location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
