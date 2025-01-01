@@ -11,7 +11,7 @@ class Entity:
         self.weaknessBar = weaknessBar
         self.resting = False
         self.skipTurn = False
-        self.attack = attack
+        self.atk = attack
         self.speed = speed
         self.sp = SP
         self.abilities = abilities
@@ -29,7 +29,7 @@ class Entity:
     def attack(self, target, ability):
         if self.sp[1] >= ability.cost:
             print(f"{self.name} attacked {target.name} with {ability.name}")
-            print(f"{target.name} took {floor(ability.multiplier*self.attack)} damage!")
+            print(f"{target.name} took {floor(ability.multiplier*self.atk)} damage!")
 
             if ability.type in target.weaknesses:
                 target.weaknessBar[1] -= ability.breakDamage
@@ -40,13 +40,13 @@ class Entity:
             self.resting = False
 
             if target.resting:
-                target.health[1] -= floor(ability.damage*self.attack)*1.5
+                target.health[1] -= floor(ability.damage*self.atk)*1.5
             else:
-                target.health[1] -= floor(ability.damage*self.attack)
+                target.health[1] -= floor(ability.damage*self.atk)
         else:
             print("You flailed out of exhaustion")
-            print(f"{self.name} dealt {floor(self.attack*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
-            target.health[1] -= floor(self.attack*0.5)
+            print(f"{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
+            target.health[1] -= floor(self.atk*0.5)
             self.health[1] -= floor(self.health[0]*0.1)
 
     def wait(self):
@@ -68,6 +68,7 @@ class Enemy(Entity):
         super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, abilityList)
         self.exp = exp
         self.lvl = lvl
+        self.isSummon = False
 
     def learn(self):
         available = []
@@ -108,6 +109,15 @@ class Enemy(Entity):
                 self.abilities[fMove-1] = available[num-1].name
         elif input == "n":
             print(f"{self.name} gave up learning {available[num-1].name}")
+
+    def becomeSummon(self):
+        self.isSummon = True
+
+    def levelUp(self):
+        self.lvl += 1
+        self.exp[1] -= self.exp[0]
+        self.exp[0] = floor(self.exp[0] * 1.1)
+        print(f"{self.name} has leveled up to level {self.lvl}!")
 
 class Player(Entity):
     def __init__(self, name:str, icon: str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
@@ -186,12 +196,13 @@ class Player(Entity):
             if ability not in self.abilityList.values() and randint(1,4) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully learned {ability.name}")
-        self.health, self.attack, self.speed += floor(enemy.health*0.25), floor(enemy.attack*0.25), floor(enemy.speed*0.25),
+        self.health, self.atk, self.speed += floor(enemy.health*0.25), floor(enemy.atk*0.25), floor(enemy.speed*0.25),
         self.sp[0] += floor(enemy.sp[0]*0.25)
 
     def necromance(self, enemy):
         print(f"You have lost {floor(self.health[0]*0.33)} to necromance {enemy.name}")
-        self.health[1] -= floor(self.health[0]*0.33) 
+        self.health[1] -= floor(self.health[0]*0.33)
+        enemy.becomeSummon()
         self.summons.append(enemy)
 
     def add_item(self, item):

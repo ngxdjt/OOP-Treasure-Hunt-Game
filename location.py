@@ -1,4 +1,7 @@
-from random import shuffle, choice
+from random import shuffle, choice, randint
+from entities import *
+from getch import getch
+from time import sleep
 
 class MazeDimensionError(Exception):
     pass
@@ -34,7 +37,7 @@ class Location():
             else:
                 stack.pop()
 
-        maze[self.size-2][self.size-1] = " "
+        maze[-2][-1] = " "
 
         self.room = maze
         #for row in maze:
@@ -59,3 +62,43 @@ class Combat():
     def __init__(self, player, enemy):
         self.player = player
         self.enemy = enemy
+        self.turnOrder = sorted(player.summons.extend([player, enemy]), key=lambda x: x.speed)
+        self.exp = enemy.exp[0]
+
+    def start(self):
+        while self.player.health[1] > 0 and self.enemy.health[1] > 0:
+            current = self.turnOrder[0].pop()
+
+            if type(current) is Player:
+                for number, ability in enumerate(current.abilities):
+                    print(number+1, ability.name)
+                print("What move do you want to use?")
+                num = int(getch())
+                while num not in range(1,6):
+                    print("Invalid input", end="\r")
+                    sleep(1)
+                    print("\033[K")
+                    num = int(getch())
+                current.attack(self.enemy, ability[num])
+            else:
+                moves = shuffle(current.abilities)
+                for move in moves:
+                    if move.cost <= current.sp[1]:
+                        if current.isSummon:
+                            current.attack(self.enemy, move)
+                        else:
+                            current.attack(choice(self.turnOrder), move)
+                        break
+                else:
+                    if current.sp[1] < 0.1 * current.sp[0]:
+                        current.rest()
+                    else:
+                        current.wait()
+
+            self.turnOrder.append(current)
+
+        if self.enemy.health[1] <= 0:
+            for summon in self.player.summons:
+                summon.exp[1] += self.exp
+                while summon.exp[1] > summon.exp[0]:
+                    summon.levelUp()
