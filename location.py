@@ -178,6 +178,11 @@ class Combat:
             os.system("clear")
             print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
             print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
+            print(f"Weakness {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
+            print()
+            print(f"Enemy Health: {self.enemy.health[1]}/{self.enemy.health[0]}")
+            print(f"Enemy SP {self.enemy.sp[1]}/{self.enemy.sp[0]}")
+            print(f"Enemy Weakness {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
             print()
 
             current = turnOrder.pop(0)
@@ -305,4 +310,3 @@ player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Firebal
 
 combat = Combat(player, enemy)
 player = combat.start()
-print(player.health)
