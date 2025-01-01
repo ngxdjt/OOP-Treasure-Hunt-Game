@@ -45,21 +45,21 @@ class Location():
             print(' '.join(row))
 
     def load_enemies(self):
-        for i in range(floor(self.size*5)):
+        for i in range(self.size*7):
             y = randint(1, self.size-1)
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("E", 'light_magenta')
                 
     def load_items(self):
-        for i in range(floor(self.size*5)):
+        for i in range(self.size*7):
             y = randint(1, self.size-1)
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("I", 'light_blue')
 
     def load_npcs(self):
-        for i in range(floor(self.size*5)):
+        for i in range(self.size*7):
             y = randint(1, self.size-1)
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
@@ -117,7 +117,7 @@ class Combat():
                     summon.levelUp()
 
 
-maze = Location("Maze", 63)
+maze = Location("Maze", 51)
 maze.generate_maze()
 maze.load_enemies()
 maze.load_items()
