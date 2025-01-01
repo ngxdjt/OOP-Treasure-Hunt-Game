@@ -168,6 +168,9 @@ class Combat:
         self.exp = enemy.exp[0]
 
     def start(self):
+        for entity in self.turnOrder:
+            entity.sp[1] = entity.sp[0]
+            
         while self.player.health[1] > 0 and self.enemy.health[1] > 0:
             current = self.turnOrder.pop(0)
 

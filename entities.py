@@ -123,6 +123,11 @@ class Enemy(Entity):
         self.exp[1] -= self.exp[0]
         self.exp[0] = floor(self.exp[0] * 1.1)
         print(f"{self.name} has leveled up to level {self.lvl}!")
+        self.health[1] += floor(self.health[0] * 1.1) - self.health[0]
+        self.health[0] = floor(self.health[0] * 1.1)
+        self.atk *= 1.1
+        self.sp[1] += floor(self.sp[0] * 1.1) - self.sp[0]
+        self.sp[0] = floor(self.sp[0] * 1.1)
 
 class Player(Entity):
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
@@ -229,7 +234,8 @@ class Player(Entity):
             if ability not in self.abilityList.values() and randint(1,4) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully learned {ability.name}")
-        self.health += floor(enemy.health*0.25)
+        self.health[0] += floor(enemy.health*0.25)
+        self.health[1] += floor(enemy.health*0.25)
         self.atk += floor(enemy.atk*0.25)
         self.speed += floor(enemy.speed*0.25)
         self.sp[0] += floor(enemy.sp[0]*0.25)
