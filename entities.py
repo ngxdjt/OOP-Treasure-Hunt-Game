@@ -196,7 +196,9 @@ class Player(Entity):
             if ability not in self.abilityList.values() and randint(1,4) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully learned {ability.name}")
-        self.health, self.atk, self.speed += floor(enemy.health*0.25), floor(enemy.atk*0.25), floor(enemy.speed*0.25),
+        self.health += floor(enemy.health*0.25)
+        self.atk += floor(enemy.atk*0.25)
+        self.speed += floor(enemy.speed*0.25)
         self.sp[0] += floor(enemy.sp[0]*0.25)
 
     def necromance(self, enemy):

@@ -1,7 +1,8 @@
-from random import shuffle, choice, randint
+from random import shuffle, choice, randint, uniform
 from entities import *
 from getch import getch
 from time import sleep
+from termcolor import colored
 
 class MazeDimensionError(Exception):
     pass
@@ -16,7 +17,7 @@ class Location():
         if self.size % 2 == 0:
             raise MazeDimensionError("Dimensions must be odd")
 
-        maze = [["x" for i in range(self.size)] for i in range(self.size)]
+        self.room = [["x" for i in range(self.size)] for i in range(self.size)]
 
         x, y = (-1, 1)
         stack = [(y, x)]
@@ -29,28 +30,40 @@ class Location():
 
             for dy, dx in directions:
                 ny, nx = y + dy, x + dx
-                if nx > 0 and ny > 0 and nx < self.size-1 and ny < self.size-1 and maze[ny][nx] == "x":
-                    maze[ny][nx] = " "
-                    maze[ny-dy//2][nx-dx//2] = " "
+                if nx > 0 and ny > 0 and nx < self.size-1 and ny < self.size-1 and self.room[ny][nx] == "x":
+                    self.room[ny][nx] = " "
+                    self.room[ny-dy//2][nx-dx//2] = " "
                     stack.append((ny, nx))
                     break
             else:
                 stack.pop()
 
-        maze[-2][-1] = " "
+        self.room[-2][-1] = " "
+    
+    def show_room(self):
+        for row in self.room:
+            print(' '.join(row))
 
-        self.room = maze
-        #for row in maze:
-        #    print(str(row).replace("[", "").replace("]", "").replace(",", "").replace("'", ""))
+    def load_enemies(self):
+        for i in range(floor(self.size*5)):
+            y = randint(1, self.size-1)
+            x = randint(1, self.size-1)
+            if randint(1, 10) == 1 and self.room[y][x] == " ":
+                self.room[y][x] = colored("E", 'light_magenta')
+                
+    def load_items(self):
+        for i in range(floor(self.size*5)):
+            y = randint(1, self.size-1)
+            x = randint(1, self.size-1)
+            if randint(1, 10) == 1 and self.room[y][x] == " ":
+                self.room[y][x] = colored("I", 'light_blue')
 
-    def load_enemies(self, enemies):
-        pass
-
-    def load_items(self, items):
-        pass
-
-    def load_npcs(self, npcs):
-        pass
+    def load_npcs(self):
+        for i in range(floor(self.size*5)):
+            y = randint(1, self.size-1)
+            x = randint(1, self.size-1)
+            if randint(1, 10) == 1 and self.room[y][x] == " ":
+                self.room[y][x] = colored("N", 'light_green')
 
 class Minigame(Location):
     def __init__(self, room):
@@ -102,3 +115,11 @@ class Combat():
                 summon.exp[1] += self.exp
                 while summon.exp[1] > summon.exp[0]:
                     summon.levelUp()
+
+
+maze = Location("Maze", 63)
+maze.generate_maze()
+maze.load_enemies()
+maze.load_items()
+maze.load_npcs()
+maze.show_room()
