@@ -121,7 +121,7 @@ class BoxPush(Minigame):
         
     def play(self, player):
         print("Push the boxes over the flames to put them out")
-        print("Be careful as setpping on the flames will kill you")
+        print("Be careful as stepping on the flames will kill you")
         sleep(2)
         os.system("clear")
 
