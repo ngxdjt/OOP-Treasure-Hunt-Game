@@ -99,6 +99,12 @@ class ColourSwitch(Minigame):
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
             sleep(2)
+        else:
+            os.system("clear")
+            print("You reacted to slowly and lost 100 health and 5 attack")
+            player.atk -= self.reward[1]
+            player.health[0] -= self.reward[0]
+            player.health[1] -= self.reward[0]
 
         return player
 
