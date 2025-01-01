@@ -8,11 +8,18 @@ import os
 class MazeDimensionError(Exception):
     pass
 
-class Location():
-    def __init__(self, type:str, size:int):
-        self.type = type
+class Location:
+    def __init__(self, size:int):
         self.size = size
         self.room = []
+
+    def show_room(self):
+        for row in self.room:
+            print(' '.join(row))
+
+class Maze(Location):
+    def __init__(self, size:int):
+        super().__init__(size)
 
     def generate_maze(self):
         if self.size % 2 == 0:
@@ -41,10 +48,6 @@ class Location():
 
         self.room[-2][-1] = " "
     
-    def show_room(self):
-        for row in self.room:
-            print(' '.join(row))
-
     def load_enemies(self):
         for i in range(self.size*7):
             y = randint(1, self.size-1)
@@ -67,12 +70,78 @@ class Location():
                 self.room[y][x] = colored("N", 'light_green')
 
 class Minigame(Location):
-    def __init__(self, room):
-        super().__init__("Minigame", len(room))
+    def __init__(self, room:list, reward:tuple):
         self.room = room
-        self.won = False
+        self.reward = reward
 
-class Combat():
+class ColourSwitch(Minigame):
+    def __init__(self):
+        super().__init__([["x", "x", "x", "x", "x"], 
+                          [" ", " ", colored("P", 'light_yellow'), " ", "x"], 
+                          ["x", " ", " ", " ", "x"], 
+                          ["x", " ", " ", " ", " "], 
+                          ["x", "x", "x", "x", "x"]], (100, 5))
+
+    def play(self, player):
+        os.system("clear")
+        print("Press any button when this message changes colour")
+        time.sleep(randint(1,5))
+        start = time()
+        print(colored("\033[FPress any button when this message changes colour", 'red'))
+        input = getch()
+        end = time()
+
+        if end-start < 1:
+            print("\033[FYou succeeded!")
+            print("You gained 100 health and 5 attack")
+            player.atk += self.reward[1]
+            player.health[0] += self.reward[0]
+            player.health[1] += self.reward[0]
+
+        return player
+
+class BoxPush(Minigame):
+    def __init__(self):
+        super().__init__([["x","x", "x", "x", "x", "x", "x"],
+                          [" "," ", " ", " ", " ", "'", "x"],
+                          ["x"," ", "#", " ", "'", "'", "x"],
+                          ["x"," ", " ", " ", " ", " ", "x"],
+                          ["x"," ", " ", "#", "#", " ", "x"],
+                          ["x"," ", " ", " ", " ", " ", " "],
+                          ["x","x", "x", "x", "x", "x", "x"]], (40, 40))
+        
+    def play(self, player):
+        while any("'" in row for row in self.room):
+            if self.room[1][5] != "#":
+                self.room[1][5] = "'"
+            if self.room[2][5] != "#":
+                self.room[2][5] = "'"
+            if self.room[2][4] != "#":
+                self.room[2][4] = "'"
+            
+            self.show_room()
+            direction = getch()
+            player.move(direction, self)
+            os.system("clear")
+
+            if player.currentPos == [5, 6]:
+                break
+            if player.currentPos == [1, 5] or player.currentPos == [2, 5] or player.currentPos == [2, 4]:
+                player.health[1] = 0
+                print("You died by stepping in the fire")
+                break
+        
+        if not any("'" in row for row in self.room):
+            os.system("clear")
+            print("You succeeded!")
+            print("You gained 40 health and 40 attack")
+            player.atk += self.reward[1]
+            player.health[0] += self.reward[0]
+            player.health[1] += self.reward[0]
+
+        return player
+    
+class Combat:
     def __init__(self, player, enemy):
         self.player = player
         self.enemy = enemy
@@ -128,14 +197,12 @@ class Combat():
         return self.player
 
 player = Player("Bob", [100,100], ["Fire"], [100,100], 20, 10, [50,50], ["Fireball"])
-maze = Location("Maze", 51)
+maze = Maze(51)
 maze.generate_maze()
 maze.load_enemies()
 maze.load_items()
 maze.load_npcs()
 maze.room[1][0] = colored("@", 'red')
-while True:
-    maze.show_room()
-    direction = getch()
-    player.move(direction, maze)
-    os.system("clear")
+box = BoxPush()
+box.room[1][0] = colored("@", 'red')
+player = box.play(player)

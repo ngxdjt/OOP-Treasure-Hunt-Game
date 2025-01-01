@@ -1,6 +1,6 @@
 from math import floor
 from getch import getch
-from time import sleep
+from time import sleep, time
 from random import randint
 from termcolor import colored
 from item import Item
@@ -139,21 +139,39 @@ class Player(Entity):
             self.currentPos[0] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[0] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]-1][self.currentPos[1]] != " " and location.room[self.currentPos[0]-1][self.currentPos[1]] != "'":
+                self.currentPos[0] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]-1][self.currentPos[1]] != "x" and location.room[self.currentPos[0]-1][self.currentPos[1]] != "#":
+                location.room[self.currentPos[0]-1][self.currentPos[1]] = "#"
+
         if direction == "a":
             self.currentPos[1] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[1] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]-1] != " " and location.room[self.currentPos[0]][self.currentPos[1]-1] != "'":
+                self.currentPos[1] += 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]-1] != "x" and location.room[self.currentPos[0]][self.currentPos[1]-1] != "#":
+                location.room[self.currentPos[0]][self.currentPos[1]-1] = "#"
+
         if direction == "s":
             self.currentPos[0] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[0] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]+1][self.currentPos[1]] != " " and location.room[self.currentPos[0]+1][self.currentPos[1]] != "'":
+                self.currentPos[0] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]+1][self.currentPos[1]] != "x" and location.room[self.currentPos[0]+1][self.currentPos[1]] != "#":
+                location.room[self.currentPos[0]+1][self.currentPos[1]] = "#"
+
         if direction == "d":
             self.currentPos[1] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[1] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]+1] != " " and location.room[self.currentPos[0]][self.currentPos[1]+1] != "'":
+                self.currentPos[1] -= 1
+            if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]+1] != "x" and location.room[self.currentPos[0]][self.currentPos[1]+1] != "#":
+                location.room[self.currentPos[0]][self.currentPos[1]+1] = "#"
 
         location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
-        return self.currentPos
     
     def learn(self, ability):
         print(f"Do you want to learn {ability.name}? (y/n)")
