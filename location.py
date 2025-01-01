@@ -81,7 +81,11 @@ class Combat():
 
     def start(self):
         while self.player.health[1] > 0 and self.enemy.health[1] > 0:
-            current = self.turnOrder[0].pop()
+            current = self.turnOrder.pop(0)
+
+            if current.broken:
+                current.unBreak()
+                continue
 
             if type(current) is Player:
                 for number, ability in enumerate(current.abilities):
@@ -93,16 +97,16 @@ class Combat():
                     sleep(1)
                     print("\033[K")
                     num = int(getch())
-                current.attack(self.enemy, ability[num])
+                self.enemy = current.attack(self.enemy, ability[num-1])
             else:
                 moves = shuffle(current.abilities)
                 for move in moves:
                     if move.cost <= current.sp[1]:
                         if current.isSummon:
-                            current.attack(self.enemy, move)
+                            self.enemy = current.attack(self.enemy, move)
                         else:
-                            current.attack(choice(self.turnOrder), move)
-                        break
+                            target = choice(self.turnOrder)
+                            target = current.attack(target, move)
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
                         current.rest()
@@ -112,10 +116,16 @@ class Combat():
             self.turnOrder.append(current)
 
         if self.enemy.health[1] <= 0:
+            self.player.weaknessBar[1] = self.player.weaknessBar[0]
             for summon in self.player.summons:
                 summon.exp[1] += self.exp
+                summon.weaknessBar[1] = summon.weaknessBar[0]
                 while summon.exp[1] > summon.exp[0]:
                     summon.levelUp()
+        else:
+            self.player.alive = False
+
+        return self.player
 
 player = Player("Bob", [100,100], ["Fire"], [100,100], 20, 10, [50,50], ["Fireball"])
 maze = Location("Maze", 51)

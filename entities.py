@@ -3,6 +3,7 @@ from getch import getch
 from time import sleep
 from random import randint
 from termcolor import colored
+from item import Item
 
 class Entity:
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
@@ -11,7 +12,7 @@ class Entity:
         self.weaknesses = weaknesses
         self.weaknessBar = weaknessBar
         self.resting = False
-        self.skipTurn = False
+        self.broken = False
         self.atk = attack
         self.speed = speed
         self.sp = SP
@@ -20,12 +21,12 @@ class Entity:
 
     def Break(self):
         print(f"{self.name} has been broken! They took {floor(self.health[0]*0.2)} damage")
-        self.health -= floor(self.health[0]*0.2)
-        self.skipTurn = True
+        self.health[1] -= floor(self.health[0]*0.2)
+        self.broken = True
 
     def unBreak(self):
         print(f"{self.name} has recovered from being broken!")
-        self.skipTurn = False
+        self.broken = False
 
     def attack(self, target, ability):
         if self.sp[1] >= ability.cost:
@@ -49,6 +50,8 @@ class Entity:
             print(f"{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
             target.health[1] -= floor(self.atk*0.5)
             self.health[1] -= floor(self.health[0]*0.1)
+
+        return target
 
     def wait(self):
         print(f"{self.name} is waiting this turn")
@@ -127,6 +130,7 @@ class Player(Entity):
         self.currentPos = [1,0]
         self.summons = []
         self.reputation = 50
+        self.alive = True
 
     def move(self, direction, location):
         location.room[self.currentPos[0]][self.currentPos[1]] = " "
@@ -216,3 +220,48 @@ class Player(Entity):
             self.inventory.append(item)
         else:
             print(f"Your bag was too full and {item.name} got lost")
+
+    def use_item(self, item):
+        if item.type == "healing":
+            if self.health[1] + item.healing < self.health[0]:
+                print(f"You were healed by {item.healing}")
+                self.health[1] += item.healing
+            else:
+                print(f"You were healed by {self.health[0]-self.health[1]}")
+                self.health[1] = self.health[0]
+        elif item.type == "attack":
+            print(f"Your attack was increased by {item.attack}")
+            self.atk += item.attack
+        elif item.type == "special":
+            if self.health[1] + item.healing < self.health[0]:
+                print(f"You were healed by {item.healing} and attack increased by {item.attack}")
+                self.health[1] += item.healing
+                self.atk += item.attack
+            else:
+                print(f"You were healed by {self.health[0]-self.health[1]} and attack increased by {item.attack}")
+                self.health[1] = self.health[0]
+                self.atk += item.attack
+
+    def change_soul(self):
+        for number, summon in enumerate(self.summons):
+            print(number+1, summon.name)
+        print("What summon do you want to soul swap with?")
+        num = int(getch())
+        while num not in range(len(self.summons)):
+            print("Invalid input", end="\r")
+            sleep(1)
+            print("\033[K")
+            num = int(getch())
+        swap = self.summons.pop(num-1)
+        self.health = swap.health
+        self.weaknesses = swap.weaknesses
+        self.atk = swap.atk
+        self.speed = swap.speed
+        self.sp = swap.sp
+
+class NPC:
+    def __init__(self, name:str, reputation:int, reward: Item, cost:int):
+        self.name = name
+        self.reputation = reputation
+        self.reward = reward
+        self.cost = cost
