@@ -167,6 +167,7 @@ class Combat:
         self.enemy = enemy
         self.savedEnemy = enemy
         self.exp = enemy.exp[0]
+        self.itemAtk = 0
 
     def start(self):
         turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
@@ -186,9 +187,9 @@ class Combat:
                 continue
 
             if type(current) is Player:
-                print("Do you want to attack (1), wait (2) or rest (3)?")
+                print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
                 action = int(getch())
-                while action not in range(1,4):
+                while action not in range(1,5):
                     print("Invalid input", end="\r")
                     sleep(1)
                     print("\033[K")
@@ -213,6 +214,19 @@ class Combat:
                 elif action == 3:
                     self.player.rest()
                     sleep(1)
+                elif action == 4:
+                    for number, item in enumerate(current.inventory):
+                        print(number+1, item.name)
+                    print("What item do you want to use?")
+                    num = int(getch())
+                    while num not in range(1,len(self.player.inventory)+1):
+                        print("Invalid input", end="\r")
+                        sleep(1)
+                        print("\033[K\033[F")
+                        num = int(getch())
+                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                    self.itemAtk += self.player.inventory[num-1]
+                    current.use_item(self.player.inventory.pop(num-1))
             else:
                 shuffle(current.abilities)
                 for move in current.abilities:
@@ -239,6 +253,7 @@ class Combat:
         if self.enemy.health[1] <= 0:
             os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
+            self.player.atk -= self.itemAtk
             for summon in self.player.summons:
                 summon.exp[1] += self.exp
                 summon.weaknessBar[1] = summon.weaknessBar[0]
@@ -290,3 +305,4 @@ player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Firebal
 
 combat = Combat(player, enemy)
 player = combat.start()
+print(player.health)
