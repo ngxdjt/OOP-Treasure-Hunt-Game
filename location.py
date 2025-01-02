@@ -284,10 +284,52 @@ class Slot(Minigame):
             print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
             print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
             print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
-            sleep(2)
+            sleep(1)
             os.system("clear")
 
             if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
+                if wheel1[0] == wheel2[0] == wheel3[0]:
+                    wheel1[0] = colored(wheel1[0], 'green')
+                    wheel2[0] = colored(wheel2[0], 'green')
+                    wheel3[0] = colored(wheel3[0], 'green')
+                if wheel2[0] == wheel3[0] == wheel4[0]:
+                    wheel2[0] = colored(wheel2[0], 'green')
+                    wheel3[0] = colored(wheel3[0], 'green')
+                    wheel4[0] = colored(wheel4[0], 'green')
+                if wheel3[0] == wheel4[0] == wheel5[0]:
+                    wheel3[0] = colored(wheel3[0], 'green')
+                    wheel4[0] = colored(wheel4[0], 'green')
+                    wheel5[0] = colored(wheel5[0], 'green')
+                if wheel1[1] == wheel2[1] == wheel3[1]:
+                    wheel1[1] = colored(wheel1[1], 'green')
+                    wheel2[1] = colored(wheel2[1], 'green')
+                    wheel3[1] = colored(wheel3[1], 'green')
+                if wheel2[1] == wheel3[1] == wheel4[1]:
+                    wheel2[1] = colored(wheel2[1], 'green')
+                    wheel3[1] = colored(wheel3[1], 'green')
+                    wheel4[1] = colored(wheel4[1], 'green')
+                if wheel3[1] == wheel4[1] == wheel5[1]:
+                    wheel3[1] = colored(wheel3[1], 'green')
+                    wheel4[1] = colored(wheel4[1], 'green')
+                    wheel5[1] = colored(wheel5[1], 'green')
+                if wheel1[2] == wheel2[2] == wheel3[2]:
+                    wheel1[2] = colored(wheel1[2], 'green')
+                    wheel2[2] = colored(wheel2[2], 'green')
+                    wheel3[2] = colored(wheel3[2], 'green')
+                if wheel2[2] == wheel3[2] == wheel4[2]:
+                    wheel2[2] = colored(wheel2[2], 'green')
+                    wheel3[2] = colored(wheel3[2], 'green')
+                    wheel4[2] = colored(wheel4[2], 'green')
+                if wheel3[2] == wheel4[2] == wheel5[2]:
+                    wheel3[2] = colored(wheel3[2], 'green')
+                    wheel4[2] = colored(wheel4[2], 'green')
+                    wheel5[2] = colored(wheel5[2], 'green')
+                print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
+                print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
+                print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
+                sleep(2)
+                os.system("clear")
+
                 print("You won!")
                 player.health[0] *= 2
                 player.health[1] += player.health[0]//2
@@ -295,16 +337,76 @@ class Slot(Minigame):
                 player.sp[0] *= 2
                 player.sp[1] *= 2
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0]:
+                    wheel1[0] = colored(wheel1[0], 'green')
+                    wheel2[0] = colored(wheel2[0], 'green')
+                    wheel3[0] = colored(wheel3[0], 'green')
+                    wheel4[0] = colored(wheel4[0], 'green')
+                if wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0]:
+                    wheel2[0] = colored(wheel2[0], 'green')
+                    wheel3[0] = colored(wheel3[0], 'green')
+                    wheel4[0] = colored(wheel4[0], 'green')
+                    wheel5[0] = colored(wheel5[0], 'green')
+                if wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1]:
+                    wheel1[1] = colored(wheel1[1], 'green')
+                    wheel2[1] = colored(wheel2[1], 'green')
+                    wheel3[1] = colored(wheel3[1], 'green')
+                    wheel4[1] = colored(wheel4[1], 'green')
+                if wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
+                    wheel2[1] = colored(wheel2[1], 'green')
+                    wheel3[1] = colored(wheel3[1], 'green')
+                    wheel4[1] = colored(wheel4[1], 'green')
+                    wheel5[1] = colored(wheel5[1], 'green')
+                if wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2]:
+                    wheel1[2] = colored(wheel1[2], 'green')
+                    wheel2[2] = colored(wheel2[2], 'green')
+                    wheel3[2] = colored(wheel3[2], 'green')
+                    wheel4[2] = colored(wheel4[2], 'green')
+                if wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                    wheel2[2] = colored(wheel2[2], 'green')
+                    wheel3[2] = colored(wheel3[2], 'green')
+                    wheel4[2] = colored(wheel4[2], 'green')
+                    wheel5[2] = colored(wheel5[2], 'green')
+                print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
+                print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
+                print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
+                sleep(2)
+                os.system("clear")
+                
                 print("You won big!")
                 player.health[0] *= 3
-                player.health[1] += player.health[0]//2
+                player.health[1] += player.health[0]//3
                 player.atk *= 3
                 player.sp[0] *= 3
                 player.sp[1] = player.sp[0]
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0]:
+                    wheel1[0] = colored(wheel1[0], 'green')
+                    wheel2[0] = colored(wheel2[0], 'green')
+                    wheel3[0] = colored(wheel3[0], 'green')
+                    wheel4[0] = colored(wheel4[0], 'green')
+                    wheel5[0] = colored(wheel5[0], 'green')
+                if wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
+                    wheel1[1] = colored(wheel1[1], 'green')
+                    wheel2[1] = colored(wheel2[1], 'green')
+                    wheel3[1] = colored(wheel3[1], 'green')
+                    wheel4[1] = colored(wheel4[1], 'green')
+                    wheel5[1] = colored(wheel5[1], 'green')
+                if wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                    wheel1[2] = colored(wheel1[2], 'green')
+                    wheel2[2] = colored(wheel2[2], 'green')
+                    wheel3[2] = colored(wheel3[2], 'green')
+                    wheel4[2] = colored(wheel4[2], 'green')
+                    wheel5[2] = colored(wheel5[2], 'green')
+                print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
+                print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
+                print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
+                sleep(2)
+                os.system("clear")
+
                 print("You won the jackpot!")
                 player.health[0] *= 4
-                player.health[1] += player.health[0]//2
+                player.health[1] += player.health[0]//4
                 player.atk *= 4
                 player.sp[0] *= 4
                 player.sp[1] = player.sp[0]
