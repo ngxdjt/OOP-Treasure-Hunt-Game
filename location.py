@@ -290,21 +290,21 @@ class Slot(Minigame):
             if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
                 print("You won!")
                 player.health[0] *= 2
-                player.health[1] += 0.5*player.health[0]
+                player.health[1] += player.health[0]//2
                 player.atk *= 2
                 player.sp[0] *= 2
                 player.sp[1] *= 2
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
                 print("You won big!")
                 player.health[0] *= 3
-                player.health[1] += 0.5*player.health[0]
+                player.health[1] += player.health[0]//2
                 player.atk *= 3
                 player.sp[0] *= 3
                 player.sp[1] = player.sp[0]
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
                 print("You won the jackpot!")
                 player.health[0] *= 4
-                player.health[1] += 0.5*player.health[0]
+                player.health[1] += player.health[0]//2
                 player.atk *= 4
                 player.sp[0] *= 4
                 player.sp[1] = player.sp[0]
