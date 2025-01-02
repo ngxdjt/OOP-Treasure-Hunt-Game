@@ -26,8 +26,9 @@ class Location:
             print(' '.join(row))
 
 class Maze(Location):
-    def __init__(self, size:int):
+    def __init__(self, size:int, enemyList):
         super().__init__(size)
+        self.enemyList = enemyList
 
     def generate_maze(self):
         if self.size % 2 == 0:
@@ -683,131 +684,10 @@ class Maths(Minigame):
 
         return player
 
-class Combat:
-    def __init__(self, player, enemy):
-        self.player = player
-        self.enemy = enemy
-        self.savedEnemy = enemy
-        self.exp = enemy.exp[0]
-        self.itemAtk = 0
-
-    def start(self):
-        turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
-        for entity in turnOrder:
-            entity.sp[1] = entity.sp[0]
-
-        while self.player.health[1] > 0 and self.enemy.health[1] > 0:
-            os.system("clear")
-            print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
-            print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
-            print(f"Weakness {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
-            print()
-            print(f"Enemy Health: {self.enemy.health[1]}/{self.enemy.health[0]}")
-            print(f"Enemy SP {self.enemy.sp[1]}/{self.enemy.sp[0]}")
-            print(f"Enemy Weakness {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
-            print()
-
-            current = turnOrder.pop(0)
-
-            if current.broken:
-                current.unBreak()
-                continue
-
-            if type(current) is Player:
-                print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
-                action = int(getch())
-                while action not in range(1,5):
-                    print("Invalid input", end="\r")
-                    sleep(1)
-                    print("\033[K")
-                    action = int(getch())
-                print("\033[F\033[K\033[F\033[K")
-                if action == 1:
-                    for number, ability in enumerate(current.abilities):
-                        print(f"{number+1} {ability.name} ({ability.cost})")
-                    print("What move do you want to use?")
-                    num = int(getch())
-                    while num not in range(1,len(self.player.abilities)+1):
-                        print("Invalid input", end="\r")
-                        sleep(1)
-                        print("\033[K\033[F")
-                        num = int(getch())
-                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
-                    self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
-                    sleep(1)
-                elif action == 2:
-                    self.player.wait()
-                    sleep(1)
-                elif action == 3:
-                    self.player.rest()
-                    sleep(1)
-                elif action == 4:
-                    for number, item in enumerate(current.inventory):
-                        print(number+1, item.name)
-                    print("What item do you want to use?")
-                    num = int(getch())
-                    while num not in range(1,len(self.player.inventory)+1):
-                        print("Invalid input", end="\r")
-                        sleep(1)
-                        print("\033[K\033[F")
-                        num = int(getch())
-                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
-                    self.itemAtk += self.player.inventory[num-1]
-                    current.use_item(self.player.inventory.pop(num-1))
-            else:
-                shuffle(current.abilities)
-                for move in current.abilities:
-                    if move.cost <= current.sp[1]:
-                        if current.isSummon:
-                            self.enemy = current.attack(self.enemy, move)
-                            sleep(1)
-                            break
-                        else:
-                            target = choice(turnOrder)
-                            target = current.attack(target, move)
-                            sleep(1)
-                            break
-                else:
-                    if current.sp[1] < 0.1 * current.sp[0]:
-                        current.rest()
-                        sleep(1)
-                    else:
-                        current.wait()
-                        sleep(1)
-
-            turnOrder.append(current)
-
-        if self.enemy.health[1] <= 0:
-            os.system("clear")
-            self.player.weaknessBar[1] = self.player.weaknessBar[0]
-            self.player.atk -= self.itemAtk
-            for summon in self.player.summons:
-                summon.exp[1] += self.exp
-                summon.weaknessBar[1] = summon.weaknessBar[0]
-                while summon.exp[1] > summon.exp[0]:
-                    summon.levelUp()
-            print(f"You have defeated the {self.enemy.name}")
-            print("Do you want to absorb it (1) or necromance it (2)")
-            input = int(getch())
-            while input != 1 and input != 2:
-                print("Invalid input", end="\r")
-                sleep(1)
-                print("\033[K")
-                input = int(getch())
-            if input == 1:
-                self.player.absorb(self.savedEnemy)
-            elif input == 2:
-                self.player.necromance(self.savedEnemy)
-        else:
-            os.system("clear")
-            self.player.alive = False
-            print("You died")
-
-        return self.player
 
 Fireball = Ability("Fireball", 1.5, "Fire", 30, 20)
 os.system("clear")
-enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball}, [100,0], 11)
+enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball, 3: Fireball}, [100,0], 1)
 player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
 
 # maze = Maze(51)
@@ -822,6 +702,11 @@ colour = ColourSwitch()
 box = BoxPush()
 maths = Maths()
 buckshot = Buckshot()
+
+enemy.levelUp()
+enemy.levelUp()
+
+sleep(2)
 
 while player.health[1] > 0:
     os.system("clear")

@@ -1,6 +1,6 @@
-from location import Place
-from entities import Player
-from item import Item
+from location import *
+from entities import *
+from item import *
 import os
 
 class Game():

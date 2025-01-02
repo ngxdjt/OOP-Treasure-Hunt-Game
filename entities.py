@@ -1,10 +1,132 @@
 from math import floor
 from getch import getch
 from time import sleep, time
-from random import randint
+from random import randint, choice
 from termcolor import colored
 from item import Item
 import os
+
+class Combat:
+    def __init__(self, player, enemy):
+        self.player = player
+        self.enemy = enemy
+        self.savedEnemy = enemy
+        self.exp = enemy.exp[0]
+        self.itemAtk = 0
+
+    def start(self):
+        turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
+        for entity in turnOrder:
+            entity.sp[1] = entity.sp[0]
+
+        while self.player.health[1] > 0 and self.enemy.health[1] > 0:
+            os.system("clear")
+            print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
+            print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
+            print(f"Weakness {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
+            print()
+            print(f"Enemy Health: {self.enemy.health[1]}/{self.enemy.health[0]}")
+            print(f"Enemy SP {self.enemy.sp[1]}/{self.enemy.sp[0]}")
+            print(f"Enemy Weakness {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
+            print()
+
+            current = turnOrder.pop(0)
+
+            if current.broken:
+                current.unBreak()
+                continue
+
+            if type(current) is Player:
+                print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
+                action = int(getch())
+                while action not in range(1,5):
+                    print("Invalid input", end="\r")
+                    sleep(1)
+                    print("\033[K")
+                    action = int(getch())
+                print("\033[F\033[K\033[F\033[K")
+                if action == 1:
+                    for number, ability in enumerate(current.abilities):
+                        print(f"{number+1} {ability.name} ({ability.cost})")
+                    print("What move do you want to use?")
+                    num = int(getch())
+                    while num not in range(1,len(self.player.abilities)+1):
+                        print("Invalid input", end="\r")
+                        sleep(1)
+                        print("\033[K\033[F")
+                        num = int(getch())
+                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                    self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
+                    sleep(1)
+                elif action == 2:
+                    self.player.wait()
+                    sleep(1)
+                elif action == 3:
+                    self.player.rest()
+                    sleep(1)
+                elif action == 4:
+                    for number, item in enumerate(current.inventory):
+                        print(number+1, item.name)
+                    print("What item do you want to use?")
+                    num = int(getch())
+                    while num not in range(1,len(self.player.inventory)+1):
+                        print("Invalid input", end="\r")
+                        sleep(1)
+                        print("\033[K\033[F")
+                        num = int(getch())
+                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                    self.itemAtk += self.player.inventory[num-1]
+                    current.use_item(self.player.inventory.pop(num-1))
+            else:
+                shuffle(current.abilities)
+                for move in current.abilities:
+                    if move.cost <= current.sp[1]:
+                        if current.isSummon:
+                            self.enemy = current.attack(self.enemy, move)
+                            sleep(1)
+                            break
+                        else:
+                            target = choice(turnOrder)
+                            target = current.attack(target, move)
+                            sleep(1)
+                            break
+                else:
+                    if current.sp[1] < 0.1 * current.sp[0]:
+                        current.rest()
+                        sleep(1)
+                    else:
+                        current.wait()
+                        sleep(1)
+
+            turnOrder.append(current)
+
+        if self.enemy.health[1] <= 0:
+            os.system("clear")
+            self.player.weaknessBar[1] = self.player.weaknessBar[0]
+            self.player.atk -= self.itemAtk
+            for summon in self.player.summons:
+                summon.exp[1] += self.exp
+                summon.weaknessBar[1] = summon.weaknessBar[0]
+                while summon.exp[1] > summon.exp[0]:
+                    summon.levelUp()
+            print(f"You have defeated the {self.enemy.name}")
+            print("Do you want to absorb it (1) or necromance it (2)")
+            input = int(getch())
+            while input != 1 and input != 2:
+                print("Invalid input", end="\r")
+                sleep(1)
+                print("\033[K")
+                input = int(getch())
+            if input == 1:
+                self.player.absorb(self.savedEnemy)
+            elif input == 2:
+                self.player.necromance(self.savedEnemy)
+        else:
+            os.system("clear")
+            self.player.alive = False
+            print("You died")
+
+        return self.player
 
 class Entity:
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
@@ -127,9 +249,52 @@ class Enemy(Entity):
         print(f"{self.name} has leveled up to level {self.lvl}!")
         self.health[1] += floor(self.health[0] * 1.1) - self.health[0]
         self.health[0] = floor(self.health[0] * 1.1)
-        self.atk *= 1.1
+        self.atk = floor(self.atk * 1.1)
         self.sp[1] += floor(self.sp[0] * 1.1) - self.sp[0]
         self.sp[0] = floor(self.sp[0] * 1.1)
+        if self.lvl in self.abilityList:
+            print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
+            print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
+            input = getch().lower()
+            while input != "y" and input != "n":
+                print("Invalid input", end="\r")
+                sleep(1)
+                print("\033[K")
+                input = getch().lower()
+            
+            if input == "y" and len(self.abilities) < 5:
+                print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
+                self.abilities.append(self.abilityList[self.lvl])
+            elif input == "y" and len(self.abilities) > 5:
+                print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
+                forget = getch.lower()
+                while forget != "y" and forget != "n":
+                    print("Invalid input", end="\r")
+                    sleep(1)
+                    print("\033[K")
+                    forget = getch().lower()
+                if forget == "y":
+                    for number, ability in enumerate(self.abilities):
+                        print(number+1, ability.name)
+                    print("What move do you want to forget?")
+                    num = int(getch())
+                    while num not in range(1,6):
+                        print("Invalid input", end="\r")
+                        sleep(1)
+                        print("\033[K")
+                        num = int(getch())
+                    print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
+                    self.abilities[num-1] = self.abilityList[self.lvl]
+            elif input == "n":
+                print(f"{self.name} gave up learning {self.abilityList[self.lvl].name}")
+
+    def calculate_stats(self):
+        self.exp[0] = floor(self.exp[0] * 1.1**self.lvl)
+        self.health[0] = floor(self.health[0] * 1.1**self.lvl)
+        self.health[1] = self.health[0]
+        self.atk = floor(self.atk * 1.1**self.lvl)
+        self.sp[0] = floor(self.sp[0] * 1.1**self.lvl)
+        self.sp[1] = self.sp[0]
 
 class Player(Entity):
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
@@ -193,6 +358,12 @@ class Player(Entity):
             location.show_room()
             sleep(0.5)
             self = location.play(self)
+        elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("E", 'light_magenta'):
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+            os.system("clear")
+            location.show_room()
+            sleep(0.5)
+            self = Combat(self, choice(location.enemyList))
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
     
@@ -205,12 +376,12 @@ class Player(Entity):
             print("\033[K")
             input = getch().lower()
         
-        if input == "y" and len(self.abilityList) <= 5:
+        if input == "y" and len(self.abilities) < 5:
             print(f"You have learned {ability.name}")
             self.abilities.append(ability)
             if ability not in self.abilityList.values():
                 self.abilityList[len(self.abilityList)+1] = ability
-        elif input == "y" and len(self.abilityList) > 5:
+        elif input == "y" and len(self.abilities) > 5:
             print("You have too many abilities, do you want to forget an ability? (y/n)")
             forget = getch.lower()
             while forget != "y" and forget != "n":
