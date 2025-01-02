@@ -185,8 +185,8 @@ class Player(Entity):
             location.show_room()
             sleep(0.5)
             self = location.play(self)
-
-        location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+        else:
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
     
     def learn(self, ability):
         print(f"Do you want to learn {ability.name}? (y/n)")

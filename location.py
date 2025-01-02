@@ -5,6 +5,7 @@ from time import sleep
 from termcolor import colored
 import os
 from ability import Ability
+import pyfiglet as pfg
 
 class MazeDimensionError(Exception):
     pass
@@ -71,20 +72,25 @@ class Maze(Location):
                 self.room[y][x] = colored("N", 'light_green')
 
 class Minigame(Location):
-    def __init__(self, room:list, reward:tuple):
-        self.room = room
+    def __init__(self, reward:tuple):
+        self.room = [["x", "x", "x", "x", "x"], 
+                     [colored("@", 'red'), " ", colored("P", 'light_yellow'), " ", "x"], 
+                     ["x", " ", " ", " ", "x"], 
+                     ["x", " ", " ", " ", " "], 
+                     ["x", "x", "x", "x", "x"]
+                    ]
         self.reward = reward
 
 class ColourSwitch(Minigame):
     def __init__(self):
-        super().__init__([["x", "x", "x", "x", "x"], 
-                          [" ", " ", colored("P", 'light_yellow'), " ", "x"], 
-                          ["x", " ", " ", " ", "x"], 
-                          ["x", " ", " ", " ", " "], 
-                          ["x", "x", "x", "x", "x"]], (100, 5))
+        super().__init__((100, 5))
 
     def play(self, player):
         os.system("clear")
+        print(pfg.figlet_format("Colour Switch",font="larry3d"))
+        sleep(2)
+        os.system("clear")
+
         print("Press any button when this message changes colour")
         sleep(randint(1,5))
         start = time()
@@ -112,15 +118,25 @@ class ColourSwitch(Minigame):
 
 class BoxPush(Minigame):
     def __init__(self):
-        super().__init__([["x","x", "x", "x", "x", "x", "x"],
-                          [" "," ", " ", " ", " ", "'", "x"],
-                          ["x"," ", "#", " ", "'", "'", "x"],
-                          ["x"," ", " ", " ", " ", " ", "x"],
-                          ["x"," ", " ", "#", "#", " ", "x"],
-                          ["x"," ", " ", " ", " ", " ", " "],
-                          ["x","x", "x", "x", "x", "x", "x"]], (40, 40))
+        super().__init__((40, 40))
         
     def play(self, player):
+        self.room = [["x","x", "x", "x", "x", "x", "x"],
+                     [colored("@", 'red')," ", " ", " ", " ", "'", "x"],
+                     ["x"," ", "#", " ", "'", "'", "x"],
+                     ["x"," ", " ", " ", " ", " ", "x"],
+                     ["x"," ", " ", "#", "#", " ", "x"],
+                     ["x"," ", " ", " ", " ", " ", " "],
+                     ["x","x", "x", "x", "x", "x", "x"]
+                    ]
+        
+        player.currentPos = [1,0]
+        
+        os.system("clear")
+        print(pfg.figlet_format("Box Push",font="larry3d"))
+        sleep(2)
+        os.system("clear")
+
         print("Push the boxes over the flames to put them out")
         print("Be careful as stepping on the flames will kill you")
         sleep(2)
@@ -148,6 +164,7 @@ class BoxPush(Minigame):
                 sleep(0.5)
                 os.system("clear")
                 print("You died by stepping in the fire")
+                sleep(2)
                 break
         
         if not any("'" in row for row in self.room):
@@ -158,9 +175,122 @@ class BoxPush(Minigame):
             player.atk += self.reward[1]
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
+            player.currentPos = [1,2]
+            sleep(2)
 
+        self.room = [["x", "x", "x", "x", "x"], 
+                     [" ", " ", colored("@", 'red'), " ", "x"], 
+                     ["x", " ", " ", " ", "x"], 
+                     ["x", " ", " ", " ", " "], 
+                     ["x", "x", "x", "x", "x"]
+                    ]
+        
         return player
     
+class Buckshot(Minigame):
+    def __init__(self):
+        super().__init__((200, 30))
+
+    def play(self, player):
+        os.system("clear")
+        print(pfg.figlet_format("Buckshot Roulette",font="larry3d"))
+        sleep(2)
+        os.system("clear")
+
+        return player
+
+class Slot(Minigame):
+    def __init__(self):
+        super().__init__((2,2,2,2))
+        self.items = ["*","$","&","%","#"]
+
+    def play(self, player):
+        os.system("clear")
+        print(pfg.figlet_format("Slot Machine",font="larry3d"))
+        sleep(2)
+        os.system("clear")
+
+        print("Using the slot machine will use 5% of your max health and can kill you")
+        print("Getting 3 of the same will double all your stats, otherwise gain nothing")
+        sleep(4)
+        os.system("clear")
+
+        print(f"Current Health: {player.health[1]}/{player.health[0]}")
+        print("Do you want to play (1) or quit (2)?")
+        decision = getch()
+        while decision != "1" and decision != "2":
+            print("Invalid input")
+            sleep(1)
+            decision = getch()
+        os.system("clear")
+
+        while decision == "1":
+            os.system("clear")
+            player.health[1] = floor(player.health[1] - (0.05*player.health[0]))
+            wheel1 = self.items.copy()
+            wheel2 = self.items.copy()
+            wheel3 = self.items.copy()
+
+            shuffle(wheel1)
+            shuffle(wheel2)
+            shuffle(wheel3)
+    
+            for i in range(randint(5,15)):
+                print(wheel1[i%4+1])
+                print(wheel1[i%4])
+                print(wheel1[i%4-1])
+                sleep(0.5)
+                os.system("clear")
+            wheel1 = [wheel1[i%4+1],wheel1[i%4],wheel1[i%4-1]]
+
+            for i in range(randint(5,15)):
+                print(wheel1[0], wheel2[i%4+1])
+                print(wheel1[1], wheel2[i%4])
+                print(wheel1[2], wheel2[i%4-1])
+                sleep(0.5)
+                os.system("clear")
+            wheel2 = [wheel2[i%4+1],wheel2[i%4],wheel2[i%4-1]]
+
+            for i in range(randint(5,15)):
+                print(wheel1[0], wheel2[0], wheel3[i%4+1])
+                print(wheel1[1], wheel2[1], wheel3[i%4])
+                print(wheel1[2], wheel2[2], wheel3[i%4-1])
+                sleep(0.5)
+                os.system("clear")
+            wheel3 = [wheel3[i%4+1],wheel3[i%4],wheel3[i%4-1]]
+
+            print(wheel1[0], wheel2[0], wheel3[0])
+            print(wheel1[1], wheel2[1], wheel3[1])
+            print(wheel1[2], wheel2[2], wheel3[2])
+            sleep(2)
+            os.system("clear")
+
+            if wheel1[1] == wheel2[1] == wheel3[1]:
+                print("You won!")
+                player.health[0] *= 2
+                player.health[1] = player.health[0]
+                player.atk *= 2
+                player.sp[0] *= 2
+                player.sp[1] *= 2
+            
+            print(f"Current Health: {player.health[1]}/{player.health[0]}")
+            print("Do you want to try again (1) or quit (2)?")
+            decision = getch()
+
+        return player
+
+class Maths(Minigame):
+    def __init__(self):
+        super().__init__((50, 100))
+
+    def play(self, player):
+        os.system("clear")
+        print(pfg.figlet_format("Maths Challenge",font="larry3d"))
+        sleep(2)
+        os.system("clear")
+
+        return player
+
 class Combat:
     def __init__(self, player, enemy):
         self.player = player
@@ -287,26 +417,27 @@ Fireball = Ability("Fireball", 1.5, "Fire", 30, 20)
 os.system("clear")
 enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball}, [100,0], 11)
 player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
+
 # maze = Maze(51)
 # maze.generate_maze()
 # maze.load_enemies()
 # maze.load_items()
 # maze.load_npcs()
 # maze.room[1][0] = colored("@", 'red')
-# box = BoxPush()
-# box.room[1][0] = colored("@", 'red')
-# colour = ColourSwitch()
-# colour.room[1][0] = colored("@", 'red')
 
-# box = BoxPush()dd
-# box.room[1][0] = colored("@", 'red')
-# player = box.play(player)
+slot = Slot()
+colour = ColourSwitch()
+box = BoxPush()
 
-# while True:
-#     os.system("clear")
-#     colour.show_room()
-#     direction = getch()
-#     player.move(direction, colour)
+while player.health[1] > 0:
+    os.system("clear")
+    # colour.show_room()
+    # box.show_room()
+    slot.show_room()
+    direction = getch()
+    # player.move(direction, colour)
+    # player.move(direction, box)
+    player.move(direction, slot)
 
-combat = Combat(player, enemy)
-player = combat.start()
+# combat = Combat(player, enemy)
+# player = combat.start()
