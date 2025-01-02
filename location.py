@@ -202,7 +202,7 @@ class Buckshot(Minigame):
 class Slot(Minigame):
     def __init__(self):
         super().__init__((2,2,2,2))
-        self.items = ["*","$","&","%","#"]
+        self.items = ["*","$","&","%","#","'","@","~"]
 
     def play(self, player):
         os.system("clear")
