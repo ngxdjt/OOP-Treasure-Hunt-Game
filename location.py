@@ -197,6 +197,172 @@ class Buckshot(Minigame):
         sleep(2)
         os.system("clear")
 
+        print("You will be presented with a shotgun with your goal to shoot the dealer")
+        print("A random amount of shells will be added with some live and some blank")
+        print("The will always be at least 1 live round and 1 blank round")
+        print("If you shoot yourself and it is a blank round, you gain an extra turn")
+        print("Use items to gain an advantage over the dealer")
+        sleep(5)
+        os.system("clear")
+
+        shells = randint(1,8)
+        shellList = []
+        for shell in range(shells):
+            if shell == 0:
+                shellList.append("live")
+            elif shell == 1:
+                shellList.append("blank")
+            else:
+                shellList.append(choice(["live","blank"]))
+
+        itemList = ['magnifying glass', 'beer', 'handcuffs']
+        playerItems = [choice(itemList),choice(itemList)]
+        dealerItems = [choice(itemList),choice(itemList)]
+        
+        def show_details():
+            print(f"There are {len(shellList)} shells")
+            print(f"{shellList.count("live")} live shells, {shellList.count("blank")} blank shells")
+            print(f"\nDealer's items: {', '.join(dealerItems)}")
+            print(f"Your items: {', '.join(playerItems)}")
+            print()
+
+        while shells > 0 and player.health[1] > 0:
+            os.system("clear")
+            show_details()
+
+            dealerHandcuffed = False
+            handcuffed = False
+            dealerKnows = None
+            dealerShoot = None
+            
+            if not handcuffed and dealerShoot != "s":
+                if len(playerItems) == 2:
+                    print(f"Do you want to use the {playerItems[0]} (1) or {playerItems[1]} (2) or not use an item (3)?")
+                    itemUse = getch()
+                    while itemUse != "1" and itemUse != "2" and itemUse != "3":
+                        print("\033[FInvalid input")
+                        sleep(1)
+                        os.system("clear")
+                        show_details()
+                        print(f"Do you want to use the {playerItems[0]} (1) or {playerItems[1]} (2) or not use an item (3)?")
+                        itemUse = getch()
+                    
+                    if itemUse == "1":
+                        playerItemUsed = playerItems.pop(0)
+                    elif itemUse == "2":
+                        playerItemUsed = playerItems.pop(1)
+                    elif itemUse == "3":
+                        print("You did not use an item")
+
+                elif len(playerItems) == 1:
+                    print(f"Do you want to use the {playerItems[0]} (1) or not use it (2)?")
+                    itemUse = getch()
+                    while itemUse != "1" and itemUse != "2":
+                        print("\033[FInvalid input")
+                        sleep(1)
+                        os.system("clear")
+                        show_details()
+                        print(f"Do you want to use the {playerItems[0]} (1) or not use it (2)?")
+                        itemUse = getch()
+
+                    if itemUse == "1":
+                        playerItemUsed = playerItems.pop(0)
+                    elif itemUse == "2":
+                        print("You didnt use the item")
+
+                sleep(1)
+                os.system("clear")
+                show_details()
+
+                if playerItemUsed == "magnifying glass":
+                    print(f"The current shell is {shellList[0]}")
+                elif playerItemUsed == "beer":
+                    print("You rack the gun")
+                    print(f"A {shellList.pop(0)} shell is thrown out")
+                elif playerItemUsed == "handcuffs":
+                    print("You put the dealer in handcuffs")
+                    dealerHandcuffed = True
+
+                sleep(1)
+                playerItemUsed = None
+                os.system("clear")
+                show_details()
+
+                print("Do you want to shoot yourself (1) or the dealer (2)?")
+                shoot = getch()
+                while shoot != "1" and shoot != "2":
+                    print("\033[FInvalid input")
+                    sleep(1)
+                    os.system("clear")
+                    show_details()
+                    print("Do you want to shoot yourself (1) or the dealer (2)?")
+                    shoot = getch()
+
+                os.system("clear")
+                show_details()
+
+                if shoot == "1":
+                    print("You shoot yourself")
+                    sleep(1)
+                    shell = shellList.pop(0)
+                    if shell == "live":
+                        player.health[1] = 0
+                        print("\033[FYou shot a live")
+                    elif shell == "blank":
+                        print("\033[FYou shot a blank")
+                        continue
+                
+                if shoot == "2":
+                    print("You shoot the dealer")
+                    sleep(1)
+                    shell = shellList.pop(0)
+                    if shell == "live":
+                        print("\033[FYou shot a live and killed the dealer")
+                        break
+                    elif shell == "blank":
+                        print("\033[FYou shot a blank")
+            elif handcuffed:
+                print("You are handcuffed and cannot move")
+
+            sleep(1)
+            os.system("clear")
+            show_details()
+
+            if not dealerHandcuffed:
+                if len(dealerItems) > 0:
+                    dealerItemUsed = dealerItems.pop(0)
+                    if dealerItemUsed == "magnifying glass" and not dealerHandcuffed:
+                        print("The dealer used a magnifying glass")
+                        dealerKnows = shellList[0]
+                    elif dealerItemUsed == "beer" and not dealerHandcuffed:
+                        print("The dealer racked the gun")
+                        print(f"A {shellList.pop(0)} shell is thrown out")
+                    elif dealerItemUsed == "handcuffs" and not dealerHandcuffed:
+                        handcuffed = True
+                        print("The dealer put you in handcuffs")
+
+                sleep(1)
+                os.system("clear")
+                show_details()
+
+                shell = shellList.pop(0)
+                if dealerKnows == "live":
+                    print("The dealer shot you a live and killed you")
+                    player.health[1] = 0
+                    break
+                elif dealerKnows == "blank":
+                    print("The dealer shot themself")
+                    sleep(1)
+                    print("\033[FThey shot a blank")
+                    shellList.pop(0)
+                elif randint(1,2) == 1:
+                    print("The dealer shot you")
+                    sleep(1)
+                    os.system("clear")
+                    show_details()
+
+
+
         return player
 
 class Slot(Minigame):
