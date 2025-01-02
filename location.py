@@ -427,9 +427,16 @@ class Maths(Minigame):
         sleep(2)
         os.system("clear")
 
-        num1 = randint(3,14)
-        num2 = randint(3,14)
+        print("You will be presented with a multiplication problem with 5 seconds to solve it")
+        print("You will only be given one attempt")
+        sleep(3)
+        
+        os.system("clear")
 
+        num1 = randint(3,21)
+        num2 = randint(3,21)
+
+        start = time()
         print(f"What is {num1} multiplied by {num2}")
         answer = input()
 
@@ -443,21 +450,30 @@ class Maths(Minigame):
                 os.system("clear")
                 print(f"What is {num1} multiplied by {num2}")
                 answer = input()
-
+        end = time()
         os.system("clear")
 
-        if int(answer) == int(num1*num2):
+        if int(answer) == int(num1*num2) and end-start < 5:
             print("You got it right!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
             player.atk += self.reward[1]
-        else:
-            print("You got it wrong")
-            print(f"The gods are furious at your mistake and you lose {self.reward[0]} health and {self.reward[1]} attack")
+            sleep(2)
+        elif end-start >= 5:
+            print("You took too long")
+            print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
             player.health[0] -= self.reward[0]
             player.health[1] -= self.reward[0]
             player.atk -= self.reward[1]
+            sleep(2)
+        else:
+            print("You got it wrong")
+            print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
+            player.health[0] -= self.reward[0]
+            player.health[1] -= self.reward[0]
+            player.atk -= self.reward[1]
+            sleep(2)
 
         return player
 
