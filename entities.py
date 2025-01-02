@@ -363,7 +363,7 @@ class Player(Entity):
             os.system("clear")
             location.show_room()
             sleep(0.5)
-            self = Combat(self, choice(location.enemyList))
+            self = Combat(self, choice(location.enemyList)).start()
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
     
