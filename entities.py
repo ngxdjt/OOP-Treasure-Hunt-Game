@@ -1,7 +1,7 @@
 from math import floor
 from getch import getch
-from time import sleep, time
-from random import randint, choice
+from time import sleep
+from random import randint, choice, shuffle
 from termcolor import colored
 from item import Item
 import os
@@ -10,7 +10,6 @@ class Combat:
     def __init__(self, player, enemy):
         self.player = player
         self.enemy = enemy
-        self.savedEnemy = enemy
         self.exp = enemy.exp[0]
         self.itemAtk = 0
 
@@ -19,8 +18,7 @@ class Combat:
         for entity in turnOrder:
             entity.sp[1] = entity.sp[0]
 
-        while self.player.health[1] > 0 and self.enemy.health[1] > 0:
-            os.system("clear")
+        def show_info():
             print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
             print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
             print(f"Weakness {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
@@ -30,6 +28,11 @@ class Combat:
             print(f"Enemy Weakness {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
             print()
 
+
+        while self.player.health[1] > 0 and self.enemy.health[1] > 0:
+            os.system("clear")
+            show_info()
+
             current = turnOrder.pop(0)
 
             if current.broken:
@@ -38,43 +41,60 @@ class Combat:
 
             if type(current) is Player:
                 print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
-                action = int(getch())
-                while action not in range(1,5):
-                    print("Invalid input", end="\r")
+                action = getch()
+                while action not in ["1","2","3","4"]:
+                    print("Invalid input")
                     sleep(1)
-                    print("\033[K")
-                    action = int(getch())
-                print("\033[F\033[K\033[F\033[K")
-                if action == 1:
+                    os.system("clear")
+                    show_info()
+                    print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
+                    action = getch()
+                os.system("clear")
+                show_info()
+                if action == "1":
                     for number, ability in enumerate(current.abilities):
-                        print(f"{number+1} {ability.name} ({ability.cost})")
+                        print(f"{number+1} {ability.name} (SP: {ability.cost})")
                     print("What move do you want to use?")
-                    num = int(getch())
-                    while num not in range(1,len(self.player.abilities)+1):
+                    num = getch()
+                    while True:
+                        try:
+                            num = int(num)
+                            if num in range(1,len(self.player.abilities)+1):
+                                break
+                        except:
+                            pass
                         print("Invalid input", end="\r")
                         sleep(1)
                         print("\033[K\033[F")
-                        num = int(getch())
-                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                        num = getch()
+                    os.system("clear")
+                    show_info()
                     self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
                     sleep(1)
-                elif action == 2:
+                elif action == "2":
                     self.player.wait()
                     sleep(1)
-                elif action == 3:
+                elif action == "3":
                     self.player.rest()
                     sleep(1)
-                elif action == 4:
+                elif action == "4":
                     for number, item in enumerate(current.inventory):
                         print(number+1, item.name)
                     print("What item do you want to use?")
-                    num = int(getch())
-                    while num not in range(1,len(self.player.inventory)+1):
+                    num = getch()
+                    while True:
+                        try:
+                            num = int(num)
+                            if num in range(1,len(self.player.inventory)+1):
+                                break
+                        except:
+                            pass
                         print("Invalid input", end="\r")
                         sleep(1)
                         print("\033[K\033[F")
-                        num = int(getch())
-                    print("\033[F\033[K\033[F\033[K\033[F\033[K")
+                        num = getch()
+                    os.system("clear")
+                    show_info()
                     self.itemAtk += self.player.inventory[num-1]
                     current.use_item(self.player.inventory.pop(num-1))
             else:
@@ -101,6 +121,7 @@ class Combat:
             turnOrder.append(current)
 
         if self.enemy.health[1] <= 0:
+            self.enemy.health[1] = self.enemy.health[0]
             os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
             self.player.atk -= self.itemAtk
@@ -111,22 +132,24 @@ class Combat:
                     summon.levelUp()
             print(f"You have defeated the {self.enemy.name}")
             print("Do you want to absorb it (1) or necromance it (2)")
-            input = int(getch())
-            while input != 1 and input != 2:
+            input = getch()
+            while input != "1" and input != "2":
                 print("Invalid input", end="\r")
                 sleep(1)
                 print("\033[K")
-                input = int(getch())
-            if input == 1:
-                self.player.absorb(self.savedEnemy)
-            elif input == 2:
-                self.player.necromance(self.savedEnemy)
+                input = getch()
+            if input == "1":
+                self.player.absorb(self.enemy)
+                sleep(2)
+            elif input == "2":
+                self.player.necromance(self.enemy)
+                sleep(2)
         else:
             os.system("clear")
             self.player.alive = False
             print("You died")
 
-        return self.player
+        return self.player, self.enemy
 
 class Entity:
     def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
@@ -363,7 +386,8 @@ class Player(Entity):
             os.system("clear")
             location.show_room()
             sleep(0.5)
-            self = Combat(self, choice(location.enemyList)).start()
+            enemy  = choice(location.enemyList)
+            self, enemy = Combat(self, enemy).start()
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
     
