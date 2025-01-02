@@ -122,15 +122,15 @@ class BoxPush(Minigame):
         
     def play(self, player):
         self.room = [["x","x", "x", "x", "x", "x", "x"],
-                     [colored("@", 'red')," ", " ", " ", " ", "'", "x"],
+                     ["x",colored("@", 'red'), " ", " ", " ", "'", "x"],
                      ["x"," ", "#", " ", "'", "'", "x"],
                      ["x"," ", " ", " ", " ", " ", "x"],
                      ["x"," ", " ", "#", "#", " ", "x"],
-                     ["x"," ", " ", " ", " ", " ", " "],
+                     ["x"," ", " ", " ", " ", " ", "x"],
                      ["x","x", "x", "x", "x", "x", "x"]
                     ]
         
-        player.currentPos = [1,0]
+        player.currentPos = [1,1]
         
         os.system("clear")
         print(pfg.figlet_format("Box Push",font="larry3d"))
@@ -570,12 +570,12 @@ box = BoxPush()
 while player.health[1] > 0:
     os.system("clear")
     # colour.show_room()
-    # box.show_room()
-    slot.show_room()
+    box.show_room()
+    # slot.show_room()
     direction = getch()
     # player.move(direction, colour)
-    # player.move(direction, box)
-    player.move(direction, slot)
+    player.move(direction, box)
+    # player.move(direction, slot)
 
 # combat = Combat(player, enemy)
 # player = combat.start()
