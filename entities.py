@@ -145,6 +145,8 @@ class Player(Entity):
         
         if direction == "w":
             self.currentPos[0] -= 1
+            if self.currentPos[0] < 0 or self.currentPos[0] > len(location.room)-1:
+                self.currentPos[0] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[0] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]-1][self.currentPos[1]] != " " and location.room[self.currentPos[0]-1][self.currentPos[1]] != "'":
@@ -154,6 +156,8 @@ class Player(Entity):
 
         if direction == "a":
             self.currentPos[1] -= 1
+            if self.currentPos[1] < 0 or self.currentPos[1] > len(location.room)-1:
+                self.currentPos[1] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[1] += 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]-1] != " " and location.room[self.currentPos[0]][self.currentPos[1]-1] != "'":
@@ -163,6 +167,8 @@ class Player(Entity):
 
         if direction == "s":
             self.currentPos[0] += 1
+            if self.currentPos[0] < 0 or self.currentPos[0] > len(location.room)-1:
+                self.currentPos[0] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[0] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]+1][self.currentPos[1]] != " " and location.room[self.currentPos[0]+1][self.currentPos[1]] != "'":
@@ -172,6 +178,8 @@ class Player(Entity):
 
         if direction == "d":
             self.currentPos[1] += 1
+            if self.currentPos[1] < 0 or self.currentPos[1] > len(location.room)-1:
+                self.currentPos[1] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "x":
                 self.currentPos[1] -= 1
             if location.room[self.currentPos[0]][self.currentPos[1]] == "#" and location.room[self.currentPos[0]][self.currentPos[1]+1] != " " and location.room[self.currentPos[0]][self.currentPos[1]+1] != "'":
