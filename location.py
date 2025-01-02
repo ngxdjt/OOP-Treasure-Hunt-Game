@@ -101,14 +101,14 @@ class ColourSwitch(Minigame):
         if end-start < 1:
             os.system("clear")
             print("You succeeded!")
-            print("You gained 100 health and 5 attack")
+            print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player.atk += self.reward[1]
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
             sleep(2)
         else:
             os.system("clear")
-            print("You reacted too slowly and lost 100 health and 5 attack")
+            print(f"You reacted too slowly and lost {self.reward[0]} health and {self.reward[1]} attack")
             player.atk -= self.reward[1]
             player.health[0] -= self.reward[0]
             player.health[1] -= self.reward[0]
@@ -171,7 +171,7 @@ class BoxPush(Minigame):
             sleep(0.5)
             os.system("clear")
             print("You succeeded!")
-            print("You gained 40 health and 40 attack")
+            print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player.atk += self.reward[1]
             player.health[0] += self.reward[0]
             player.health[1] += self.reward[0]
@@ -427,6 +427,38 @@ class Maths(Minigame):
         sleep(2)
         os.system("clear")
 
+        num1 = randint(3,14)
+        num2 = randint(3,14)
+
+        print(f"What is {num1} multiplied by {num2}")
+        answer = input()
+
+        while True:
+            try:
+                int(answer)
+                break
+            except:
+                print("\033[FInvalid input")
+                sleep(1)
+                os.system("clear")
+                print(f"What is {num1} multiplied by {num2}")
+                answer = input()
+
+        os.system("clear")
+
+        if int(answer) == int(num1*num2):
+            print("You got it right!")
+            print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
+            player.health[0] += self.reward[0]
+            player.health[1] += self.reward[0]
+            player.atk += self.reward[1]
+        else:
+            print("You got it wrong")
+            print(f"The gods are furious at your mistake and you lose {self.reward[0]} health and {self.reward[1]} attack")
+            player.health[0] -= self.reward[0]
+            player.health[1] -= self.reward[0]
+            player.atk -= self.reward[1]
+
         return player
 
 class Combat:
@@ -566,16 +598,19 @@ player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Firebal
 slot = Slot()
 colour = ColourSwitch()
 box = BoxPush()
+maths = Maths()
 
 while player.health[1] > 0:
     os.system("clear")
     # colour.show_room()
-    box.show_room()
+    # box.show_room()
+    maths.show_room()
     # slot.show_room()
     direction = getch()
     # player.move(direction, colour)
-    player.move(direction, box)
+    # player.move(direction, box)
     # player.move(direction, slot)
+    player.move(direction, maths)
 
 # combat = Combat(player, enemy)
 # player = combat.start()
