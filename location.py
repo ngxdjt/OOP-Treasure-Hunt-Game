@@ -224,7 +224,7 @@ class Slot(Minigame):
             decision = getch()
         os.system("clear")
 
-        while decision == "1":
+        while decision == "1" and player.health[1] > 0:
             os.system("clear")
             player.health[1] = floor(player.health[1] - (0.05*player.health[0]))
             wheel1 = self.items.copy()
@@ -235,27 +235,27 @@ class Slot(Minigame):
             shuffle(wheel2)
             shuffle(wheel3)
     
-            for i in range(randint(5,15)):
+            for i in range(randint(30,50)):
                 print(wheel1[i%4+1])
                 print(wheel1[i%4])
                 print(wheel1[i%4-1])
-                sleep(0.5)
+                sleep(0.15)
                 os.system("clear")
             wheel1 = [wheel1[i%4+1],wheel1[i%4],wheel1[i%4-1]]
 
-            for i in range(randint(5,15)):
+            for i in range(randint(30,50)):
                 print(wheel1[0], wheel2[i%4+1])
                 print(wheel1[1], wheel2[i%4])
                 print(wheel1[2], wheel2[i%4-1])
-                sleep(0.5)
+                sleep(0.15)
                 os.system("clear")
             wheel2 = [wheel2[i%4+1],wheel2[i%4],wheel2[i%4-1]]
 
-            for i in range(randint(5,15)):
+            for i in range(randint(30,50)):
                 print(wheel1[0], wheel2[0], wheel3[i%4+1])
                 print(wheel1[1], wheel2[1], wheel3[i%4])
                 print(wheel1[2], wheel2[2], wheel3[i%4-1])
-                sleep(0.5)
+                sleep(0.15)
                 os.system("clear")
             wheel3 = [wheel3[i%4+1],wheel3[i%4],wheel3[i%4-1]]
 
