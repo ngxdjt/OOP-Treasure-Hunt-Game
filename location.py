@@ -324,7 +324,7 @@ class Buckshot(Minigame):
 
                 if shoot == "1":
                     print("You shoot yourself")
-                    sleep(1)
+                    sleep(2)
                     shell = shellList.pop(0)
                     if shell == "live":
                         player.health[1] = 0
@@ -336,7 +336,7 @@ class Buckshot(Minigame):
                 
                 if shoot == "2":
                     print("You shoot the dealer")
-                    sleep(1)
+                    sleep(2)
                     shell = shellList.pop(0)
                     if shell == "live":
                         print("\033[FYou shot a live and killed the dealer")
@@ -372,11 +372,13 @@ class Buckshot(Minigame):
                 if dealerKnows == "live":
                     print("The dealer shot you a live and killed you")
                     player.health[1] = 0
+                    sleep(2)
                 elif dealerKnows == "blank":
                     print("The dealer shot themself")
                     sleep(2)
                     print("\033[FThe dealer shot a blank")
                     dealerShoot = "s"
+                    sleep(2)
                 elif randint(1,2) == 1:
                     print("The dealer shot you")
                     sleep(2)
@@ -385,8 +387,10 @@ class Buckshot(Minigame):
                     if shell == "live":
                         print("The dealer shot a live and killed you")
                         player.health[1] = 0
+                        sleep(2)
                     elif shell == "blank":
                         print("The dealer shot a blank")
+                        sleep(2)
                 else:
                     print("The dealer shot themself")
                     sleep(2)
@@ -702,11 +706,6 @@ colour = ColourSwitch()
 box = BoxPush()
 maths = Maths()
 buckshot = Buckshot()
-
-enemy.levelUp()
-enemy.levelUp()
-
-sleep(2)
 
 while player.health[1] > 0:
     os.system("clear")
