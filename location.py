@@ -210,9 +210,11 @@ class Slot(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("Using the slot machine will use 5% of your max health and can kill you")
-        print("Getting 3 of the same will double all your stats, otherwise gain nothing")
-        sleep(4)
+        print("Using the slot machine will use 10% of your max health and can kill you")
+        print("Getting 3 in a row will double all your stats")
+        print("Getting 4 in a row will triple all your stats")
+        print("Getting 5 in a row will quadruple all your stats")
+        sleep(5)
         os.system("clear")
 
         print(f"Current Health: {player.health[1]}/{player.health[0]}")
@@ -226,52 +228,86 @@ class Slot(Minigame):
 
         while decision == "1" and player.health[1] > 0:
             os.system("clear")
-            player.health[1] = floor(player.health[1] - (0.05*player.health[0]))
+            player.health[1] = floor(player.health[1] - (0.1*player.health[0]))
             wheel1 = self.items.copy()
             wheel2 = self.items.copy()
             wheel3 = self.items.copy()
+            wheel4 = self.items.copy()
+            wheel5 = self.items.copy()
 
             shuffle(wheel1)
             shuffle(wheel2)
             shuffle(wheel3)
+            shuffle(wheel4)
+            shuffle(wheel5)
     
-            for i in range(randint(30,50)):
+            for i in range(randint(20,35)):
                 print(wheel1[i%4+1])
                 print(wheel1[i%4])
                 print(wheel1[i%4-1])
-                sleep(0.15)
+                sleep(0.1)
                 os.system("clear")
             wheel1 = [wheel1[i%4+1],wheel1[i%4],wheel1[i%4-1]]
 
-            for i in range(randint(30,50)):
+            for i in range(randint(20,35)):
                 print(wheel1[0], wheel2[i%4+1])
                 print(wheel1[1], wheel2[i%4])
                 print(wheel1[2], wheel2[i%4-1])
-                sleep(0.15)
+                sleep(0.1)
                 os.system("clear")
             wheel2 = [wheel2[i%4+1],wheel2[i%4],wheel2[i%4-1]]
 
-            for i in range(randint(30,50)):
+            for i in range(randint(20,35)):
                 print(wheel1[0], wheel2[0], wheel3[i%4+1])
                 print(wheel1[1], wheel2[1], wheel3[i%4])
                 print(wheel1[2], wheel2[2], wheel3[i%4-1])
-                sleep(0.15)
+                sleep(0.1)
                 os.system("clear")
             wheel3 = [wheel3[i%4+1],wheel3[i%4],wheel3[i%4-1]]
 
-            print(wheel1[0], wheel2[0], wheel3[0])
-            print(wheel1[1], wheel2[1], wheel3[1])
-            print(wheel1[2], wheel2[2], wheel3[2])
+            for i in range(randint(20,35)):
+                print(wheel1[0], wheel2[0], wheel3[0], wheel4[i%4+1])
+                print(wheel1[1], wheel2[1], wheel3[1], wheel4[i%4])
+                print(wheel1[2], wheel2[2], wheel3[2], wheel4[i%4-1])
+                sleep(0.1)
+                os.system("clear")
+            wheel4 = [wheel4[i%4+1],wheel4[i%4],wheel4[i%4-1]]
+
+            for i in range(randint(30,50)):
+                print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[i%4+1])
+                print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[i%4])
+                print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[i%4-1])
+                sleep(0.1)
+                os.system("clear")
+            wheel5 = [wheel5[i%4+1],wheel5[i%4],wheel5[i%4-1]]
+
+            print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
+            print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
+            print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
             sleep(2)
             os.system("clear")
 
-            if wheel1[1] == wheel2[1] == wheel3[1]:
+            if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
                 print("You won!")
                 player.health[0] *= 2
                 player.health[1] = player.health[0]
                 player.atk *= 2
                 player.sp[0] *= 2
                 player.sp[1] *= 2
+            if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                print("You won big!")
+                player.health[0] *= 3
+                player.health[1] = player.health[0]
+                player.atk *= 3
+                player.sp[0] *= 3
+                player.sp[1] = player.sp[0]
+            if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                print("You won the jackpot!")
+                player.health[0] *= 4
+                player.health[1] = player.health[0]
+                player.atk *= 4
+                player.sp[0] *= 4
+                player.sp[1] = player.sp[0]
             
             print(f"Current Health: {player.health[1]}/{player.health[0]}")
             print("Do you want to try again (1) or quit (2)?")
