@@ -7,6 +7,12 @@ import os
 from ability import Ability
 import pyfiglet as pfg
 
+def dprint(string:str):
+    for char in string:
+        print(char, end='', flush=True)
+        sleep(0.05)
+    print()
+
 class MazeDimensionError(Exception):
     pass
 
@@ -81,6 +87,20 @@ class Minigame(Location):
                     ]
         self.reward = reward
 
+    def win(self, player):
+        player.atk += self.reward[1]
+        player.health[0] += self.reward[0]
+        player.health[1] += self.reward[0]
+
+        return player
+
+    def lose(self, player):
+        player.atk -= self.reward[1]
+        player.health[0] -= self.reward[0]
+        player.health[1] -= self.reward[0]
+
+        return player
+
 class ColourSwitch(Minigame):
     def __init__(self):
         super().__init__((100, 5))
@@ -102,16 +122,12 @@ class ColourSwitch(Minigame):
             os.system("clear")
             print("You succeeded!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
-            player.atk += self.reward[1]
-            player.health[0] += self.reward[0]
-            player.health[1] += self.reward[0]
+            player = self.win(player)
             sleep(2)
         else:
             os.system("clear")
             print(f"You reacted too slowly and lost {self.reward[0]} health and {self.reward[1]} attack")
-            player.atk -= self.reward[1]
-            player.health[0] -= self.reward[0]
-            player.health[1] -= self.reward[0]
+            player = self.lose(player)
             sleep(2)
 
         return player
@@ -137,8 +153,8 @@ class BoxPush(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("Push the boxes over the flames to put them out")
-        print("Be careful as stepping on the flames will kill you")
+        dprint("Push the boxes over the flames to put them out")
+        dprint("Be careful as stepping on the flames will kill you")
         sleep(2)
         os.system("clear")
 
@@ -172,9 +188,7 @@ class BoxPush(Minigame):
             os.system("clear")
             print("You succeeded!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
-            player.atk += self.reward[1]
-            player.health[0] += self.reward[0]
-            player.health[1] += self.reward[0]
+            player = self.win(player)
             player.currentPos = [1,2]
             sleep(2)
 
@@ -197,15 +211,15 @@ class Buckshot(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("You will be presented with a shotgun with your goal to shoot the dealer")
-        print("A random amount of shells will be added with some live and some blank")
-        print("The will always be at least 1 live round and 1 blank round")
-        print("If you shoot yourself and it is a blank round, you gain an extra turn")
-        print("Use items to gain an advantage over the dealer")
-        sleep(5)
+        dprint("You will be presented with a shotgun with your goal to kill the dealer")
+        dprint("A random amount of shells will be added with some live and some blank")
+        dprint("There will always be at least 1 live round and 1 blank round")
+        dprint("If you shoot yourself and it is a blank round, you gain an extra turn")
+        dprint("Use items to gain an advantage over the dealer")
+        sleep(2)
         os.system("clear")
 
-        shells = randint(1,8)
+        shells = randint(2,8)
         shellList = []
         for shell in range(shells):
             if shell == 0:
@@ -214,6 +228,7 @@ class Buckshot(Minigame):
                 shellList.append("blank")
             else:
                 shellList.append(choice(["live","blank"]))
+        shuffle(shellList)
 
         itemList = ['magnifying glass', 'beer', 'handcuffs']
         playerItems = [choice(itemList),choice(itemList)]
@@ -226,14 +241,17 @@ class Buckshot(Minigame):
             print(f"Your items: {', '.join(playerItems)}")
             print()
 
-        while shells > 0 and player.health[1] > 0:
+        handcuffed = False
+        playerItemUsed = ""
+        dealerShoot = ""
+
+        while shells > 0 and player.health[1] > 0 and dealerShoot != "s":
             os.system("clear")
             show_details()
 
             dealerHandcuffed = False
-            handcuffed = False
-            dealerKnows = None
-            dealerShoot = None
+            dealerKnows = ""
+            dealerShoot = ""
             
             if not handcuffed and dealerShoot != "s":
                 if len(playerItems) == 2:
@@ -269,21 +287,23 @@ class Buckshot(Minigame):
                         playerItemUsed = playerItems.pop(0)
                     elif itemUse == "2":
                         print("You didnt use the item")
+                        sleep(2)
 
-                sleep(1)
                 os.system("clear")
                 show_details()
 
                 if playerItemUsed == "magnifying glass":
                     print(f"The current shell is {shellList[0]}")
+                    sleep(2)
                 elif playerItemUsed == "beer":
-                    print("You rack the gun")
+                    print("You drank the beer and rack the gun")
                     print(f"A {shellList.pop(0)} shell is thrown out")
+                    sleep(2)
                 elif playerItemUsed == "handcuffs":
                     print("You put the dealer in handcuffs")
                     dealerHandcuffed = True
+                    sleep(2)
 
-                sleep(1)
                 playerItemUsed = None
                 os.system("clear")
                 show_details()
@@ -307,9 +327,10 @@ class Buckshot(Minigame):
                     shell = shellList.pop(0)
                     if shell == "live":
                         player.health[1] = 0
-                        print("\033[FYou shot a live")
+                        print("\033[F\033[KYou shot a live")
+                        break
                     elif shell == "blank":
-                        print("\033[FYou shot a blank")
+                        print("\033[F\033[KYou shot a blank")
                         continue
                 
                 if shoot == "2":
@@ -320,11 +341,12 @@ class Buckshot(Minigame):
                         print("\033[FYou shot a live and killed the dealer")
                         break
                     elif shell == "blank":
-                        print("\033[FYou shot a blank")
+                        print("\033[F\033[KYou shot a blank")
             elif handcuffed:
                 print("You are handcuffed and cannot move")
 
-            sleep(1)
+            handcuffed = False
+            sleep(2)
             os.system("clear")
             show_details()
 
@@ -335,13 +357,13 @@ class Buckshot(Minigame):
                         print("The dealer used a magnifying glass")
                         dealerKnows = shellList[0]
                     elif dealerItemUsed == "beer" and not dealerHandcuffed:
-                        print("The dealer racked the gun")
+                        print("The dealer drank the beer and racked the gun")
                         print(f"A {shellList.pop(0)} shell is thrown out")
                     elif dealerItemUsed == "handcuffs" and not dealerHandcuffed:
                         handcuffed = True
                         print("The dealer put you in handcuffs")
 
-                sleep(1)
+                sleep(2)
                 os.system("clear")
                 show_details()
 
@@ -349,19 +371,43 @@ class Buckshot(Minigame):
                 if dealerKnows == "live":
                     print("The dealer shot you a live and killed you")
                     player.health[1] = 0
-                    break
                 elif dealerKnows == "blank":
                     print("The dealer shot themself")
-                    sleep(1)
-                    print("\033[FThey shot a blank")
-                    shellList.pop(0)
+                    sleep(2)
+                    print("\033[FThe dealer shot a blank")
+                    dealerShoot = "s"
                 elif randint(1,2) == 1:
                     print("The dealer shot you")
-                    sleep(1)
+                    sleep(2)
                     os.system("clear")
                     show_details()
+                    if shell == "live":
+                        print("The dealer shot a live and killed you")
+                        player.health[1] = 0
+                    elif shell == "blank":
+                        print("The dealer shot a blank")
+                else:
+                    print("The dealer shot themself")
+                    sleep(2)
+                    os.system("clear")
+                    show_details()
+                    if shell == "live":
+                        print("The dealer shot a live and killed themself")
+                        break
+                    elif shell == "blank":
+                        dealerShoot = "s"
+                        print("The dealer shot a blank")
+            else:
+                print("The dealer is handcuffed")
 
-
+        if player.health[1] > 0:
+            print("You win")
+            print(f"You receive {self.reward[0]} health and {self.reward[1]} attack")
+            player = self.win(player)
+            sleep(2)
+        else:
+            print("You died")
+            sleep(2)
 
         return player
 
@@ -376,11 +422,11 @@ class Slot(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("Using the slot machine will use 10% of your max health and can kill you")
-        print("Getting 3 in a row will double all your stats")
-        print("Getting 4 in a row will triple all your stats")
-        print("Getting 5 in a row will quadruple all your stats")
-        sleep(5)
+        dprint("Using the slot machine will use 10% of your max health and can kill you")
+        dprint("Getting 3 in a row will double all your stats")
+        dprint("Getting 4 in a row will triple all your stats")
+        dprint("Getting 5 in a row will quadruple all your stats")
+        sleep(2)
         os.system("clear")
 
         print(f"Current Health: {player.health[1]}/{player.health[0]}")
@@ -497,8 +543,8 @@ class Slot(Minigame):
                 os.system("clear")
 
                 print("You won!")
+                player.health[1] += player.health[0]
                 player.health[0] *= 2
-                player.health[1] += player.health[0]//2
                 player.atk *= 2
                 player.sp[0] *= 2
                 player.sp[1] *= 2
@@ -540,8 +586,8 @@ class Slot(Minigame):
                 os.system("clear")
                 
                 print("You won big!")
+                player.health[1] += player.health[0]*2
                 player.health[0] *= 3
-                player.health[1] += player.health[0]//3
                 player.atk *= 3
                 player.sp[0] *= 3
                 player.sp[1] = player.sp[0]
@@ -571,8 +617,8 @@ class Slot(Minigame):
                 os.system("clear")
 
                 print("You won the jackpot!")
+                player.health[1] += player.health[0]*3
                 player.health[0] *= 4
-                player.health[1] += player.health[0]//4
                 player.atk *= 4
                 player.sp[0] *= 4
                 player.sp[1] = player.sp[0]
@@ -593,8 +639,8 @@ class Maths(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("You will be presented with a multiplication problem with 5 seconds to solve it")
-        print("You will only be given one attempt")
+        dprint("You will be presented with a multiplication problem with 5 seconds to solve it")
+        dprint("You will only be given one attempt")
         sleep(3)
         
         os.system("clear")
@@ -622,23 +668,17 @@ class Maths(Minigame):
         if int(answer) == int(num1*num2) and end-start < 5:
             print("You got it right!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
-            player.health[0] += self.reward[0]
-            player.health[1] += self.reward[0]
-            player.atk += self.reward[1]
+            player = self.win(player)
             sleep(2)
         elif end-start >= 5:
             print("You took too long")
             print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
-            player.health[0] -= self.reward[0]
-            player.health[1] -= self.reward[0]
-            player.atk -= self.reward[1]
+            player = self.lose(player)
             sleep(2)
         else:
             print("You got it wrong")
             print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
-            player.health[0] -= self.reward[0]
-            player.health[1] -= self.reward[0]
-            player.atk -= self.reward[1]
+            player = self.lose(player)
             sleep(2)
 
         return player
@@ -781,18 +821,21 @@ slot = Slot()
 colour = ColourSwitch()
 box = BoxPush()
 maths = Maths()
+buckshot = Buckshot()
 
 while player.health[1] > 0:
     os.system("clear")
     # colour.show_room()
     # box.show_room()
-    maths.show_room()
+    # maths.show_room()
     # slot.show_room()
+    buckshot.show_room()
     direction = getch()
     # player.move(direction, colour)
     # player.move(direction, box)
     # player.move(direction, slot)
-    player.move(direction, maths)
+    # player.move(direction, maths)
+    player.move(direction, buckshot)
 
 # combat = Combat(player, enemy)
 # player = combat.start()
