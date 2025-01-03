@@ -55,11 +55,22 @@ class Game():
 
         # items
 
+        Potion = Item("potion", "healing", 50, 0)
+        superPotion = Item("super potion", "healing", 200, 0)
+        hyperPotion = Item("hyper potion", "healing", 500, 0)
+
+        gummy = Item("gummy", "attack", 0, 20)
+        powderedGummy = Item("powdered gummy", "attack", 0, 50)
+        condensedGummy = Item("condensed gummy", "attack", 0, 200)
+
+        pizza = Item("pizza", "special", 25, 10)
+        banana = Item("banana", "special", 100, 30)
+        blackHole = Item("black hole", "special", 400, 100)
 
         # places
 
         
-        # items
+        # npcs
 
 
     def start(self):
