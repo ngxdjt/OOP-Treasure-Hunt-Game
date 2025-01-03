@@ -566,17 +566,18 @@ class Player(Entity):
         location.show_room()
 
 class NPC:
-    def __init__(self, name:str, reputation:int, reward: Item, cost:int, intro:str):
-        self.name = name
+    def __init__(self, names:list, reputation:int, reward: Item, cost:int, intro:str):
+        self.names = names
         self.reputation = reputation
         self.reward = reward
         self.cost = cost
         self.intro = intro
 
     def interact(self, player):
+        name = choice(self.names)
         if player.reputation >= 30:
             dprint({self.intro})
-            dprint(f"I will offer a {self.reward.name} for {self.cost} health")
+            dprint(f"{name} is offering a {self.reward.name} for {self.cost} health")
             print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
             option = getch()
             while option != "1" and option != "2" and option != "3":
@@ -596,7 +597,7 @@ class NPC:
             elif option == "2":
                 print("You declined the offer")
             elif option == "3":
-                print(f"You killed {self.name}")
+                print(f"You killed {name}")
                 print(f"-{self.reputation} reputation")
                 if player.reputation < 0:
                     player.reputation = 0

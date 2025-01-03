@@ -6,8 +6,8 @@ import os
 
 class Game():
     def __init__(self):
+        self.places = []
         self.currentPlace = None
-        self.nextPlace = None
 
     def setup(self):
         # Starting abilities
@@ -59,18 +59,42 @@ class Game():
         superPotion = Item("super potion", "healing", 200, 0)
         hyperPotion = Item("hyper potion", "healing", 500, 0)
 
-        gummy = Item("gummy", "attack", 0, 20)
+        Gummy = Item("gummy", "attack", 0, 20)
         powderedGummy = Item("powdered gummy", "attack", 0, 50)
         condensedGummy = Item("condensed gummy", "attack", 0, 200)
 
-        pizza = Item("pizza", "special", 25, 10)
-        banana = Item("banana", "special", 100, 30)
-        blackHole = Item("black hole", "special", 400, 100)
+        Pizza = Item("pizza", "special", 25, 10)
+        Banana = Item("banana", "special", 100, 30)
+        blackHole = Item("black hole", "special", 400, 400)
+
+        # npcs
+
+        PotionSeller = NPC(["John", "Dave", "Hagatha", "Kirsten", "Mitchell"], 50, Potion, 25, "I have some mystery liquid with me")
+        DrugDealer = NPC(["Emily", "Keith", "Dawn", "Clarence", "Sebastian"], 25, Gummy, 10, "Want some drugs?")
+        Chef = NPC(["Bryson", "Jennie", "Gordon", "James", "Arnold"], 75, Pizza, 12, "I tried really hard to make this")
+
+        betterPotionSeller = NPC(["Phillip", "Aya", "William", "Wojciech", "Zaynah"], 50, superPotion, 50, "Best stuff I could find")
+        powderedDrugDealer = NPC(["Liberty", "Valerie", "Steffan", "Izabella", "Dillon"], 25, powderedGummy, 25, "This is the good stuff")
+        monkey = NPC(["Grease", "Cooter", "Beppo", "Takekei", "Brass"], 100, Banana, 40, "OOH OOH AH AH")
+
+        bestPotionSeller = NPC(["Eddie", "Kieran", "Dora", "Iona", "Aaryan"], 75, hyperPotion, 250, "This is a one of the kind")
+        condensedDrugDealer = NPC(["Jose", "Myah", "Hashim", "Olivia", "Macauley"], 10, condensedGummy, 100, "I've got the real deal")
+        god = NPC(["Andre", "Faye", "Ffion", "Katie", "Cameron"], 150, blackHole, 200)
 
         # places
 
-        
-        # npcs
+        maze1 = Maze(11, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze2 = Maze(13, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze3 = Maze(17, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze4 = Maze(23, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze5 = Maze(31, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+
+        colour = ColourSwitch()
+        box = BoxPush()
+        buckshot = Buckshot()
+        slot = Slot()
+        maths = Maths()
+
 
 
     def start(self):

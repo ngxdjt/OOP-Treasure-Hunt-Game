@@ -17,10 +17,10 @@ class MazeDimensionError(Exception):
     pass
 
 class Location:
-    def __init__(self, size:int, roomNumber):
+    def __init__(self, size:int):
         self.size = size
         self.room = []
-        self.roomNumber = roomNumber
+        self.roomNumber = 1
 
     def show_room(self):
         for row in self.room:
@@ -33,11 +33,11 @@ class Maze(Location):
         self.itemList = itemList
         self.npcList = npcList
 
-    def generate_maze(self):
+    def generate_maze(self, player):
         if self.size % 2 == 0:
             raise MazeDimensionError("Dimensions must be odd")
 
-        self.room = [["x" for i in range(self.size)] for i in range(self.size)]
+        maze = [["x" for i in range(self.size)] for i in range(self.size)]
 
         x, y = (-1, 1)
         stack = [(y, x)]
@@ -50,17 +50,24 @@ class Maze(Location):
 
             for dy, dx in directions:
                 ny, nx = y + dy, x + dx
-                if nx > 0 and ny > 0 and nx < self.size-1 and ny < self.size-1 and self.room[ny][nx] == "x":
-                    self.room[ny][nx] = " "
-                    self.room[ny-dy//2][nx-dx//2] = " "
+                if nx > 0 and ny > 0 and nx < self.size-1 and ny < self.size-1 and maze[ny][nx] == "x":
+                    maze[ny][nx] = " "
+                    maze[ny-dy//2][nx-dx//2] = " "
                     stack.append((ny, nx))
                     break
             else:
                 stack.pop()
 
-        self.room[-2][-1] = " "
+        maze[-2][-1] = " "
+
+        if maze[player.currentPos[0]][player.currentPos[1]] == " ":
+            self.room = maze
+            self.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
     
     def load_enemies(self):
+        for i in range(floor(self.roomNumber**1.8)):
+            for enemy in self.enemyList:
+                enemy.levelUp(True)
         for i in range(self.size*7):
             y = randint(1, self.size-1)
             x = randint(1, self.size-1)
@@ -80,11 +87,6 @@ class Maze(Location):
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("N", 'light_green')
-
-    def set_up_enemies(self):
-        for i in range(6*self.roomNumber):
-            for enemy in self.enemyList:
-                enemy.levelUp(True)
 
 class Minigame(Location):
     def __init__(self, reward:tuple):
@@ -697,15 +699,15 @@ class Maths(Minigame):
         return player
 
 
-Fireball = Ability("Fireball", 1.5, "Fire", 30, 20)
+Fireball = Ability("Fireball", 1.5, "Fire", 30, 20, 0)
 os.system("clear")
-enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball, 3: Fireball}, [100,0], 1)
-player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
+enemy = Enemy("Dragon", 50, ["Ice"], 100, 20, 20, 200, [Fireball], {1: Fireball, 3: Fireball}, 100, 1)
+player = Player("Bob", 100, ["Fire"], 100, 50, 10, 50, [Fireball])
 item = Item("Potion", "healing", 20, 0)
-npc = NPC("John", 10, item, 20, "I am John")
+npc = NPC(["John"], 10, item, 20, "I am John")
 
-maze = Maze(51, [enemy], [item], [npc])
-maze.generate_maze()
+maze = Maze(31, [enemy], [item], [npc])
+maze.generate_maze(player)
 maze.load_enemies()
 maze.load_items()
 maze.load_npcs()
