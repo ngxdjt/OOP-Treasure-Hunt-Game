@@ -75,19 +75,19 @@ class Game():
 
         betterPotionSeller = NPC(["Phillip", "Aya", "William", "Wojciech", "Zaynah"], 50, superPotion, 50, "Best stuff I could find")
         powderedDrugDealer = NPC(["Liberty", "Valerie", "Steffan", "Izabella", "Dillon"], 25, powderedGummy, 25, "This is the good stuff")
-        monkey = NPC(["Grease", "Cooter", "Beppo", "Takekei", "Brass"], 100, Banana, 40, "OOH OOH AH AH")
+        Monkey = NPC(["Grease", "Cooter", "Beppo", "Takekei", "Brass"], 100, Banana, 40, "OOH OOH AH AH")
 
         bestPotionSeller = NPC(["Eddie", "Kieran", "Dora", "Iona", "Aaryan"], 75, hyperPotion, 250, "This is a one of the kind")
         condensedDrugDealer = NPC(["Jose", "Myah", "Hashim", "Olivia", "Macauley"], 10, condensedGummy, 100, "I've got the real deal")
-        god = NPC(["Andre", "Faye", "Ffion", "Katie", "Cameron"], 150, blackHole, 200)
+        god = NPC(["Andre", "Faye", "Ffion", "Katie", "Cameron"], 150, blackHole, 200, "I am god")
 
         # places
 
         maze1 = Maze(11, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
-        maze2 = Maze(13, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
-        maze3 = Maze(17, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
-        maze4 = Maze(23, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
-        maze5 = Maze(31, [Goblin, Slime], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze2 = Maze(13, [Goblin, Slime, Elf], [Potion, Gummy, Pizza], [PotionSeller, DrugDealer, Chef])
+        maze3 = Maze(17, [Goblin, Slime, Elf, Golem], [Potion, superPotion, Gummy, powderedGummy, Pizza, Banana], [PotionSeller, betterPotionSeller, DrugDealer, powderedDrugDealer, Chef, Monkey])
+        maze4 = Maze(23, [Elf, Orc, Golem], [superPotion, powderedGummy, Banana], [betterPotionSeller, powderedDrugDealer, Monkey])
+        maze5 = Maze(31, [Elf, Orc, Golem, Dragon, Phoenix], [hyperPotion, condensedGummy, Banana], [bestPotionSeller, condensedDrugDealer, god, Monkey])
 
         colour = ColourSwitch()
         box = BoxPush()

@@ -156,10 +156,10 @@ class Combat:
                 input = getch()
             if input == "1":
                 self.player.absorb(self.enemy)
-                sleep(2)
+                sleep(1)
             elif input == "2":
                 self.player.necromance(self.enemy)
-                sleep(2)
+                sleep(1)
         else:
             os.system("clear")
             self.player.alive = False
@@ -209,11 +209,11 @@ class Entity:
                 target.health[1] -= floor(ability.multiplier*self.atk)
 
             if ability.recoil > 0:
-                print(f"self.name took {ability.recoil} recoil damage from {ability.name}")
-                self.health[1] -= ability.recoil
+                print(f"self.name took {ability.recoil}% recoil damage from {ability.name}")
+                self.health[1] *= ability.recoil//100
             if ability.recoil < 0:
-                print(f"self.name healed {-ability.recoil} from {ability.name}")
-                self.health[1] -= ability.recoil
+                print(f"self.name healed {-ability.recoil}% from {ability.name}")
+                self.health[1] *= ability.recoil//100
 
         else:
             print("You flailed out of exhaustion")
@@ -438,9 +438,13 @@ class Player(Entity):
             location.show_room()
             sleep(0.5)
             os.system("clear")
-            npc = choice(location.npcList)
-            self = npc.interact(self)
-            sleep(1)
+            if location.npcList:
+                npc = choice(location.npcList)
+                self = npc.interact(self, location)
+                sleep(1)
+            else:
+                print("You killed everyone on this floor")
+                sleep(1)
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
  
@@ -573,7 +577,7 @@ class NPC:
         self.cost = cost
         self.intro = intro
 
-    def interact(self, player):
+    def interact(self, player, location):
         name = choice(self.names)
         if player.reputation >= 30:
             dprint({self.intro})
@@ -602,6 +606,7 @@ class NPC:
                 if player.reputation < 0:
                     player.reputation = 0
                 player.add_item(self.reward)
+                location.npcList.remove(self)
         else:
             dprint("Go die in a ditch")
 

@@ -8,4 +8,4 @@ class Ability:
         self.recoil = recoil
 
     def show_info(self):
-        return f"Name: {self.name}\nMultiplier: {self.multiplier*100}%\nType: {self.type}\nBreak Damage: {self.breakDamage}\nSP Cost {self.cost}\nRecoil: {self.recoil}"
+        return f"Name: {self.name}\nMultiplier: {self.multiplier*100}%\nType: {self.type}\nBreak Damage: {self.breakDamage}\nSP Cost {self.cost}\nRecoil: {self.recoil}%"
