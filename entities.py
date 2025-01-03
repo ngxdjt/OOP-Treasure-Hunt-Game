@@ -45,11 +45,6 @@ class Combat:
                 print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
                 action = getch()
                 while action not in ["1","2","3","4"]:
-                    print("Invalid input")
-                    sleep(1)
-                    os.system("clear")
-                    show_info()
-                    print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
                     action = getch()
                 os.system("clear")
                 show_info()
@@ -65,9 +60,6 @@ class Combat:
                                 break
                         except:
                             pass
-                        print("Invalid input", end="\r")
-                        sleep(1)
-                        print("\033[K\033[F")
                         num = getch()
                     os.system("clear")
                     show_info()
@@ -92,9 +84,6 @@ class Combat:
                                     break
                             except:
                                 pass
-                            print("Invalid input", end="\r")
-                            sleep(1)
-                            print("\033[K\033[F")
                             num = getch()
                         os.system("clear")
                         show_info()
@@ -145,9 +134,6 @@ class Combat:
             print("Do you want to absorb it (1) or necromance it (2)")
             input = getch()
             while input != "1" and input != "2":
-                print("Invalid input", end="\r")
-                sleep(1)
-                print("\033[K")
                 input = getch()
             if input == "1":
                 self.player.absorb(self.enemy)
@@ -246,33 +232,36 @@ class Enemy(Entity):
         for number, ability in enumerate(available):
             print(number+1, ability.name)
         print(f"What move does {self.name} want to learn?")
-        num = int(getch())
-        while num not in range(1, len(available)+1):
-            print("Invalid input", end="\r")
-            sleep(1)
-            print("\033[K")
-            num = int(getch())
+        num = getch()
+        while True:
+            try:
+                num = int(fMove)
+                if num in range(len(available)+1):
+                    break
+            except:
+                pass
+            num = getch()
         if len(self.abilities) < 5:
             print(f"{self.name} has learned {available[num-1].name}")
             self.abilities.append(available[num-1])
         elif len(self.abilities) >= 5:
             print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
-            forget = getch.lower()
+            forget = getch
             while forget != "y" and forget != "n":
-                print("Invalid input", end="\r")
-                sleep(1)
-                print("\033[K")
-                forget = getch().lower()
+                forget = getch()
             if forget == "y":
                 for number, ability in enumerate(self.abilities):
                     print(number+1, ability.name)
                 print("What move do you want to forget?")
-                fMove = int(getch())
-                while fMove not in range(1,6):
-                    print("Invalid input", end="\r")
-                    sleep(1)
-                    print("\033[K")
-                    fMove = int(getch())
+                fMove = getch()
+                while True:
+                    try:
+                        fMove = int(fMove)
+                        if fMove in range(1,6):
+                            break
+                    except:
+                        pass
+                    fMove = getch()
                 print(f"You have forgotten {self.abilities[fMove-1]} and learned {available[num-1].name}!")
                 self.abilities[fMove-1] = available[num-1].name
         elif input == "n":
@@ -302,24 +291,18 @@ class Enemy(Entity):
                 if len(self.abilities) > 5:
                     print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
                     print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
-                    input = getch().lower()
+                    input = getch()
                     while input != "y" and input != "n":
-                        print("Invalid input", end="\r")
-                        sleep(1)
-                        print("\033[K")
-                        input = getch().lower()
+                        input = getch()
                     
                     if input == "y" and len(self.abilities) < 5:
                         print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
                         self.abilities.append(self.abilityList[self.lvl])
                     elif input == "y" and len(self.abilities) > 5:
                         print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
-                        forget = getch.lower()
+                        forget = getch()
                         while forget != "y" and forget != "n":
-                            print("Invalid input", end="\r")
-                            sleep(1)
-                            print("\033[K")
-                            forget = getch().lower()
+                            forget = getch()
                         if forget == "y":
                             for number, ability in enumerate(self.abilities):
                                 print(number+1, ability.name)
@@ -332,9 +315,6 @@ class Enemy(Entity):
                                         break
                                 except:
                                     pass
-                                print("Invalid input", end="\r")
-                                sleep(1)
-                                print("\033[K\033[F")
                                 num = getch()
                             print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
                             self.abilities[num-1] = self.abilityList[self.lvl]
@@ -455,12 +435,9 @@ class Player(Entity):
  
     def learn(self, ability):
         print(f"Do you want to learn {ability.name}? (y/n)")
-        input = getch().lower()
+        input = getch()
         while input != "y" and input != "n":
-            print("Invalid input", end="\r")
-            sleep(1)
-            print("\033[K")
-            input = getch().lower()
+            input = getch()
         
         if input == "y" and len(self.abilities) < 5:
             print(f"You have learned {ability.name}")
@@ -469,12 +446,9 @@ class Player(Entity):
                 self.abilityList[len(self.abilityList)+1] = ability
         elif input == "y" and len(self.abilities) > 5:
             print("You have too many abilities, do you want to forget an ability? (y/n)")
-            forget = getch.lower()
+            forget = getch()
             while forget != "y" and forget != "n":
-                print("Invalid input", end="\r")
-                sleep(1)
-                print("\033[K")
-                forget = getch().lower()
+                forget = getch()
             if forget == "y":
                 for number, ability in enumerate(self.abilities):
                     print(number+1, ability.name)
@@ -487,9 +461,6 @@ class Player(Entity):
                             break
                     except:
                         pass
-                    print("Invalid input", end="\r")
-                    sleep(1)
-                    print("\033[K\033[F")
                     num = getch()
                 print(f"You have forgotten {self.abilities[num-1]} and learned {ability.name}!")
                 self.abilities[num-1] = ability
@@ -555,12 +526,15 @@ class Player(Entity):
         for number, summon in enumerate(self.summons):
             print(number+1, summon.name)
         print("What summon do you want to soul swap with?")
-        num = int(getch())
-        while num not in range(len(self.summons)):
-            print("Invalid input", end="\r")
-            sleep(1)
-            print("\033[K")
-            num = int(getch())
+        num = getch()
+        while True:
+            try:
+                num = int(num)
+                if num in range(len(self.summons)):
+                    break
+            except:
+                pass
+            num = getch()
         swap = self.summons.pop(num-1)
         self.health = swap.health
         self.weaknesses = swap.weaknesses
@@ -580,6 +554,9 @@ class Player(Entity):
         location.room[self.currentPos[0]][self.currentPos[1]-1] = " "
         location.show_room()
 
+    def manage(self):
+        print("1: Change move\n2: ")
+
 class NPC:
     def __init__(self, names:list, reputation:int, reward: Item, cost:int, intro:str):
         self.names = names
@@ -596,8 +573,6 @@ class NPC:
             print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
             option = getch()
             while option != "1" and option != "2" and option != "3":
-                print("Invalid input")
-                sleep(1)
                 option = getch()
             
             os.system("clear")

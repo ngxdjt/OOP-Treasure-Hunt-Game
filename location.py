@@ -1,7 +1,7 @@
 from random import shuffle, choice, randint
 from entities import *
 from getch import getch
-from time import sleep
+from time import sleep, time
 from termcolor import colored
 import os
 from ability import Ability
@@ -264,11 +264,6 @@ class Buckshot(Minigame):
                     print(f"Do you want to use the {playerItems[0]} (1) or {playerItems[1]} (2) or not use an item (3)?")
                     itemUse = getch()
                     while itemUse != "1" and itemUse != "2" and itemUse != "3":
-                        print("\033[FInvalid input")
-                        sleep(1)
-                        os.system("clear")
-                        show_details()
-                        print(f"Do you want to use the {playerItems[0]} (1) or {playerItems[1]} (2) or not use an item (3)?")
                         itemUse = getch()
                     
                     if itemUse == "1":
@@ -282,13 +277,7 @@ class Buckshot(Minigame):
                     print(f"Do you want to use the {playerItems[0]} (1) or not use it (2)?")
                     itemUse = getch()
                     while itemUse != "1" and itemUse != "2":
-                        print("\033[FInvalid input")
-                        sleep(1)
-                        os.system("clear")
-                        show_details()
-                        print(f"Do you want to use the {playerItems[0]} (1) or not use it (2)?")
                         itemUse = getch()
-
                     if itemUse == "1":
                         playerItemUsed = playerItems.pop(0)
                     elif itemUse == "2":
@@ -317,11 +306,6 @@ class Buckshot(Minigame):
                 print("Do you want to shoot yourself (1) or the dealer (2)?")
                 shoot = getch()
                 while shoot != "1" and shoot != "2":
-                    print("\033[FInvalid input")
-                    sleep(1)
-                    os.system("clear")
-                    show_details()
-                    print("Do you want to shoot yourself (1) or the dealer (2)?")
                     shoot = getch()
 
                 os.system("clear")
@@ -443,8 +427,6 @@ class Slot(Minigame):
         print("Do you want to play (1) or quit (2)?")
         decision = getch()
         while decision != "1" and decision != "2":
-            print("Invalid input")
-            sleep(1)
             decision = getch()
         os.system("clear")
 
@@ -636,6 +618,8 @@ class Slot(Minigame):
             print(f"Current Health: {player.health[1]}/{player.health[0]}")
             print("Do you want to try again (1) or quit (2)?")
             decision = getch()
+            while decision != "1" and decision != "2":
+                decision = getch()
 
         return player
 
@@ -667,11 +651,8 @@ class Maths(Minigame):
                 int(answer)
                 break
             except:
-                print("\033[FInvalid input")
-                sleep(1)
-                os.system("clear")
-                print(f"What is {num1} multiplied by {num2}")
-                answer = input()
+                pass
+            answer = input()
         end = time()
         os.system("clear")
 
@@ -694,46 +675,46 @@ class Maths(Minigame):
         return player
 
 
-# Fireball = Ability("Fireball", 1.5, "Fire", 30, 20, 0)
-# os.system("clear")
-# enemy = Enemy("Dragon", 50, ["Ice"], 100, 20, 20, 200, [Fireball], {1: Fireball, 3: Fireball}, 100, 1)
-# player = Player("Bob", 100, ["Fire"], 100, 50, 10, 50, [Fireball])
-# item = Item("Potion", "healing", 20, 0)
-# npc = NPC(["John"], 10, item, 20, "I am John")
+Fireball = Ability("Fireball", 1.5, "Fire", 30, 20, 0)
+os.system("clear")
+enemy = Enemy("Dragon", 50, ["Ice"], 100, 20, 20, 200, [Fireball], {1: Fireball, 3: Fireball}, 100, 1)
+player = Player("Bob", 100, ["Fire"], 100, 50, 10, 50, [Fireball])
+item = Item("Potion", "healing", 20, 0)
+npc = NPC(["John"], 10, item, 20, "I am John")
 
-# maze = Maze(31, [enemy], [item], [npc])
-# maze.generate_maze(player)
-# maze.load_enemies()
-# maze.load_items()
-# maze.load_npcs()
-# maze.room[1][0] = colored("@", 'red')
+maze = Maze(31, [enemy], [item], [npc])
+maze.generate_maze(player)
+maze.load_enemies()
+maze.load_items()
+maze.load_npcs()
+maze.room[1][0] = colored("@", 'red')
 
-# slot = Slot()
-# colour = ColourSwitch()
-# box = BoxPush()
-# maths = Maths()
-# buckshot = Buckshot()
+slot = Slot()
+colour = ColourSwitch()
+box = BoxPush()
+maths = Maths()
+buckshot = Buckshot()
 
-# player.add_item(item)
+player.add_item(item)
 
-# while player.health[1] > 0:
-#     os.system("clear")
-#     maze.show_room()
-#     # colour.show_room()
-#     # box.show_room()
-#     # maths.show_room()
-#     # slot.show_room()
-#     # buckshot.show_room()
-#     direction = getch()
-#     if direction == "e":
-#         player.place_explosive(maze)
-#     else:
-#         player.move(direction, maze)
-#     # player.move(direction, colour)
-#     # player.move(direction, box)
-#     # player.move(direction, slot)
-#     # player.move(direction, maths)
-#     # player.move(direction, buckshot)
+while player.health[1] > 0:
+    os.system("clear")
+    maze.show_room()
+    # colour.show_room()
+    # box.show_room()
+    # maths.show_room()
+    # slot.show_room()
+    # buckshot.show_room()
+    direction = getch()
+    if direction == "e":
+        player.place_explosive(maze)
+    else:
+        player.move(direction, maze)
+    # player.move(direction, colour)
+    # player.move(direction, box)
+    # player.move(direction, slot)
+    # player.move(direction, maths)
+    # player.move(direction, buckshot)
 
 # # combat = Combat(player, enemy)
 # # player = combat.start()

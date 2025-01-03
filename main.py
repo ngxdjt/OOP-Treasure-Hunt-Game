@@ -146,6 +146,9 @@ class Game():
 
         if tutorial == "1":
             dprint("This labyrinth comprises of two main rooms: mazes and minigames.")
+            dprint("To move around, press w (up), a (left), s (down), and d (right).")
+            dprint("To manage your player, press q.")
+            dprint("To place an explosive, press e, destroying adjacent cells and reducing your health by 20")
             dprint("The following is an example of a maze you might encounter:\n")
             exampleMaze = Maze(11, [], [], [])
             exampleMaze.generate_maze(player)
@@ -203,9 +206,19 @@ class Game():
             os.system("clear")
         elif tutorial == "2":
             pass
-
         
+        room = 0
 
+        while player.health[1] > 0:
+            self.currentPlace = self.places[room]
+            os.system("clear")
+            print("Controls: Movement (wasd), Place Explosive (e), Manage Player (q)")
+            self.currentPlace.show_room()
+            direction = getch()
+            if direction == "e":
+                player.place_explosive(self.currentPlace)
+            elif direction in ["w","a","s","d"]:
+                player.move(direction, self.currentPlace)
 
 
 game = Game()
