@@ -696,7 +696,7 @@ os.system("clear")
 enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball, 3: Fireball}, [100,0], 1)
 player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
 item = Item("Potion", "healing", 20, 0)
-npc = NPC("John", 50, item, 20, "I am John")
+npc = NPC("John", 10, item, 20, "I am John")
 
 maze = Maze(51, [enemy], [item], [npc])
 maze.generate_maze()
@@ -722,7 +722,10 @@ while player.health[1] > 0:
     # slot.show_room()
     # buckshot.show_room()
     direction = getch()
-    player.move(direction, maze)
+    if direction == "e":
+        player.place_explosive(maze)
+    else:
+        player.move(direction, maze)
     # player.move(direction, colour)
     # player.move(direction, box)
     # player.move(direction, slot)

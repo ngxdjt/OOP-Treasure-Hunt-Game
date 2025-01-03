@@ -343,6 +343,7 @@ class Player(Entity):
         self.summons = []
         self.reputation = 50
         self.alive = True
+        self.explosives = 0
 
     def move(self, direction, location):
         location.room[self.currentPos[0]][self.currentPos[1]] = " "
@@ -539,6 +540,18 @@ class Player(Entity):
         self.speed = swap.speed
         self.sp = swap.sp
 
+    def place_explosive(self, location):
+        os.system("clear")
+        print("You placed an explosive -20 health")
+        self.health -= 20
+        sleep(1)
+        os.system("clear")
+        location.room[self.currentPos[0]+1][self.currentPos[1]] = " "
+        location.room[self.currentPos[0]-1][self.currentPos[1]] = " "
+        location.room[self.currentPos[0]][self.currentPos[1]+1] = " "
+        location.room[self.currentPos[0]][self.currentPos[1]-1] = " "
+        location.show_room()
+
 class NPC:
     def __init__(self, name:str, reputation:int, reward: Item, cost:int, intro:str):
         self.name = name
@@ -551,7 +564,7 @@ class NPC:
         if player.reputation >= 30:
             dprint({self.intro})
             dprint(f"I will offer a {self.reward.name} for {self.cost} health")
-            dprint(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
+            print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
             option = getch()
             while option != "1" and option != "2" and option != "3":
                 print("Invalid input")
