@@ -82,7 +82,7 @@ class Maze(Location):
                 self.room[y][x] = colored("N", 'light_green')
 
     def set_up_enemies(self):
-        for i in range(2**self.roomNumber):
+        for i in range(6*self.roomNumber):
             for enemy in self.enemyList:
                 enemy.levelUp(True)
 
