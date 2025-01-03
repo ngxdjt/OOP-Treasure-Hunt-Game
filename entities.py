@@ -6,12 +6,19 @@ from termcolor import colored
 from item import Item
 import os
 
+def dprint(string:str):
+    for char in string:
+        print(char, end='', flush=True)
+        sleep(0.05)
+    print()
+
 class Combat:
-    def __init__(self, player, enemy):
+    def __init__(self, player, enemy, item):
         self.player = player
         self.enemy = enemy
         self.exp = enemy.exp[0]
         self.itemAtk = 0
+        self.item = item
 
     def start(self):
         turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
@@ -78,25 +85,29 @@ class Combat:
                     self.player.rest()
                     sleep(1)
                 elif action == "4":
-                    for number, item in enumerate(current.inventory):
-                        print(number+1, item.name)
-                    print("What item do you want to use?")
-                    num = getch()
-                    while True:
-                        try:
-                            num = int(num)
-                            if num in range(1,len(self.player.inventory)+1):
-                                break
-                        except:
-                            pass
-                        print("Invalid input", end="\r")
-                        sleep(1)
-                        print("\033[K\033[F")
+                    if len(self.player.inventory) > 0:
+                        for number, item in enumerate(current.inventory):
+                            print(number+1, item.name)
+                        print("What item do you want to use?")
                         num = getch()
-                    os.system("clear")
-                    show_info()
-                    self.itemAtk += self.player.inventory[num-1]
-                    current.use_item(self.player.inventory.pop(num-1))
+                        while True:
+                            try:
+                                num = int(num)
+                                if num in range(1,len(self.player.inventory)+1):
+                                    break
+                            except:
+                                pass
+                            print("Invalid input", end="\r")
+                            sleep(1)
+                            print("\033[K\033[F")
+                            num = getch()
+                        os.system("clear")
+                        show_info()
+                        self.itemAtk += self.player.inventory[num-1].attack
+                        current.use_item(self.player.inventory.pop(num-1))
+                    else:
+                        print("Your inventory is empty")
+                    sleep(1)
             else:
                 shuffle(current.abilities)
                 for move in current.abilities:
@@ -122,6 +133,7 @@ class Combat:
 
         if self.enemy.health[1] <= 0:
             self.enemy.health[1] = self.enemy.health[0]
+            self.enemy.sp[1] = self.enemy.sp[0]
             os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
             self.player.atk -= self.itemAtk
@@ -131,6 +143,9 @@ class Combat:
                 while summon.exp[1] > summon.exp[0]:
                     summon.levelUp()
             print(f"You have defeated the {self.enemy.name}")
+            if randint(1,10) == 1:
+                print(f"The {self.enemy.name} dropped a {self.item.name}")
+                self.player.add_item(self.item)
             print("Do you want to absorb it (1) or necromance it (2)")
             input = getch()
             while input != "1" and input != "2":
@@ -387,9 +402,24 @@ class Player(Entity):
             location.show_room()
             sleep(0.5)
             enemy  = choice(location.enemyList)
-            self, enemy = Combat(self, enemy).start()
+            item = choice(location.itemList)
+            os.system("clear")
+            print(f"You encountered a {enemy.name}")
+            sleep(1)
+            self, enemy = Combat(self, enemy, item).start()
+        elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+            os.system("clear")
+            location.show_room()
+            sleep(0.5)
+            os.system("clear")
+            item = choice(location.itemList)
+            print(f"You picked up a {item.name}")
+            self.add_item(item)
+            sleep(1)
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+ 
     
     def learn(self, ability):
         print(f"Do you want to learn {ability.name}? (y/n)")
@@ -439,6 +469,10 @@ class Player(Entity):
             if ability not in self.abilityList.values() and randint(1,4) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully learned {ability.name}")
+        print(f"+{floor(enemy.health[0]*0.25)} health")
+        print(f"+{floor(enemy.atk*0.25)} attack")
+        print(f"+{floor(enemy.speed*0.25)} speed")
+        print(f"+{floor(enemy.sp[0]*0.25)} sp")
         self.health[0] += floor(enemy.health[0]*0.25)
         self.health[1] += floor(enemy.health[0]*0.25)
         self.atk += floor(enemy.atk*0.25)
@@ -452,11 +486,11 @@ class Player(Entity):
         self.summons.append(enemy)
 
     def add_item(self, item):
-        if len(self.inventory) > 20:
-            print(f"You added {item.name} to your inventory")
+        if len(self.inventory) < 20:
+            print(f"You added a {item.name} to your inventory")
             self.inventory.append(item)
         else:
-            print(f"Your bag was too full and {item.name} got lost")
+            print(f"Your bag was too full and the {item.name} got lost")
 
     def use_item(self, item):
         if item.type == "healing":
@@ -497,8 +531,9 @@ class Player(Entity):
         self.sp = swap.sp
 
 class NPC:
-    def __init__(self, name:str, reputation:int, reward: Item, cost:int):
+    def __init__(self, name:str, reputation:int, reward: Item, cost:int, intro:str):
         self.name = name
         self.reputation = reputation
         self.reward = reward
         self.cost = cost
+        self.intro = intro
