@@ -26,10 +26,11 @@ class Location:
             print(' '.join(row))
 
 class Maze(Location):
-    def __init__(self, size:int, enemyList, itemList):
+    def __init__(self, size:int, enemyList, itemList, npcList):
         super().__init__(size)
         self.enemyList = enemyList
         self.itemList = itemList
+        self.npcList = npcList
 
     def generate_maze(self):
         if self.size % 2 == 0:
@@ -695,8 +696,9 @@ os.system("clear")
 enemy = Enemy("Dragon", [50,50], ["Ice"], [100,100], 20, 20, [200,200], [Fireball], {1: Fireball, 3: Fireball}, [100,0], 1)
 player = Player("Bob", [100,100], ["Fire"], [100,100], 50, 10, [50,50], [Fireball])
 item = Item("Potion", "healing", 20, 0)
+npc = NPC("John", 50, item, 20, "I am John")
 
-maze = Maze(51, [enemy], [item])
+maze = Maze(51, [enemy], [item], [npc])
 maze.generate_maze()
 maze.load_enemies()
 maze.load_items()

@@ -134,6 +134,7 @@ class Combat:
         if self.enemy.health[1] <= 0:
             self.enemy.health[1] = self.enemy.health[0]
             self.enemy.sp[1] = self.enemy.sp[0]
+            self.enemy.weaknessBar[1] = self.enemy.weaknessBar[0]
             os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
             self.player.atk -= self.itemAtk
@@ -417,10 +418,18 @@ class Player(Entity):
             print(f"You picked up a {item.name}")
             self.add_item(item)
             sleep(1)
+        elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("N", 'light_green'):
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+            os.system("clear")
+            location.show_room()
+            sleep(0.5)
+            os.system("clear")
+            npc = choice(location.npcList)
+            self = npc.interact(self)
+            sleep(1)
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
  
-    
     def learn(self, ability):
         print(f"Do you want to learn {ability.name}? (y/n)")
         input = getch().lower()
@@ -537,3 +546,36 @@ class NPC:
         self.reward = reward
         self.cost = cost
         self.intro = intro
+
+    def interact(self, player):
+        if player.reputation >= 30:
+            dprint({self.intro})
+            dprint(f"I will offer a {self.reward.name} for {self.cost} health")
+            dprint(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
+            option = getch()
+            while option != "1" and option != "2" and option != "3":
+                print("Invalid input")
+                sleep(1)
+                option = getch()
+            
+            os.system("clear")
+            if option == "1":
+                print("You accepted the offer")
+                print(f"+{self.reputation//2} reputation")
+                player.health[1] -= self.cost
+                player.reputation += self.reputation//2
+                if player.reputation > 100:
+                    player.reputation = 100
+                player.add_item(self.reward)
+            elif option == "2":
+                print("You declined the offer")
+            elif option == "3":
+                print(f"You killed {self.name}")
+                print(f"-{self.reputation} reputation")
+                if player.reputation < 0:
+                    player.reputation = 0
+                player.add_item(self.reward)
+        else:
+            dprint("Go die in a ditch")
+
+        return player
