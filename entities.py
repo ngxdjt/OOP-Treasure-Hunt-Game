@@ -204,11 +204,10 @@ class Entity:
                 target.health[1] -= floor(ability.multiplier*self.atk)
 
             if ability.recoil > 0:
-                print(f"self.name took {ability.recoil}% recoil damage from {ability.name}")
-                self.health[1] *= ability.recoil//100
+                print(f"self.name took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}")
             if ability.recoil < 0:
-                print(f"self.name healed {-ability.recoil}% from {ability.name}")
-                self.health[1] *= ability.recoil//100
+                print(f"self.name healed {self.health[0] * ability.recoil//100} from using {ability.name}")
+            self.health[1] -= self.health[0] * ability.recoil//100
 
         else:
             print("You flailed out of exhaustion")
@@ -356,7 +355,7 @@ class Enemy(Entity):
 
 class Player(Entity):
     def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list):
-        super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, {})
+        super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, {1: abilities[0]})
         self.inventory = []
         self.currentPos = [1,0]
         self.summons = []

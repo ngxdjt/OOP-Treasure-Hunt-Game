@@ -96,7 +96,7 @@ class Game():
         maths = Maths()
 
         # rooms
-        
+
         mazes = [maze1, maze2, maze3, maze4, maze5]
         minigames = [colour, box, buckshot, slot, maths]
         roomOrder = ["maze","maze","maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
@@ -110,26 +110,102 @@ class Game():
                 self.places.append(minigames.pop(0))
 
     def start(self):
-        print("Welcome to my game...")
-        print("Storyline...")
-        name = input("Enter player name: ")
-        player = Player(name)
+        os.system("clear")
+        print(pfg.figlet_format("Labyrinth of the Damned",font="larry3d"))
+        print("Press space to start")
+        start = getch()
+        while start != " ":
+            os.system("clear")
+            print(pfg.figlet_format("Labyrinth of the Damned",font="larry3d"))
+            print("Press space to start")
+            start = getch()
+        os.system("clear")
 
-        print("You are currently in " + self.current_place.name)
-        self.current_place.show_next_places()
-        opt = input("""
-What would you like to do?
-1. Go to a place
-2. Pickup item
-3. Check inventory
-etc.      
-""")
-        if opt == "1":
-            # add code
+        dprint("You are a necromancer wandering down the streets. Such a happy lad you are!")
+        dprint("That is until this group of weirdos comes and kidnaps you. Oh no!")
+        dprint("So now you are in a labyrinth where you must face off many adversities.")
+        dprint("However, the currency down here seems to be life energy which you have the ability to manipulate due to your necromatic abilities.")
+        dprint("This is quite convenient, it's almost as if you are the main character!")
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
+        os.system("clear")
+        name = input("Enter your name: ")
+        player = Player(name, 100, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 10, 20, 100, [Ability("Punch", 0.5, "Physical", 10, 10, 0)])
+        os.system("clear")
+
+        print("Press 1 for the tutorial. Press 2 to skip it.")
+        tutorial = getch()
+        while tutorial != "1" and tutorial != "2":
+            print("\033[K\033[F")
+            tutorial = getch()
+        os.system("clear")
+
+        if tutorial == "1":
+            dprint("This labyrinth comprises of two main rooms: mazes and minigames.")
+            dprint("The following is an example of a maze you might encounter:\n")
+            exampleMaze = Maze(11, [], [], [])
+            exampleMaze.generate_maze(player)
+            exampleMaze.load_enemies()
+            exampleMaze.load_items()
+            exampleMaze.load_npcs()
+            exampleMaze.show_room()
+            print()
+            dprint(f"The {colored("@", 'red')} represents you, the player.")
+            dprint(f"The {colored("E", 'light_magenta')} represents an enemy. When killing an enemy, you can either absorb or necromance it.")
+            dprint(f"The {colored("I", 'light_blue')} represents an item. You can pick up and use items inside or outside of battle. You can only hold a maximum of 20 items.")
+            dprint(f"The {colored("N", 'light_green')} represents an NPC. NPCs exchange items for your health. You can also kill them to gain the item at the expense of your reputation.\n")
+
+            dprint("The following is an example of a minigame room you may encounter:\n")
+            room = [["x", "x", "x", "x", "x"], 
+                    [colored("@", 'red'), " ", colored("P", 'light_yellow'), " ", "x"], 
+                    ["x", " ", " ", " ", "x"], 
+                    ["x", " ", " ", " ", " "], 
+                    ["x", "x", "x", "x", "x"]
+                ]
+            for row in room:
+                print(' '.join(row))
+            print()
+            dprint(f"The {colored("@", 'red')} again represents you, the player.")
+            dprint(f"The {colored("P", 'light_yellow')} represents the tile you step on to start the minigame.")
+            dprint(f"You will always be able to skip minigames and move onto the next room, however you may miss out on a few rewards.")
+            
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
+
+            dprint("Let's move onto the combat")
+            dprint("You have four main stats: Health, Attack, Speed, and SP.")
+            dprint("Health is the amount of damage you can take until you die.")
+            dprint("Attack is what influences your damage and is multiplied with the multiplier of your attack.")
+            dprint("Speed influences the turn order. Higher speed leads to you starting first in the battle.")
+            dprint("Let's see what move you have right now!")
+            print()
+            print(player.abilities[0].show_info())
+            print()
+            dprint("The multiplier is used to calculate your damage using the formula multiplier*attack")
+            dprint("The type influences what weakness damage the ability inflicts. The five weaknesses are Physical, Fire, Ice, Lightning, Wind.")
+            dprint("The break damage is how much damage the ability does to the target's weakness bar which can lead to breaks.")
+            dprint("The SP cost is the amount of SP the ability takes to use.")
+            dprint("The recoil is the percentage of your max health you lose (or gain if negative) upon using the ability.")
+            
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
+        elif tutorial == "2":
             pass
-        elif opt == "2":
-            # add code
-            pass
-        elif opt == "3":
-            # add code
-            pass
+
+
+
+
+
+game = Game()
+game.start()
