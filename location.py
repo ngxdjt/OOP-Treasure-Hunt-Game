@@ -17,9 +17,10 @@ class MazeDimensionError(Exception):
     pass
 
 class Location:
-    def __init__(self, size:int):
+    def __init__(self, size:int, roomNumber):
         self.size = size
         self.room = []
+        self.roomNumber = roomNumber
 
     def show_room(self):
         for row in self.room:
@@ -79,6 +80,11 @@ class Maze(Location):
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("N", 'light_green')
+
+    def set_up_enemies(self):
+        for i in range(2**self.roomNumber):
+            for enemy in self.enemyList:
+                enemy.levelUp(True)
 
 class Minigame(Location):
     def __init__(self, reward:tuple):
