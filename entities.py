@@ -5,12 +5,7 @@ from random import randint, choice, shuffle
 from termcolor import colored
 from item import Item
 import os
-
-def dprint(string:str):
-    for char in string:
-        print(char, end='', flush=True)
-        sleep(0.05)
-    print()
+from delayed_print import dprint
 
 class Combat:
     def __init__(self, player, enemy, item):
@@ -295,50 +290,60 @@ class Enemy(Entity):
         self.exp[1] -= self.exp[0]
         self.exp[0] = floor(self.exp[0] * 1.1)
 
-        self.health[1] += floor(self.health[0] * 1.1) - self.health[0]
-        self.health[0] = floor(self.health[0] * 1.1)
-        self.atk = floor(self.atk * 1.1)
-        self.sp[1] += floor(self.sp[0] * 1.1) - self.sp[0]
-        self.sp[0] = floor(self.sp[0] * 1.1)
+        self.health[1] += floor(self.health[0] * 1.05) - self.health[0]
+        self.health[0] = floor(self.health[0] * 1.05)
+        self.atk = floor(self.atk * 1.05)
+        self.sp[1] += floor(self.sp[0] * 1.05) - self.sp[0]
+        self.sp[0] = floor(self.sp[0] * 1.05)
 
 
         if not hidden:
             print(f"{self.name} has leveled up to level {self.lvl}!")
             if self.lvl in self.abilityList:
-                print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
-                print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
-                input = getch().lower()
-                while input != "y" and input != "n":
-                    print("Invalid input", end="\r")
-                    sleep(1)
-                    print("\033[K")
+                if len(self.abilities) > 5:
+                    print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
+                    print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
                     input = getch().lower()
-                
-                if input == "y" and len(self.abilities) < 5:
-                    print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
-                    self.abilities.append(self.abilityList[self.lvl])
-                elif input == "y" and len(self.abilities) > 5:
-                    print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
-                    forget = getch.lower()
-                    while forget != "y" and forget != "n":
+                    while input != "y" and input != "n":
                         print("Invalid input", end="\r")
                         sleep(1)
                         print("\033[K")
-                        forget = getch().lower()
-                    if forget == "y":
-                        for number, ability in enumerate(self.abilities):
-                            print(number+1, ability.name)
-                        print("What move do you want to forget?")
-                        num = int(getch())
-                        while num not in range(1,6):
+                        input = getch().lower()
+                    
+                    if input == "y" and len(self.abilities) < 5:
+                        print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
+                        self.abilities.append(self.abilityList[self.lvl])
+                    elif input == "y" and len(self.abilities) > 5:
+                        print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
+                        forget = getch.lower()
+                        while forget != "y" and forget != "n":
                             print("Invalid input", end="\r")
                             sleep(1)
                             print("\033[K")
-                            num = int(getch())
-                        print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
-                        self.abilities[num-1] = self.abilityList[self.lvl]
-                elif input == "n":
-                    print(f"{self.name} gave up learning {self.abilityList[self.lvl].name}")
+                            forget = getch().lower()
+                        if forget == "y":
+                            for number, ability in enumerate(self.abilities):
+                                print(number+1, ability.name)
+                            print("What move do you want to forget?")
+                            num = getch()
+                            while True:
+                                try:
+                                    num = int(num)
+                                    if num in range(1,6):
+                                        break
+                                except:
+                                    pass
+                                print("Invalid input", end="\r")
+                                sleep(1)
+                                print("\033[K\033[F")
+                                num = getch()
+                            print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
+                            self.abilities[num-1] = self.abilityList[self.lvl]
+                    elif input == "n":
+                        print(f"{self.name} gave up learning {self.abilityList[self.lvl].name}")
+                else:
+                    print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
+                    self.abilities.append(self.abilityList[self.lvl])
             else:
                 if self.lvl in self.abilityList:
                     self.abilities.append(self.abilityList[self.lvl])
@@ -346,7 +351,8 @@ class Enemy(Entity):
                         self.abilities.pop(0)
 
     def calculate_stats(self):
-        self.levelUp(True)
+        for i in range(self.lvl-1):
+            self.levelUp(True)
 
 class Player(Entity):
     def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list):
@@ -474,12 +480,18 @@ class Player(Entity):
                 for number, ability in enumerate(self.abilities):
                     print(number+1, ability.name)
                 print("What move do you want to forget?")
-                num = int(getch())
-                while num not in range(1,6):
+                num = getch()
+                while True:
+                    try:
+                        num = int(num)
+                        if num in range(1,6):
+                            break
+                    except:
+                        pass
                     print("Invalid input", end="\r")
                     sleep(1)
-                    print("\033[K")
-                    num = int(getch())
+                    print("\033[K\033[F")
+                    num = getch()
                 print(f"You have forgotten {self.abilities[num-1]} and learned {ability.name}!")
                 self.abilities[num-1] = ability
                 if ability not in self.abilityList.values():

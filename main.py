@@ -2,6 +2,7 @@ from location import *
 from entities import *
 from item import *
 from ability import *
+from delayed_print import dprint
 import os
 
 class Game():
@@ -33,7 +34,6 @@ class Game():
         ColdShoulder = Ability("Cold Shoulder", 1.75, "Ice", 50, 35, 0)
         ElectrifyingPassion = Ability("Electrifying Passion", 1.55, "Lightning", 40, 20, 0)
         PungentOdour = Ability("Pungent Odour", 1.85, "Wind", 55, 30, 15)
-
 
         # Base Enemy (name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, abilityList, exp, lvl)
 
@@ -95,7 +95,19 @@ class Game():
         slot = Slot()
         maths = Maths()
 
+        # rooms
+        
+        mazes = [maze1, maze2, maze3, maze4, maze5]
+        minigames = [colour, box, buckshot, slot, maths]
+        roomOrder = ["maze","maze","maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
+        shuffle(roomOrder)
+        shuffle(minigames)
 
+        for room in roomOrder:
+            if room == "maze":
+                self.places.append(mazes.pop(0))
+            else:
+                self.places.append(minigames.pop(0))
 
     def start(self):
         print("Welcome to my game...")
@@ -121,4 +133,3 @@ etc.
         elif opt == "3":
             # add code
             pass
-            
