@@ -674,47 +674,50 @@ class Maths(Minigame):
 
         return player
 
-
-Fireball = Ability("Fireball", 1.5, "Fire", 30, 20, 0)
-os.system("clear")
-enemy = Enemy("Dragon", 50, ["Ice"], 100, 20, 20, 200, [Fireball], {1: Fireball, 3: Fireball}, 100, 1)
-player = Player("Bob", 100, ["Fire"], 100, 50, 10, 50, [Fireball])
-item = Item("Potion", "healing", 20, 0)
-npc = NPC(["John"], 10, item, 20, "I am John")
-
-maze = Maze(31, [enemy], [item], [npc])
-maze.generate_maze(player)
-maze.load_enemies()
-maze.load_items()
-maze.load_npcs()
-maze.room[1][0] = colored("@", 'red')
-
-slot = Slot()
-colour = ColourSwitch()
-box = BoxPush()
-maths = Maths()
-buckshot = Buckshot()
-
-player.add_item(item)
-
-while player.health[1] > 0:
+def main():
+    Fireball = Ability("Fireball", 1.5, "Fire", 30, 20, 0)
     os.system("clear")
-    maze.show_room()
-    # colour.show_room()
-    # box.show_room()
-    # maths.show_room()
-    # slot.show_room()
-    # buckshot.show_room()
-    direction = getch()
-    if direction == "e":
-        player.place_explosive(maze)
-    else:
-        player.move(direction, maze)
-    # player.move(direction, colour)
-    # player.move(direction, box)
-    # player.move(direction, slot)
-    # player.move(direction, maths)
-    # player.move(direction, buckshot)
+    enemy = Enemy("Dragon", 50, ["Ice"], 100, 20, 20, 200, [Fireball], {1: Fireball, 3: Fireball}, 100, 1)
+    player = Player("Bob", 100, ["Fire"], 100, 50, 10, 50, [Fireball])
+    item = Item("Potion", "healing", 20, 0)
+    npc = NPC(["John"], 10, item, 20, "I am John")
 
-# # combat = Combat(player, enemy)
-# # player = combat.start()
+    maze = Maze(31, [enemy], [item], [npc])
+    maze.generate_maze(player)
+    maze.load_enemies()
+    maze.load_items()
+    maze.load_npcs()
+    maze.room[1][0] = colored("@", 'red')
+
+    slot = Slot()
+    colour = ColourSwitch()
+    box = BoxPush()
+    maths = Maths()
+    buckshot = Buckshot()
+
+    player.add_item(item)
+
+    while player.health[1] > 0:
+        os.system("clear")
+        maze.show_room()
+        # colour.show_room()
+        # box.show_room()
+        # maths.show_room()
+        # slot.show_room()
+        # buckshot.show_room()
+        direction = getch()
+        if direction == "e":
+            player.place_explosive(maze)
+        else:
+            player.move(direction, maze)
+        # player.move(direction, colour)
+        # player.move(direction, box)
+        # player.move(direction, slot)
+        # player.move(direction, maths)
+        # player.move(direction, buckshot)
+
+    # # combat = Combat(player, enemy)
+    # # player = combat.start()
+
+if __name__ == '__main__':
+    main()
