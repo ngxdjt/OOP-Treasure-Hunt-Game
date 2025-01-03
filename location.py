@@ -245,16 +245,16 @@ class Buckshot(Minigame):
             print()
 
         handcuffed = False
-        playerItemUsed = ""
-        dealerShoot = ""
+        playerItemUsed = None
+        dealerShoot = None
 
         while shells > 0 and player.health[1] > 0 and dealerShoot != "s":
             os.system("clear")
             show_details()
 
             dealerHandcuffed = False
-            dealerKnows = ""
-            dealerShoot = ""
+            dealerKnows = None
+            dealerShoot = None
             
             if not handcuffed and dealerShoot != "s":
                 if len(playerItems) == 2:

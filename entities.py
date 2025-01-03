@@ -168,16 +168,16 @@ class Combat:
         return self.player, self.enemy
 
 class Entity:
-    def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict):
+    def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list, abilityList:dict):
         self.name = name
-        self.health = health
+        self.health = [health,health]
         self.weaknesses = weaknesses
-        self.weaknessBar = weaknessBar
+        self.weaknessBar = [weaknessBar,weaknessBar]
         self.resting = False
         self.broken = False
         self.atk = attack
         self.speed = speed
-        self.sp = SP
+        self.sp = [SP,SP]
         self.abilities = abilities
         self.abilityList = abilityList
 
@@ -207,6 +207,14 @@ class Entity:
                 target.health[1] -= floor(floor(ability.multiplier*self.atk)*1.5)
             else:
                 target.health[1] -= floor(ability.multiplier*self.atk)
+
+            if ability.recoil > 0:
+                print(f"self.name took {ability.recoil} recoil damage from {ability.name}")
+                self.health[1] -= ability.recoil
+            if ability.recoil < 0:
+                print(f"self.name healed {-ability.recoil} from {ability.name}")
+                self.health[1] -= ability.recoil
+
         else:
             print("You flailed out of exhaustion")
             print(f"{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
@@ -230,9 +238,9 @@ class Entity:
             self.sp[1] = self.sp[0]
 
 class Enemy(Entity):
-    def __init__(self, name:str, health: list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list, abilityList:dict, exp:list, lvl:int):
+    def __init__(self, name:str, health: int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list, abilityList:dict, exp:int, lvl:int):
         super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, abilityList)
-        self.exp = exp
+        self.exp = [exp,0]
         self.lvl = lvl
         self.isSummon = False
 
@@ -278,65 +286,70 @@ class Enemy(Entity):
 
     def becomeSummon(self):
         self.isSummon = True
+        self.name = "Summoned" + self.name
 
         return self
 
-    def levelUp(self):
+    def levelUp(self, hidden):
         self.lvl += 1
         self.exp[1] -= self.exp[0]
         self.exp[0] = floor(self.exp[0] * 1.1)
-        print(f"{self.name} has leveled up to level {self.lvl}!")
+
         self.health[1] += floor(self.health[0] * 1.1) - self.health[0]
         self.health[0] = floor(self.health[0] * 1.1)
         self.atk = floor(self.atk * 1.1)
         self.sp[1] += floor(self.sp[0] * 1.1) - self.sp[0]
         self.sp[0] = floor(self.sp[0] * 1.1)
-        if self.lvl in self.abilityList:
-            print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
-            print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
-            input = getch().lower()
-            while input != "y" and input != "n":
-                print("Invalid input", end="\r")
-                sleep(1)
-                print("\033[K")
+
+
+        if not hidden:
+            print(f"{self.name} has leveled up to level {self.lvl}!")
+            if self.lvl in self.abilityList:
+                print(f"{self.name} wants to learn {self.abilityList[self.lvl].name}")
+                print(f"Do you want to teach {self.name} {self.abilityList[self.lvl].name}? (y/n)")
                 input = getch().lower()
-            
-            if input == "y" and len(self.abilities) < 5:
-                print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
-                self.abilities.append(self.abilityList[self.lvl])
-            elif input == "y" and len(self.abilities) > 5:
-                print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
-                forget = getch.lower()
-                while forget != "y" and forget != "n":
+                while input != "y" and input != "n":
                     print("Invalid input", end="\r")
                     sleep(1)
                     print("\033[K")
-                    forget = getch().lower()
-                if forget == "y":
-                    for number, ability in enumerate(self.abilities):
-                        print(number+1, ability.name)
-                    print("What move do you want to forget?")
-                    num = int(getch())
-                    while num not in range(1,6):
+                    input = getch().lower()
+                
+                if input == "y" and len(self.abilities) < 5:
+                    print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
+                    self.abilities.append(self.abilityList[self.lvl])
+                elif input == "y" and len(self.abilities) > 5:
+                    print(f"{self.name} has too many abilities, do you want to forget an ability? (y/n)")
+                    forget = getch.lower()
+                    while forget != "y" and forget != "n":
                         print("Invalid input", end="\r")
                         sleep(1)
                         print("\033[K")
+                        forget = getch().lower()
+                    if forget == "y":
+                        for number, ability in enumerate(self.abilities):
+                            print(number+1, ability.name)
+                        print("What move do you want to forget?")
                         num = int(getch())
-                    print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
-                    self.abilities[num-1] = self.abilityList[self.lvl]
-            elif input == "n":
-                print(f"{self.name} gave up learning {self.abilityList[self.lvl].name}")
+                        while num not in range(1,6):
+                            print("Invalid input", end="\r")
+                            sleep(1)
+                            print("\033[K")
+                            num = int(getch())
+                        print(f"{self.name} has forgotten {self.abilities[num-1]} and learned {self.abilityList[self.lvl].name}!")
+                        self.abilities[num-1] = self.abilityList[self.lvl]
+                elif input == "n":
+                    print(f"{self.name} gave up learning {self.abilityList[self.lvl].name}")
+            else:
+                if self.lvl in self.abilityList:
+                    self.abilities.append(self.abilityList[self.lvl])
+                    if len(self.abilities) > 5:
+                        self.abilities.pop(0)
 
     def calculate_stats(self):
-        self.exp[0] = floor(self.exp[0] * 1.1**self.lvl)
-        self.health[0] = floor(self.health[0] * 1.1**self.lvl)
-        self.health[1] = self.health[0]
-        self.atk = floor(self.atk * 1.1**self.lvl)
-        self.sp[0] = floor(self.sp[0] * 1.1**self.lvl)
-        self.sp[1] = self.sp[0]
+        self.levelUp(True)
 
 class Player(Entity):
-    def __init__(self, name:str, health:list, weaknesses:list, weaknessBar:list, attack:int, speed:int, SP:list, abilities:list):
+    def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list):
         super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, {})
         self.inventory = []
         self.currentPos = [1,0]
