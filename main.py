@@ -99,7 +99,7 @@ class Game():
 
         mazes = [maze1, maze2, maze3, maze4, maze5]
         minigames = [colour, box, buckshot, slot, maths]
-        roomOrder = ["maze","maze","maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
+        roomOrder = ["maze","maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
         shuffle(roomOrder)
         shuffle(minigames)
 
@@ -108,6 +108,7 @@ class Game():
                 self.places.append(mazes.pop(0))
             else:
                 self.places.append(minigames.pop(0))
+        self.places.append(mazes.pop(0))
 
     def start(self):
         os.system("clear")
@@ -203,9 +204,10 @@ class Game():
         elif tutorial == "2":
             pass
 
-
+        
 
 
 
 game = Game()
+game.setup()
 game.start()
