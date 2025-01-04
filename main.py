@@ -218,11 +218,11 @@ class Game():
                 print("\033[K\033[F")
                 opt = getch()
             os.system("clear")
-        elif tutorial == "2":
-            pass
-        
+ 
         room = 1
         self.currentPlace = self.places[room-1]
+        secretCondition = []
+
         if type(self.currentPlace) is Maze:
             self.currentPlace.generate_maze(player)
             self.currentPlace.load_enemies()
@@ -230,7 +230,7 @@ class Game():
             self.currentPlace.load_npcs()
             self.currentPlace.load_explosives()
 
-        while player.health[1] > 0:
+        while player.health[1] > 0 and room <= 10:
             os.system("clear")
             print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\n")
             self.currentPlace.show_room()
@@ -240,6 +240,7 @@ class Game():
             elif direction == "q":
                 player.manage()
             elif direction in ["w","a","s","d"]:
+                secretCondition.append(direction)
                 player.move(direction, self.currentPlace)
             
             if self.currentPlace.room[-2][-1] == colored("@", 'red'):
@@ -257,6 +258,72 @@ class Game():
                     self.currentPlace.load_items()
                     self.currentPlace.load_npcs()
                     self.currentPlace.load_explosives()
+
+        os.system("clear")
+        if player.health <= 0:
+            dprint("You died")
+        elif player.reputation >= 50 and "wwssadad" not in ''.join(secretCondition):
+            dprint("That's it! The exit!")
+            dprint("What is that around the corner?")
+            dprint("A chest! Wow! You are so excited!")
+            dprint("You open the chest and it starts talking. Weird world. Says you the necromancer.")
+            dprint('Chest: "Oh so belated one, please accept this gift before you leave."')
+            dprint("Who are you to reject a gift from a talking treasure chest so of course you accept it.")
+            dprint("You walk out of the labyrinth with the power of the gods.")
+
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
+
+            print(pfg.figlet_format("Good Ending",font="larry3d"))
+        elif player.reputation < 50 and "wwssadad" not in ''.join(secretCondition):
+            dprint("That's it! The exit!")
+            dprint("What is that around the corner?")
+            dprint("A chest! Wow! You are so excited!")
+            dprint("You open the chest and it starts talking. Weird world. Says you the necromancer.")
+            dprint('Chest: "Oh so fiendish one, please accept this gift before you leave."')
+            dprint("Who are you to reject a gift from a talking treasure chest so of course you accept it.")
+            dprint("However, it was a trap!")
+            dprint("Shackled down with the light of the outside world within your reach.")
+            dprint("Guess this is it.")
+            dprint("Forever until the end of time, until the heat death of the universe, you stay lamenting.")
+
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
+
+            print(pfg.figlet_format("Bad Ending",font="larry3d"))
+        else:
+            dprint("That's it! The exit!")
+            dprint("What is that around the corner?")
+            dprint("A chest! Wow! You are so excited!")
+            dprint("You open the chest and it starts talking. Weird world. Says you the necromancer.")
+            dprint('Chest: "Oh so transcended one, please accept this gift before you leave."')
+            dprint("Who are you to reject a gift from a talking treasure chest so of course you accept it.")
+            dprint('Chest: "Look behind you"')
+            dprint("Another chest appears.")
+            dprint("Bleep. Bleep. Bleep.")
+            dprint("SO MANY CHESTS.")
+            dprint("Perhaps it was fate. Perhaps it was destiny.")
+            dprint("Those weirdos. They had a purpose, a reason.")
+            dprint("Swimming in treasure chests, this was your dream.")
+            dprint("Consumed by bliss, you drown in your own saliva.")
+
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
+
+            print(pfg.figlet_format("Secret Ending",font="larry3d"))
+
 
 def main():
     game = Game()

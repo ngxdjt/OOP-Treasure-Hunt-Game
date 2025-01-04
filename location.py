@@ -427,8 +427,6 @@ class Buckshot(Minigame):
             print("You win")
             print(f"You receive {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
-        else:
-            print("You died")
         
         print("\nPress space to continue")
         opt = getch()
