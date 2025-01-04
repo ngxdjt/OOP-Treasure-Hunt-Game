@@ -4,6 +4,8 @@ from item import *
 from ability import *
 from delayed_print import dprint
 import os
+# Remember to pip install the following:
+# termcolor, getch, pyfiglet
 
 class Game():
     def __init__(self):
@@ -148,7 +150,7 @@ class Game():
             dprint("This labyrinth comprises of two main rooms: mazes and minigames.")
             dprint("To move around, press w (up), a (left), s (down), and d (right).")
             dprint("To manage your player, press q.")
-            dprint("To place an explosive, press e, destroying adjacent cells and reducing your health by 20")
+            dprint("To place an explosive, press e.")
             dprint("The following is an example of a maze you might encounter:\n")
             exampleMaze = Maze(11, [], [], [])
             exampleMaze.generate_maze(player)
@@ -159,10 +161,10 @@ class Game():
             exampleMaze.show_room()
             print()
             dprint(f"{colored("@", 'red')} represents you, the player.")
-            dprint(f"{colored("E", 'light_magenta')} represents an enemy. When killing an enemy, you can either absorb or necromance it.")
-            dprint(f"{colored("I", 'light_blue')} represents an item. You can pick up and use items inside or outside of battle. You can only hold a maximum of 20 items.")
-            dprint(f"{colored("N", 'light_green')} represents an NPC. NPCs exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.")
-            dprint(f"{colored("e", 'light_yellow')} represents an explosive which can be picked up. The use will be explained shortly.\n")
+            dprint(f"{colored("E", 'light_magenta')} represents an enemy. When stepping on an enemy tile, you will be put into combat.")
+            dprint(f"{colored("I", 'light_blue')} represents an item. When stepping on an item tile, you pick up the item. They can be used inside or outside of combat. You can only hold a maximum of 20 items.")
+            dprint(f"{colored("N", 'light_green')} represents an NPC. When stepping on an NPC tile, you interact with an NPC to exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.")
+            dprint(f"{colored("e", 'light_yellow')} represents an explosive. When stepping on an explosive tile, you gain an explosive. On use you lose 20 health and destory adjacent tiles.\n")
 
             dprint("The following is an example of a minigame room you may encounter:\n")
             room = [["x", "x", "x", "x", "x"], 
@@ -174,8 +176,7 @@ class Game():
             for row in room:
                 print(' '.join(row))
             print()
-            dprint(f"{colored("@", 'red')} again represents you, the player.")
-            dprint(f"{colored("P", 'light_yellow')} represents the tile you step on to start the minigame.")
+            dprint(f"{colored("P", 'light_yellow')} represents the minigame. Stepping on a minigame tile will start the minigame.")
             dprint(f"You will always be able to skip minigames and move onto the next room, however you will miss out on a few rewards.")
             
             print("\nPress space to continue")
@@ -212,7 +213,7 @@ class Game():
             dprint("Summons attack in battle and can gain levels as you fight more enemies.")
             dprint("You may also swap your soul with summons at any time to swap your stats with their stats.")
             
-            print("\nPress space to continue")
+            print("\nPress space to get into the game!")
             opt = getch()
             while opt != " ":
                 print("\033[K\033[F")

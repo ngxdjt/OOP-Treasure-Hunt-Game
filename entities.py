@@ -577,7 +577,7 @@ class Player(Entity):
 
     def manage(self):
         os.system("clear")
-        print(f"{self.name}\nHealth: {self.health[1]}/{self.health[0]}\nWeaknesses: {", ".join(self.weaknesses)}\nAttack: {self.atk}\nSpeed: {self.speed}\nSP: {self.sp[0]}\nAbilities: {", ".join([x.name for x in self.abilities])}")
+        print(f"{self.name}\nHealth: {self.health[1]}/{self.health[0]}\nWeaknesses: {", ".join(self.weaknesses)}\nAttack: {self.atk}\nSpeed: {self.speed}\nSP: {self.sp[0]}\nAbilities: {", ".join([x.name for x in self.abilities])}\n")
         print("1: Manage abilities\n2: Manage Summons\n3: View Inventory")
         opt = getch()
         while opt != "1" and opt != "2" and opt != "3":
@@ -621,8 +621,8 @@ class Player(Entity):
                         pass
                     replace = getch()
                     os.system("clear")
-                    print(f"You have forgotten {self.abilities[forget-1].name} and learned {self.abilityList[replace].name}!")
-                    self.abilities[forget-1] = self.abilityList[replace]
+                print(f"You have forgotten {self.abilities[forget-1].name} and learned {self.abilityList[replace].name}!")
+                self.abilities[forget-1] = self.abilityList[replace]
             else:
                 os.system("clear")
                 for number, ability in enumerate(self.abilities):
