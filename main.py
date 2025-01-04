@@ -139,7 +139,7 @@ class Game():
         player = Player(name, 100, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 10, 20, 100, [Ability("Punch", 1, "Physical", 10, 10, 0)])
         os.system("clear")
 
-        print("Press 1 for the tutorial. Press 2 to skip it.")
+        print("Press 1 for the tutorial.\nPress 2 to skip the tutorial.")
         tutorial = getch()
         while tutorial != "1" and tutorial != "2":
             print("\033[K\033[F")

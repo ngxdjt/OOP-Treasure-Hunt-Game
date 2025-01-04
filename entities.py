@@ -646,7 +646,7 @@ class Player(Entity):
                     ability = getch()
 
                 os.system("clear")
-                print(f"Do you want to swap {self.abilities[ability-1].name} (1) or view its details (2)? (Press space to go back)")
+                print(f"Swap {self.abilities[ability-1].name} (1)\nView {self.abilities[ability-1].name} details (2)\n(Press space to go back)")
                 manage = getch()
                 if manage != " ":
                     while manage != "1" and manage != "2":
@@ -684,7 +684,7 @@ class Player(Entity):
             if self.summons:
                 for number, summon in enumerate(self.summons):
                     print(f"{number+1}:", summon.name)
-                print("\nWhat summon do you want to manage? (Press space to go back)")
+                print("\nWhat summon do you want to manage?\n(Press space to go back)")
                 manage = getch()
                 if manage != " ":
                     while True:
@@ -698,7 +698,7 @@ class Player(Entity):
                     os.system("clear")
                     print(self.summons[manage-1].show_details())
                     if len(self.summons[manage-1].abilities) > 5:
-                        print("\nDo you want to change a move (1) or Soul Swap (2)? (Press space to go back)")
+                        print("\nChange an ability (1)\nSoul Swap (2)\n(Press space to go back)")
                         change = getch()
                         while change != "1" and change != "2" and change != " ":
                             change = getch()
@@ -710,7 +710,7 @@ class Player(Entity):
                             self.change_soul(self.summon[manage-1])
                             self.summons.remove(self.summon[manage-1])
                     else:
-                        print("\nDo you want to Soul Swap (1) (Press space to go back)")
+                        print("\nDo you want to Soul Swap (1)\n(Press space to go back)")
                         swap = getch()
                         while swap != "1" and swap != " ":
                             swap = getch()
@@ -737,7 +737,7 @@ class Player(Entity):
                 for number, item in enumerate(self.inventory):
                     print(f"{number+1}:", item.name.capitalize())
                 
-                print("\nSelect an item (Press space to go back)")
+                print("\nSelect an item\n(Press space to go back)")
                 item = getch()
                 if item != " ":
                     while True:
@@ -750,7 +750,7 @@ class Player(Entity):
                         item = getch()
                     
                     os.system("clear")
-                    print(f"Do you want to use {self.inventory[item-1].name.capitalize()} (1) or view its details (2) or discard it (3)? (Press space to go back)")
+                    print(f"Use {self.inventory[item-1].name.capitalize()} (1)\nView {self.inventory[item-1].name.capitalize()} details (2)\nDiscard {self.inventory[item-1].name.capitalize()} (3)\n(Press space to go back)")
                     manage = getch()
                     if manage != " ":
                         while manage != "1" and manage != "2" and manage == "3":
