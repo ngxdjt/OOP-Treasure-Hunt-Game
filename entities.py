@@ -130,7 +130,7 @@ class Combat:
                             target = choice(turnOrder)
                             target = current.attack(target, move)
                             if target.isSummon and target.health[1] < 0:
-                                print(f"{target} has died.")
+                                print(f"{target.name} has died.")
                                 turnOrder.remove(target)
                                 self.player.summons.remove(target)
                             print("\nPress space to continue")
@@ -171,7 +171,7 @@ class Combat:
                 summon.exp[1] += self.exp
                 summon.weaknessBar[1] = summon.weaknessBar[0]
                 while summon.exp[1] > summon.exp[0]:
-                    summon.levelUp()
+                    summon.levelUp(False)
             print(f"You have defeated the {self.enemy.name}")
             if randint(1,10) == 1:
                 print(f"The {self.enemy.name} dropped a {self.item.name}")
@@ -452,14 +452,14 @@ class Player(Entity):
         if location.room[self.currentPos[0]][self.currentPos[1]] == colored("P", 'light_yellow'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\nReputation: {self.reputation}\n")
             location.show_room()
             sleep(0.5)
             self = location.play(self)
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("E", 'light_magenta'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\nReputation: {self.reputation}\n")
             location.show_room()
             sleep(0.5)
             enemy  = choice(location.enemyList)
@@ -471,7 +471,7 @@ class Player(Entity):
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\nReputation: {self.reputation}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
@@ -487,7 +487,7 @@ class Player(Entity):
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("N", 'light_green'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\nReputation: {self.reputation}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
@@ -543,22 +543,23 @@ class Player(Entity):
                     self.abilityList[len(self.abilityList)+1] = ability
         elif input == "n":
             print(f"You gave up learning {ability.name}")
-            if ability in self.abilityList.values():
+            if ability not in self.abilityList.values():
                 self.abilityList[len(self.abilityList)+1] = ability
 
     def absorb(self, enemy):
-        print(f"You absorbed the {enemy.name}")
+        print(f"You absorbed the {enemy.name}\n")
         self.weaknesses = enemy.weaknesses
+        print(f"+{floor(enemy.health[0]*0.25)} health")
+        print(f"+{floor(enemy.atk*0.25)} attack")
+        print(f"+{floor(enemy.speed*0.25)} speed")
+        print(f"+{floor(enemy.sp[0]*0.25)} sp\n")
+
         for ability in enemy.abilities:
             if ability not in self.abilityList.values() and randint(1,2) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully gained {ability.name}")
                 self.learn(ability)
-        print()
-        print(f"+{floor(enemy.health[0]*0.25)} health")
-        print(f"+{floor(enemy.atk*0.25)} attack")
-        print(f"+{floor(enemy.speed*0.25)} speed")
-        print(f"+{floor(enemy.sp[0]*0.25)} sp")
+
         self.health[0] += floor(enemy.health[0]*0.25)
         self.health[1] += floor(enemy.health[0]*0.25)
         self.atk += floor(enemy.atk*0.25)
@@ -730,7 +731,6 @@ class Player(Entity):
                 back = getch()
                 while back != " ":
                     back = getch()
-
         elif opt == "3":
             os.system("clear")
             if self.inventory:
