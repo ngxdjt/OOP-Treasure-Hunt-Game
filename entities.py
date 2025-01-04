@@ -151,9 +151,11 @@ class Combat:
                 opt = getch()
             os.system("clear")
         else:
-            os.system("clear")
-            self.player.alive = False
-            print("You died")
+            print("A fatal hit!")
+            print("\nPress space to go back")
+            back = getch()
+            while back != " ":
+                back = getch()
 
         return self.player, self.enemy
 
@@ -535,6 +537,7 @@ class Player(Entity):
             print(f"Your bag was too full and the {item.name} got lost")
 
     def use_item(self, item):
+        print(f"You used the {item.name.capitalize()}")
         if item.type == "healing":
             if self.health[1] + item.healing < self.health[0]:
                 print(f"You were healed by {item.healing}")
@@ -588,29 +591,29 @@ class Player(Entity):
             for number, ability in enumerate(self.abilities):
                 print(f"{number+1}:", ability.name)
 
-            print("\nDo you want to change a move (1) or view its details (2)?")
+            print("\nSelect an ability")
+            ability = getch()
+            while True:
+                try:
+                    ability = int(ability)
+                    if ability in range(1,len(self.abilities)+1):
+                        break
+                except:
+                    pass
+                ability = getch()
+
+            os.system("clear")
+            print(f"Do you want to swap {self.abilities[ability-1].name} (1) or view its details (2)")
             manage = getch()
             while manage != "1" and manage != "2":
                 manage = getch()
+            os.system("clear")
 
             if manage == "1":
                 os.system("clear")
-                for number, ability in enumerate(self.abilities):
-                    print(f"{number+1}:", ability.name)
-                print("\nWhat move do you want to forget?")
-                forget = getch()
-                while True:
-                    try:
-                        forget = int(forget)
-                        if forget in range(1,len(self.abilities)+1):
-                            break
-                    except:
-                        pass
-                    forget = getch()
-                os.system("clear")
                 for i in self.abilityList:
                     print(f"{i}:", self.abilityList[i].name)
-                print("\nWhat move do you want to replace it with?")
+                print(f"\nWhat move do you want to replace {self.abilities[ability-1].name} with?")
                 replace = getch()
                 while True:
                     try:
@@ -621,24 +624,12 @@ class Player(Entity):
                         pass
                     replace = getch()
                     os.system("clear")
-                print(f"You have forgotten {self.abilities[forget-1].name} and learned {self.abilityList[replace].name}!")
-                self.abilities[forget-1] = self.abilityList[replace]
-            else:
+
                 os.system("clear")
-                for number, ability in enumerate(self.abilities):
-                    print(f"{number+1}:", ability.name)
-                print("\nWhat move do you want to you want to view?")
-                view = getch()
-                while True:
-                    try:
-                        view = int(view)
-                        if view in range(1,len(self.abilities)+1):
-                            break
-                    except:
-                        pass
-                    view = getch()
-                os.system("clear")
-                print(self.abilities[view-1].show_info())
+                print(f"You have forgotten {self.abilities[ability-1].name} and learned {self.abilityList[replace].name}!")
+                self.abilities[ability-1] = self.abilityList[replace]
+            elif manage == "2":
+                print(self.abilities[ability-1].show_info())
             
             print("\nPress space to go back")
             back = getch()
@@ -694,7 +685,42 @@ class Player(Entity):
                 back = getch()
         elif opt == "3":
             os.system("clear")
-            print(f"Inventory: {', '.join(self.inventory)}")
+            if self.inventory:
+                for number, item in enumerate(self.inventory):
+                    print(f"{number+1}:", item.name.capitalize())
+                
+                print("\nSelect an item")
+                item = getch()
+                while True:
+                    try:
+                        item = int(item)
+                        if item in range(1,len(self.inventory)+1):
+                            break
+                    except:
+                        pass
+                    item = getch()
+                
+                os.system("clear")
+                print(f"Do you want to use {self.inventory[item-1].name.capitalize()} (1) or view its details (2) or discard it (3)?")
+                manage = getch()
+                while manage != "1" and manage != "2" and manage == "3":
+                    manage = getch()
+                
+                os.system("clear")
+                if manage == "1":
+                    if self.inventory[item-1].type == "Attack":
+                        print("Cannot use attack items outside of battle.")
+                    elif self.inventory[item-1].type == "Special":
+                        print("Cannot use special items outside of battle.")
+                    else:
+                        self.use_item(self.inventory.pop(item-1))
+                elif manage == "2":
+                    print(self.inventory[item-1].show_details())
+                elif manage == "3":
+                    print(f"You discarded {self.inventory.pop(item-1)}")
+
+            else:
+                print("Your inventory is empty!")
             print("\nPress space to go back")
             back = getch()
             while back != " ":

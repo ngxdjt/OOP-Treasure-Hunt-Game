@@ -57,17 +57,17 @@ class Game():
 
         # items
 
-        Potion = Item("potion", "healing", 50, 0)
-        superPotion = Item("super potion", "healing", 200, 0)
-        hyperPotion = Item("hyper potion", "healing", 500, 0)
+        Potion = Item("potion", "Healing", 50, 0)
+        superPotion = Item("super potion", "Healing", 200, 0)
+        hyperPotion = Item("hyper potion", "Healing", 500, 0)
 
-        Gummy = Item("gummy", "attack", 0, 20)
-        powderedGummy = Item("powdered gummy", "attack", 0, 50)
-        condensedGummy = Item("condensed gummy", "attack", 0, 200)
+        Gummy = Item("gummy", "Attack", 0, 20)
+        powderedGummy = Item("powdered gummy", "Attack", 0, 50)
+        condensedGummy = Item("condensed gummy", "Attack", 0, 200)
 
-        Pizza = Item("pizza", "special", 25, 10)
-        Banana = Item("banana", "special", 100, 30)
-        blackHole = Item("black hole", "special", 400, 400)
+        Pizza = Item("pizza", "Special", 25, 10)
+        Banana = Item("banana", "Special", 100, 30)
+        blackHole = Item("black hole", "Special", 400, 400)
 
         # npcs
 
@@ -162,7 +162,7 @@ class Game():
             print()
             dprint(f"{colored("@", 'red')} represents you, the player.")
             dprint(f"{colored("E", 'light_magenta')} represents an enemy. When stepping on an enemy tile, you will be put into combat.")
-            dprint(f"{colored("I", 'light_blue')} represents an item. When stepping on an item tile, you pick up the item. They can be used inside or outside of combat. You can only hold a maximum of 20 items.")
+            dprint(f"{colored("I", 'light_blue')} represents an item. When stepping on an item tile, you pick up the item. Healing items can be used inside or outside of combat. You can only hold a maximum of 20 items.")
             dprint(f"{colored("N", 'light_green')} represents an NPC. When stepping on an NPC tile, you interact with an NPC to exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.")
             dprint(f"{colored("e", 'light_yellow')} represents an explosive. When stepping on an explosive tile, you gain an explosive. On use you lose 20 health and destory adjacent tiles.\n")
 
@@ -207,7 +207,7 @@ class Game():
             dprint("Resting recovers 66& of your SP, however, you will take 1.5x more damage until your next turn.")
             dprint("Using an item allows you to access your inventory and use an item from it.")
             print()
-            dprint("After defeating an enemy, you can choose to either absorb or necromance it.")
+            dprint("After defeating an enemy, there is a 10% chance of an item dropping and you can choose to either absorb or necromance the enemy.")
             dprint("Absorbing adds a quarter of the ememy's stats to you and you have a 50% chance of gaining each of their abilities.")
             dprint("Necromancing consumes 20% of you max health but in exchange you get a summon with the exact stats of the enemy you just faced.")
             dprint("Summons attack in battle and can gain levels as you fight more enemies.")
