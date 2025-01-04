@@ -176,6 +176,7 @@ class BoxPush(Minigame):
 
         dprint("Push the boxes over the flames to put them out")
         dprint("Be careful as stepping on the flames will kill you")
+        dprint("If you make a mistake, press r to reset.")
         print("\nPress space to continue")
         opt = getch()
         while opt != " ":
@@ -194,7 +195,18 @@ class BoxPush(Minigame):
             os.system("clear")
             self.show_room()
             direction = getch()
-            player.move(direction, self)
+            if direction in ["w","a","s","d"]:
+                player.move(direction, self)
+            elif direction == "r":
+                self.room = [["x","x", "x", "x", "x", "x", "x"],
+                             ["x",colored("@", 'red'), " ", " ", " ", "'", "x"],
+                             ["x"," ", "#", " ", "'", "'", "x"],
+                             ["x"," ", " ", " ", " ", " ", "x"],
+                             ["x"," ", " ", "#", "#", " ", "x"],
+                             ["x"," ", " ", " ", " ", " ", "x"],
+                             ["x","x", "x", "x", "x", "x", "x"]
+                            ]
+                self.player.currentPos = [1,1]
             os.system("clear")
             self.show_room()
 

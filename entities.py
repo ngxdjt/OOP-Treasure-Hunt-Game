@@ -104,7 +104,7 @@ class Combat:
                         else:
                             target = choice(turnOrder)
                             target = current.attack(target, move)
-                            if target.isSummon and target.health < 0:
+                            if target.isSummon and target.health[1] < 0:
                                 print(f"{target} has died.")
                                 turnOrder.remove(target)
                                 self.player.summons.remove(target)
@@ -144,7 +144,7 @@ class Combat:
             if input == "1":
                 self.player.absorb(self.enemy)
             elif input == "2":
-                self.player.necromance(self.enemy.becomeSummon())
+                self.player.necromance(self.enemy)
             print("\nPress space to continue")
             opt = getch()
             while opt != " ":
@@ -514,6 +514,7 @@ class Player(Entity):
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"You have successfully gained {ability.name}")
                 self.learn(ability)
+        print()
         print(f"+{floor(enemy.health[0]*0.25)} health")
         print(f"+{floor(enemy.atk*0.25)} attack")
         print(f"+{floor(enemy.speed*0.25)} speed")
@@ -527,8 +528,7 @@ class Player(Entity):
     def necromance(self, enemy):
         print(f"You have lost {floor(self.health[0]*0.2)} health to necromance the {enemy.name}")
         self.health[1] -= floor(self.health[0]*0.2)
-        enemy.becomeSummon()
-        self.summons.append(enemy)
+        self.summons.append(enemy.becomeSummon())
 
     def add_item(self, item):
         if len(self.inventory) < 20:
