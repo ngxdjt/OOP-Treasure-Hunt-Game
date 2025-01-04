@@ -792,7 +792,7 @@ class NPC:
         name = choice(self.names)
         if player.reputation >= 30:
             dprint(f'{name}: "{self.intro}"')
-            dprint(f"{name} is offering a {self.reward.name} for {self.cost} health")
+            print(f"{name} is offering a {self.reward.name} for {self.cost} health")
             print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
             option = getch()
             while option != "1" and option != "2" and option != "3":
