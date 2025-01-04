@@ -140,6 +140,7 @@ class Combat:
             input = getch()
             while input != "1" and input != "2":
                 input = getch()
+            os.system("clear")
             if input == "1":
                 self.player.absorb(self.enemy)
             elif input == "2":
@@ -538,17 +539,17 @@ class Player(Entity):
 
     def use_item(self, item):
         print(f"You used the {item.name.capitalize()}")
-        if item.type == "healing":
+        if item.type == "Healing":
             if self.health[1] + item.healing < self.health[0]:
                 print(f"You were healed by {item.healing}")
                 self.health[1] += item.healing
             else:
                 print(f"You were healed by {self.health[0]-self.health[1]}")
                 self.health[1] = self.health[0]
-        elif item.type == "attack":
+        elif item.type == "Attack":
             print(f"Your attack was increased by {item.attack}")
             self.atk += item.attack
-        elif item.type == "special":
+        elif item.type == "Special":
             if self.health[1] + item.healing < self.health[0]:
                 print(f"You were healed by {item.healing} and attack increased by {item.attack}")
                 self.health[1] += item.healing
