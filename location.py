@@ -60,7 +60,7 @@ class Maze(Location):
             self.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
     
     def load_enemies(self):
-        for enemy in self.enemy.list:
+        for enemy in self.enemyList:
             for i in range(floor(self.roomNumber**1.8)):
                 enemy.levelUp(True)
         for i in range(self.size*7):
@@ -119,7 +119,7 @@ class Minigame(Location):
 
 class ColourSwitch(Minigame):
     def __init__(self):
-        super().__init__((100, 5))
+        super().__init__((100, 10))
 
     def play(self, player):
         os.system("clear")
@@ -144,13 +144,18 @@ class ColourSwitch(Minigame):
             os.system("clear")
             print(f"You reacted too slowly and lost {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
-            sleep(2)
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
 
         return player
 
 class BoxPush(Minigame):
     def __init__(self):
-        super().__init__((40, 40))
+        super().__init__((50, 75))
         
     def play(self, player):
         self.room = [["x","x", "x", "x", "x", "x", "x"],
@@ -171,7 +176,11 @@ class BoxPush(Minigame):
 
         dprint("Push the boxes over the flames to put them out")
         dprint("Be careful as stepping on the flames will kill you")
-        sleep(2)
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
         os.system("clear")
 
         while any("'" in row for row in self.room):
@@ -206,7 +215,12 @@ class BoxPush(Minigame):
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
             player.currentPos = [1,2]
-            sleep(2)
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
 
         self.room = [["x", "x", "x", "x", "x"], 
                      [" ", " ", colored("@", 'red'), " ", "x"], 
@@ -219,7 +233,7 @@ class BoxPush(Minigame):
     
 class Buckshot(Minigame):
     def __init__(self):
-        super().__init__((200, 30))
+        super().__init__((200, 35))
 
     def play(self, player):
         os.system("clear")
@@ -232,7 +246,11 @@ class Buckshot(Minigame):
         dprint("There will always be at least 1 live round and 1 blank round")
         dprint("If you shoot yourself and it is a blank round, you gain an extra turn")
         dprint("Use items to gain an advantage over the dealer")
-        sleep(2)
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
         os.system("clear")
 
         shells = randint(2,8)
@@ -331,6 +349,7 @@ class Buckshot(Minigame):
                         break
                     elif shell == "blank":
                         print("\033[F\033[KYou shot a blank")
+                        sleep(2)
                         continue
                 
                 if shoot == "2":
@@ -408,10 +427,15 @@ class Buckshot(Minigame):
             print("You win")
             print(f"You receive {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
-            sleep(2)
         else:
             print("You died")
-            sleep(2)
+        
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
+        os.system("clear")
 
         return player
 
@@ -430,7 +454,11 @@ class Slot(Minigame):
         dprint("Getting 3 in a row will double all your stats")
         dprint("Getting 4 in a row will triple all your stats")
         dprint("Getting 5 in a row will quadruple all your stats")
-        sleep(2)
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
         os.system("clear")
 
         print(f"Current Health: {player.health[1]}/{player.health[0]}")
@@ -635,7 +663,7 @@ class Slot(Minigame):
 
 class Maths(Minigame):
     def __init__(self):
-        super().__init__((50, 100))
+        super().__init__((150, 20))
 
     def play(self, player):
         os.system("clear")
@@ -645,7 +673,12 @@ class Maths(Minigame):
 
         dprint("You will be presented with a multiplication problem with 5 seconds to solve it")
         dprint("You will only be given one attempt")
-        sleep(3)
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
+        os.system("clear")
         
         os.system("clear")
 
@@ -670,17 +703,21 @@ class Maths(Minigame):
             print("You got it right!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
-            sleep(2)
         elif end-start >= 5:
             print("You took too long")
             print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
-            sleep(2)
         else:
             print("You got it wrong")
             print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
-            sleep(2)
+
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
+            opt = getch()
+        os.system("clear")
 
         return player
 

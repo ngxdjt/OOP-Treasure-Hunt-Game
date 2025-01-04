@@ -17,23 +17,23 @@ class Game():
         Fireball = Ability("Fireball", 0.8, "Fire", 25, 20, 0)
         FrostBeam = Ability("Frost Beam", 0.7, "Ice", 20, 15, 0)
         Thunderbolt = Ability("Thunderbolt", 0.65, "Lightning", 10, 10, 0)
-        StrongAroma = Ability("Strong Aroma", 0.55, "Wind", 5, 15, -5)
+        StrongAroma = Ability("Strong Aroma", 0.55, "Wind", 5, 15, -2)
 
         # Middle abilities
 
         Tackle = Ability("Tackle", 1, "Physical", 15, 15, 0)
-        Incinerate = Ability("Incinerate", 1.3, "Fire", 35, 30, 5)
+        Incinerate = Ability("Incinerate", 1.3, "Fire", 35, 30, 2)
         Cryokinesis = Ability("Cryokinesis", 1.15, "Ice", 30, 20, 0)
         Thunderstorm = Ability("Thunderstorm", 1.1, "Lightning", 30, 15, 0)
-        PurifyingWind = Ability("Purifying Wind", 0.9, "Wind", 20, 20, -15)
+        PurifyingWind = Ability("Purifying Wind", 0.9, "Wind", 20, 20, -10)
 
         # Late abilities
 
-        UnrelentingBarrage = Ability("Unrelenting Barrage", 2.5, "Physical", 50, 50, 25)
-        ScorchingRage = Ability("Scorching Rage", 2.2, "Fire", 45, 40, 10)
+        UnrelentingBarrage = Ability("Unrelenting Barrage", 2.5, "Physical", 50, 50, 15)
+        ScorchingRage = Ability("Scorching Rage", 2.2, "Fire", 45, 40, 5)
         ColdShoulder = Ability("Cold Shoulder", 1.75, "Ice", 50, 35, 0)
         ElectrifyingPassion = Ability("Electrifying Passion", 1.55, "Lightning", 40, 20, 0)
-        PungentOdour = Ability("Pungent Odour", 1.85, "Wind", 55, 30, 15)
+        PungentOdour = Ability("Pungent Odour", 1.85, "Wind", 55, 30, 10)
 
         # Base Enemy (name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, abilityList, exp, lvl)
 
@@ -79,7 +79,7 @@ class Game():
 
         bestPotionSeller = NPC(["Eddie", "Kieran", "Dora", "Iona", "Aaryan"], 75, hyperPotion, 250, "This is a one of the kind")
         condensedDrugDealer = NPC(["Jose", "Myah", "Hashim", "Olivia", "Macauley"], 10, condensedGummy, 100, "I've got the real deal")
-        god = NPC(["Andre", "Faye", "Ffion", "Katie", "Cameron"], 150, blackHole, 200, "I am god")
+        god = NPC(["Andre", "Faye", "Ffion", "Josiah", "Cameron"], 150, blackHole, 200, "I am god")
 
         # places
 
@@ -98,17 +98,17 @@ class Game():
         # rooms
 
         mazes = [maze1, maze2, maze3, maze4, maze5]
-        minigames = [colour, box, buckshot, slot, maths]
-        roomOrder = ["maze","maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
+        minigames = [colour, maths, box, buckshot, slot]
+        roomOrder = ["maze","maze","maze","minigame","minigame","minigame","minigame","minigame"]
         shuffle(roomOrder)
-        shuffle(minigames)
 
+        self.places.append(mazes.pop(0))
         for room in roomOrder:
             if room == "maze":
                 self.places.append(mazes.pop(0))
             else:
                 self.places.append(minigames.pop(0))
-        self.places.append(mazes.pop(0))
+        self.places.append(mazes.pop(-1))
 
     def start(self):
         os.system("clear")
@@ -134,7 +134,7 @@ class Game():
             opt = getch()
         os.system("clear")
         name = input("Enter your name: ")
-        player = Player(name, 100, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 10, 20, 100, [Ability("Punch", 0.5, "Physical", 10, 10, 0)])
+        player = Player(name, 100, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 10, 20, 100, [Ability("Punch", 1, "Physical", 10, 10, 0)])
         os.system("clear")
 
         print("Press 1 for the tutorial. Press 2 to skip it.")
@@ -158,11 +158,11 @@ class Game():
             exampleMaze.load_explosives()
             exampleMaze.show_room()
             print()
-            dprint(f"The {colored("@", 'red')} represents you, the player.")
-            dprint(f"The {colored("E", 'light_magenta')} represents an enemy. When killing an enemy, you can either absorb or necromance it.")
-            dprint(f"The {colored("I", 'light_blue')} represents an item. You can pick up and use items inside or outside of battle. You can only hold a maximum of 20 items.")
-            dprint(f"The {colored("N", 'light_green')} represents an NPC. NPCs exchange items for your health. You can also kill them to gain the item at the expense of your reputation.\n")
-            dprint(f"The {colored("e", 'light_yellow')} represents an explosive which can be picked up. The use will be explained shortly")
+            dprint(f"{colored("@", 'red')} represents you, the player.")
+            dprint(f"{colored("E", 'light_magenta')} represents an enemy. When killing an enemy, you can either absorb or necromance it.")
+            dprint(f"{colored("I", 'light_blue')} represents an item. You can pick up and use items inside or outside of battle. You can only hold a maximum of 20 items.")
+            dprint(f"{colored("N", 'light_green')} represents an NPC. NPCs exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.")
+            dprint(f"{colored("e", 'light_yellow')} represents an explosive which can be picked up. The use will be explained shortly.\n")
 
             dprint("The following is an example of a minigame room you may encounter:\n")
             room = [["x", "x", "x", "x", "x"], 
@@ -174,9 +174,9 @@ class Game():
             for row in room:
                 print(' '.join(row))
             print()
-            dprint(f"The {colored("@", 'red')} again represents you, the player.")
-            dprint(f"The {colored("P", 'light_yellow')} represents the tile you step on to start the minigame.")
-            dprint(f"You will always be able to skip minigames and move onto the next room, however you may miss out on a few rewards.")
+            dprint(f"{colored("@", 'red')} again represents you, the player.")
+            dprint(f"{colored("P", 'light_yellow')} represents the tile you step on to start the minigame.")
+            dprint(f"You will always be able to skip minigames and move onto the next room, however you will miss out on a few rewards.")
             
             print("\nPress space to continue")
             opt = getch()
@@ -205,6 +205,12 @@ class Game():
             dprint("Waiting recovers 33% of your SP.")
             dprint("Resting recovers 66& of your SP, however, you will take 1.5x more damage until your next turn.")
             dprint("Using an item allows you to access your inventory and use an item from it.")
+            print()
+            dprint("After defeating an enemy, you can choose to either absorb or necromance it.")
+            dprint("Absorbing adds a quarter of the ememy's stats to you and you have a 50% chance of gaining each of their abilities.")
+            dprint("Necromancing consumes 20% of you max health but in exchange you get a summon with the exact stats of the enemy you just faced.")
+            dprint("Summons attack in battle and can gain levels as you fight more enemies.")
+            dprint("You may also swap your soul with summons at any time to swap your stats with their stats.")
             
             print("\nPress space to continue")
             opt = getch()
@@ -217,10 +223,16 @@ class Game():
         
         room = 1
         self.currentPlace = self.places[room-1]
+        if type(self.currentPlace) is Maze:
+            self.currentPlace.generate_maze(player)
+            self.currentPlace.load_enemies()
+            self.currentPlace.load_items()
+            self.currentPlace.load_npcs()
+            self.currentPlace.load_explosives()
 
         while player.health[1] > 0:
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {player.health[1]}/{player.health[0]}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\n")
             self.currentPlace.show_room()
             direction = getch()
             if direction == "e":
@@ -232,7 +244,7 @@ class Game():
             
             if self.currentPlace.room[-2][-1] == colored("@", 'red'):
                 os.system("clear")
-                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {player.health[1]}/{player.health[0]}\n")
+                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\n")
                 self.currentPlace.show_room()
                 sleep(0.5)
                 room += 1
@@ -246,7 +258,10 @@ class Game():
                     self.currentPlace.load_npcs()
                     self.currentPlace.load_explosives()
 
+def main():
+    game = Game()
+    game.setup()
+    game.start()
 
-game = Game()
-game.setup()
-game.start()
+if __name__ == '__main__':
+    main()

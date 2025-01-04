@@ -6,6 +6,7 @@ from termcolor import colored
 from item import Item
 import os
 from delayed_print import dprint
+from copy import deepcopy
 
 class Combat:
     def __init__(self, player, enemy, item):
@@ -50,7 +51,7 @@ class Combat:
                 show_info()
                 if action == "1":
                     for number, ability in enumerate(current.abilities):
-                        print(f"{number+1}: {ability.name} (Damage: {floor(ability.multiplier*self.player.atk)}) (SP: {ability.cost}) ")
+                        print(f"{number+1}: {ability.name} (Damage: {floor(ability.multiplier*self.player.atk)}) (Type: {ability.type}) (SP: {ability.cost}) ")
                     print("What move do you want to use?")
                     num = getch()
                     while True:
@@ -103,6 +104,10 @@ class Combat:
                         else:
                             target = choice(turnOrder)
                             target = current.attack(target, move)
+                            if target.isSummon and target.health < 0:
+                                print(f"{target} has died.")
+                                turnOrder.remove(target)
+                                self.player.summons.remove(target)
                             sleep(1.5)
                             break
                 else:
@@ -137,10 +142,14 @@ class Combat:
                 input = getch()
             if input == "1":
                 self.player.absorb(self.enemy)
-                sleep(1)
             elif input == "2":
-                self.player.necromance(self.enemy)
-                sleep(1)
+                self.player.necromance(self.enemy.becomeSummon())
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
         else:
             os.system("clear")
             self.player.alive = False
@@ -268,8 +277,11 @@ class Enemy(Entity):
             print(f"{self.name} gave up learning {available[num-1].name}")
 
     def becomeSummon(self):
-        self.isSummon = True
-        self.name = "Summoned " + self.name
+        summon = deepcopy(self)
+        summon.isSummon = True
+        summon.name = "Summoned " + summon.name
+
+        return summon
 
     def levelUp(self, hidden):
         self.lvl += 1
@@ -345,6 +357,7 @@ class Player(Entity):
         self.reputation = 50
         self.alive = True
         self.explosives = 1
+        self.isSummon = False
 
     def move(self, direction, location):
         location.room[self.currentPos[0]][self.currentPos[1]] = " "
@@ -396,14 +409,14 @@ class Player(Entity):
         if location.room[self.currentPos[0]][self.currentPos[1]] == colored("P", 'light_yellow'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
             location.show_room()
             sleep(0.5)
             self = location.play(self)
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("E", 'light_magenta'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
             location.show_room()
             sleep(0.5)
             enemy  = choice(location.enemyList)
@@ -415,32 +428,39 @@ class Player(Entity):
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
             item = choice(location.itemList)
             print(f"You picked up a {item.name}")
             self.add_item(item)
-            sleep(1)
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("N", 'light_green'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
-            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {self.health[1]}/{self.health[0]}\nExplosives: {self.explosives}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
             if location.npcList:
                 npc = choice(location.npcList)
                 self = npc.interact(self, location)
-                sleep(1)
             else:
                 print("You killed everyone on this floor")
-                sleep(1)
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("e", 'light_yellow'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
-            os.system("clear")
-            print("You picked up an explosive")
             self.explosives += 1
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
@@ -487,9 +507,10 @@ class Player(Entity):
         print(f"You absorbed the {enemy.name}")
         self.weaknesses = enemy.weaknesses
         for ability in enemy.abilities:
-            if ability not in self.abilityList.values() and randint(1,4) == 1:
+            if ability not in self.abilityList.values() and randint(1,2) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
-                print(f"You have successfully learned {ability.name}")
+                print(f"You have successfully gained {ability.name}")
+                self.learn(ability)
         print(f"+{floor(enemy.health[0]*0.25)} health")
         print(f"+{floor(enemy.atk*0.25)} attack")
         print(f"+{floor(enemy.speed*0.25)} speed")
@@ -501,8 +522,8 @@ class Player(Entity):
         self.sp[0] += floor(enemy.sp[0]*0.25)
 
     def necromance(self, enemy):
-        print(f"You have lost {floor(self.health[0]*0.33)} health to necromance the {enemy.name}")
-        self.health[1] -= floor(self.health[0]*0.33)
+        print(f"You have lost {floor(self.health[0]*0.2)} health to necromance the {enemy.name}")
+        self.health[1] -= floor(self.health[0]*0.2)
         enemy.becomeSummon()
         self.summons.append(enemy)
 
@@ -556,8 +577,8 @@ class Player(Entity):
 
     def manage(self):
         os.system("clear")
+        print(f"{self.name}\nHealth: {self.health[1]}/{self.health[0]}\nWeaknesses: {", ".join(self.weaknesses)}\nAttack: {self.atk}\nSpeed: {self.speed}\nSP: {self.sp[0]}\nAbilities: {", ".join([x.name for x in self.abilities])}")
         print("1: Manage abilities\n2: Manage Summons\n3: View Inventory")
-        print(f"")
         opt = getch()
         while opt != "1" and opt != "2" and opt != "3":
             opt = getch()
@@ -703,14 +724,13 @@ class NPC:
                 print(f"+{self.reputation//2} reputation")
                 player.health[1] -= self.cost
                 player.reputation += self.reputation//2
-                if player.reputation > 100:
-                    player.reputation = 100
                 player.add_item(self.reward)
             elif option == "2":
                 print("You declined the offer")
             elif option == "3":
                 print(f"You killed {name}")
-                print(f"-{self.reputation} reputation")
+                print(f"-{self.reputation//2} reputation")
+                player.reputation -= self.reputation//2
                 if player.reputation < 0:
                     player.reputation = 0
                 player.add_item(self.reward)
