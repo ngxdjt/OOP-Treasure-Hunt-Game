@@ -538,7 +538,7 @@ class Player(Entity):
             print(f"Your bag was too full and the {item.name} got lost")
 
     def use_item(self, item):
-        print(f"You used the {item.name.capitalize()}")
+        print(f"You used the {item.name}")
         if item.type == "Healing":
             if self.health[1] + item.healing < self.health[0]:
                 print(f"You were healed by {item.healing}")
