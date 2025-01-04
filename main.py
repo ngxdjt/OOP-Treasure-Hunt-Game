@@ -155,12 +155,14 @@ class Game():
             exampleMaze.load_enemies()
             exampleMaze.load_items()
             exampleMaze.load_npcs()
+            exampleMaze.load_explosives()
             exampleMaze.show_room()
             print()
             dprint(f"The {colored("@", 'red')} represents you, the player.")
             dprint(f"The {colored("E", 'light_magenta')} represents an enemy. When killing an enemy, you can either absorb or necromance it.")
             dprint(f"The {colored("I", 'light_blue')} represents an item. You can pick up and use items inside or outside of battle. You can only hold a maximum of 20 items.")
             dprint(f"The {colored("N", 'light_green')} represents an NPC. NPCs exchange items for your health. You can also kill them to gain the item at the expense of your reputation.\n")
+            dprint(f"The {colored("e", 'light_yellow')} represents an explosive which can be picked up. The use will be explained shortly")
 
             dprint("The following is an example of a minigame room you may encounter:\n")
             room = [["x", "x", "x", "x", "x"], 
@@ -197,6 +199,12 @@ class Game():
             dprint("The break damage is how much damage the ability does to the target's weakness bar which can lead to breaks.")
             dprint("The SP cost is the amount of SP the ability takes to use.")
             dprint("The recoil is the percentage of your max health you lose (or gain if negative) upon using the ability.")
+            print()
+            dprint("During you turn you have four actions: attack, wait, rest, use item.")
+            dprint("Attacking allows you to use a move on the enemy.")
+            dprint("Waiting recovers 33% of your SP.")
+            dprint("Resting recovers 66& of your SP, however, you will take 1.5x more damage until your next turn.")
+            dprint("Using an item allows you to access your inventory and use an item from it.")
             
             print("\nPress space to continue")
             opt = getch()
@@ -207,18 +215,36 @@ class Game():
         elif tutorial == "2":
             pass
         
-        room = 0
+        room = 1
+        self.currentPlace = self.places[room-1]
 
         while player.health[1] > 0:
-            self.currentPlace = self.places[room]
             os.system("clear")
-            print("Controls: Movement (wasd), Place Explosive (e), Manage Player (q)")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {player.health[1]}/{player.health[0]}\n")
             self.currentPlace.show_room()
             direction = getch()
             if direction == "e":
                 player.place_explosive(self.currentPlace)
+            elif direction == "q":
+                player.manage()
             elif direction in ["w","a","s","d"]:
                 player.move(direction, self.currentPlace)
+            
+            if self.currentPlace.room[-2][-1] == colored("@", 'red'):
+                os.system("clear")
+                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {player.health[1]}/{player.health[0]}\n")
+                self.currentPlace.show_room()
+                sleep(0.5)
+                room += 1
+                player.currentPos = [1,0]
+                self.currentPlace = self.places[room-1]
+                self.currentPlace.roomNumber = room
+                if type(self.currentPlace) is Maze:
+                    self.currentPlace.generate_maze(player)
+                    self.currentPlace.load_enemies()
+                    self.currentPlace.load_items()
+                    self.currentPlace.load_npcs()
+                    self.currentPlace.load_explosives()
 
 
 game = Game()

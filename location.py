@@ -60,8 +60,8 @@ class Maze(Location):
             self.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
     
     def load_enemies(self):
-        for i in range(floor(self.roomNumber**1.8)):
-            for enemy in self.enemyList:
+        for enemy in self.enemy.list:
+            for i in range(floor(self.roomNumber**1.8)):
                 enemy.levelUp(True)
         for i in range(self.size*7):
             y = randint(1, self.size-1)
@@ -82,6 +82,13 @@ class Maze(Location):
             x = randint(1, self.size-1)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("N", 'light_green')
+
+    def load_explosives(self):
+        for i in range(self.size*7):
+            y = randint(1, self.size-1)
+            x = randint(1, self.size-1)
+            if randint(1, 25) == 1 and self.room[y][x] == " ":
+                self.room[y][x] = colored("e", 'light_yellow')
 
 class Minigame(Location):
     def __init__(self, reward:tuple):
@@ -104,6 +111,9 @@ class Minigame(Location):
         player.atk -= self.reward[1]
         player.health[0] -= self.reward[0]
         player.health[1] -= self.reward[0]
+
+        if player.atk <= 0:
+            player.atk = 1
 
         return player
 
@@ -251,7 +261,7 @@ class Buckshot(Minigame):
         playerItemUsed = None
         dealerShoot = None
 
-        while shells > 0 and player.health[1] > 0 and dealerShoot != "s":
+        while shells > 0 and player.health[1] > 0:
             os.system("clear")
             show_details()
 
@@ -365,7 +375,7 @@ class Buckshot(Minigame):
                 elif dealerKnows == "blank":
                     print("The dealer shot themself")
                     sleep(2)
-                    print("\033[FThe dealer shot a blank")
+                    print("\033[FThe dealer shot a blank  ")
                     dealerShoot = "s"
                     sleep(2)
                 elif randint(1,2) == 1:

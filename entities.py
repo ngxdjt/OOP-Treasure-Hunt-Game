@@ -22,12 +22,12 @@ class Combat:
 
         def show_info():
             print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
-            print(f"SP {self.player.sp[1]}/{self.player.sp[0]}")
-            print(f"Weakness {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
+            print(f"SP: {self.player.sp[1]}/{self.player.sp[0]}")
+            print(f"Weakness: {self.player.weaknessBar[1]}/{self.player.weaknessBar[0]}")
             print()
             print(f"Enemy Health: {self.enemy.health[1]}/{self.enemy.health[0]}")
-            print(f"Enemy SP {self.enemy.sp[1]}/{self.enemy.sp[0]}")
-            print(f"Enemy Weakness {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
+            print(f"Enemy SP: {self.enemy.sp[1]}/{self.enemy.sp[0]}")
+            print(f"Enemy Weakness: {self.enemy.weaknessBar[1]}/{self.enemy.weaknessBar[0]}")
             print()
 
 
@@ -50,7 +50,7 @@ class Combat:
                 show_info()
                 if action == "1":
                     for number, ability in enumerate(current.abilities):
-                        print(f"{number+1} {ability.name} (SP: {ability.cost})")
+                        print(f"{number+1}: {ability.name} (Damage: {floor(ability.multiplier*self.player.atk)}) (SP: {ability.cost}) ")
                     print("What move do you want to use?")
                     num = getch()
                     while True:
@@ -64,17 +64,17 @@ class Combat:
                     os.system("clear")
                     show_info()
                     self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
-                    sleep(1)
+                    sleep(1.5)
                 elif action == "2":
                     self.player.wait()
-                    sleep(1)
+                    sleep(1.5)
                 elif action == "3":
                     self.player.rest()
-                    sleep(1)
+                    sleep(1.5)
                 elif action == "4":
                     if len(self.player.inventory) > 0:
                         for number, item in enumerate(current.inventory):
-                            print(number+1, item.name)
+                            print(f"{number+1}:", item.name)
                         print("What item do you want to use?")
                         num = getch()
                         while True:
@@ -91,27 +91,27 @@ class Combat:
                         current.use_item(self.player.inventory.pop(num-1))
                     else:
                         print("Your inventory is empty")
-                    sleep(1)
+                    sleep(1.5)
             else:
                 shuffle(current.abilities)
                 for move in current.abilities:
                     if move.cost <= current.sp[1]:
                         if current.isSummon:
                             self.enemy = current.attack(self.enemy, move)
-                            sleep(1)
+                            sleep(1.5)
                             break
                         else:
                             target = choice(turnOrder)
                             target = current.attack(target, move)
-                            sleep(1)
+                            sleep(1.5)
                             break
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
                         current.rest()
-                        sleep(1)
+                        sleep(1.5)
                     else:
                         current.wait()
-                        sleep(1)
+                        sleep(1.5)
 
             turnOrder.append(current)
 
@@ -235,7 +235,7 @@ class Enemy(Entity):
         num = getch()
         while True:
             try:
-                num = int(fMove)
+                num = int(num)
                 if num in range(len(available)+1):
                     break
             except:
@@ -252,7 +252,7 @@ class Enemy(Entity):
             if forget == "y":
                 for number, ability in enumerate(self.abilities):
                     print(number+1, ability.name)
-                print("What move do you want to forget?")
+                print(f"What move does {self.name} want to forget?")
                 fMove = getch()
                 while True:
                     try:
@@ -262,20 +262,20 @@ class Enemy(Entity):
                     except:
                         pass
                     fMove = getch()
-                print(f"You have forgotten {self.abilities[fMove-1]} and learned {available[num-1].name}!")
+                print(f"{self.name} has forgotten {self.abilities[fMove-1]} and learned {available[num-1].name}!")
                 self.abilities[fMove-1] = available[num-1].name
         elif input == "n":
             print(f"{self.name} gave up learning {available[num-1].name}")
 
     def becomeSummon(self):
         self.isSummon = True
-        self.name = "Summoned" + self.name
-
-        return self
+        self.name = "Summoned " + self.name
 
     def levelUp(self, hidden):
         self.lvl += 1
         self.exp[1] -= self.exp[0]
+        if self.exp[1] < 0:
+            self.exp[1] = 0
         self.exp[0] = floor(self.exp[0] * 1.1)
 
         self.health[1] += floor(self.health[0] * 1.05) - self.health[0]
@@ -306,7 +306,7 @@ class Enemy(Entity):
                         if forget == "y":
                             for number, ability in enumerate(self.abilities):
                                 print(number+1, ability.name)
-                            print("What move do you want to forget?")
+                            print(f"\nWhat move does {self.name} want to forget?")
                             num = getch()
                             while True:
                                 try:
@@ -333,6 +333,9 @@ class Enemy(Entity):
         for i in range(self.lvl-1):
             self.levelUp(True)
 
+    def show_details(self):
+        return f"Name: {self.name}\nHealth: {self.health[1]}/{self.health[0]}\nWeaknesses: {", ".join(self.weaknesses)}\nAttack: {self.atk}\nSpeed: {self.speed}\nSP: {self.sp[0]}\nAbilities: {", ".join([x.name for x in self.abilities])}\nlvl: {self.lvl} ({self.exp[1]}/{self.exp[0]})"
+
 class Player(Entity):
     def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list):
         super().__init__(name, health, weaknesses, weaknessBar, attack, speed, SP, abilities, {1: abilities[0]})
@@ -341,7 +344,7 @@ class Player(Entity):
         self.summons = []
         self.reputation = 50
         self.alive = True
-        self.explosives = 0
+        self.explosives = 1
 
     def move(self, direction, location):
         location.room[self.currentPos[0]][self.currentPos[1]] = " "
@@ -393,12 +396,14 @@ class Player(Entity):
         if location.room[self.currentPos[0]][self.currentPos[1]] == colored("P", 'light_yellow'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
             location.show_room()
             sleep(0.5)
             self = location.play(self)
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("E", 'light_magenta'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
             location.show_room()
             sleep(0.5)
             enemy  = choice(location.enemyList)
@@ -410,6 +415,7 @@ class Player(Entity):
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
@@ -420,6 +426,7 @@ class Player(Entity):
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("N", 'light_green'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
+            print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nCurrent Health {self.health[1]}/{self.health[0]}\n")
             location.show_room()
             sleep(0.5)
             os.system("clear")
@@ -430,6 +437,11 @@ class Player(Entity):
             else:
                 print("You killed everyone on this floor")
                 sleep(1)
+        elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("e", 'light_yellow'):
+            location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
+            os.system("clear")
+            print("You picked up an explosive")
+            self.explosives += 1
         else:
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
  
@@ -452,7 +464,7 @@ class Player(Entity):
             if forget == "y":
                 for number, ability in enumerate(self.abilities):
                     print(number+1, ability.name)
-                print("What move do you want to forget?")
+                print("\nWhat move do you want to forget?")
                 num = getch()
                 while True:
                     try:
@@ -522,20 +534,7 @@ class Player(Entity):
                 self.health[1] = self.health[0]
                 self.atk += item.attack
 
-    def change_soul(self):
-        for number, summon in enumerate(self.summons):
-            print(number+1, summon.name)
-        print("What summon do you want to soul swap with?")
-        num = getch()
-        while True:
-            try:
-                num = int(num)
-                if num in range(len(self.summons)):
-                    break
-            except:
-                pass
-            num = getch()
-        swap = self.summons.pop(num-1)
+    def change_soul(self, swap):
         self.health = swap.health
         self.weaknesses = swap.weaknesses
         self.atk = swap.atk
@@ -543,19 +542,142 @@ class Player(Entity):
         self.sp = swap.sp
 
     def place_explosive(self, location):
-        os.system("clear")
-        print("You placed an explosive -20 health")
-        self.health -= 20
-        sleep(1)
-        os.system("clear")
-        location.room[self.currentPos[0]+1][self.currentPos[1]] = " "
-        location.room[self.currentPos[0]-1][self.currentPos[1]] = " "
-        location.room[self.currentPos[0]][self.currentPos[1]+1] = " "
-        location.room[self.currentPos[0]][self.currentPos[1]-1] = " "
-        location.show_room()
+        if self.explosives > 0:
+            os.system("clear")
+            print("You placed an explosive -20 health")
+            self.health[1] -= 20
+            sleep(1)
+            os.system("clear")
+            location.room[self.currentPos[0]+1][self.currentPos[1]] = " "
+            location.room[self.currentPos[0]-1][self.currentPos[1]] = " "
+            location.room[self.currentPos[0]][self.currentPos[1]+1] = " "
+            location.room[self.currentPos[0]][self.currentPos[1]-1] = " "
+            location.show_room()
 
     def manage(self):
-        print("1: Change move\n2: ")
+        os.system("clear")
+        print("1: Manage abilities\n2: Manage Summons\n3: View Inventory")
+        print(f"")
+        opt = getch()
+        while opt != "1" and opt != "2" and opt != "3":
+            opt = getch()
+        
+        if opt == "1":
+            os.system("clear")
+            for number, ability in enumerate(self.abilities):
+                print(f"{number+1}:", ability.name)
+
+            print("\nDo you want to change a move (1) or view its details (2)?")
+            manage = getch()
+            while manage != "1" and manage != "2":
+                manage = getch()
+
+            if manage == "1":
+                os.system("clear")
+                for number, ability in enumerate(self.abilities):
+                    print(f"{number+1}:", ability.name)
+                print("\nWhat move do you want to forget?")
+                forget = getch()
+                while True:
+                    try:
+                        forget = int(forget)
+                        if forget in range(1,len(self.abilities)+1):
+                            break
+                    except:
+                        pass
+                    forget = getch()
+                os.system("clear")
+                for i in self.abilityList:
+                    print(f"{i}:", self.abilityList[i].name)
+                print("\nWhat move do you want to replace it with?")
+                replace = getch()
+                while True:
+                    try:
+                        replace = int(replace)
+                        if replace in range(1,len(self.abilityList)+1):
+                            break
+                    except:
+                        pass
+                    replace = getch()
+                    os.system("clear")
+                    print(f"You have forgotten {self.abilities[forget-1].name} and learned {self.abilityList[replace].name}!")
+                    self.abilities[forget-1] = self.abilityList[replace]
+            else:
+                os.system("clear")
+                for number, ability in enumerate(self.abilities):
+                    print(f"{number+1}:", ability.name)
+                print("\nWhat move do you want to you want to view?")
+                view = getch()
+                while True:
+                    try:
+                        view = int(view)
+                        if view in range(1,len(self.abilities)+1):
+                            break
+                    except:
+                        pass
+                    view = getch()
+                os.system("clear")
+                print(self.abilities[view-1].show_info())
+            
+            print("\nPress space to go back")
+            back = getch()
+            while back != " ":
+                back = getch()
+        elif opt == "2":
+            os.system("clear")
+            if self.summons:
+                for number, summon in enumerate(self.summons):
+                    print(f"{number+1}:", summon.name)
+                print("\nWhat summon do you want to manage?")
+                manage = getch()
+                while True:
+                    try:
+                        manage = int(manage)
+                        if manage in range(1,len(self.summons)+1):
+                            break
+                    except:
+                        pass
+                    manage = getch()
+                os.system("clear")
+                print(self.summons[manage-1].show_details())
+                if len(self.summons[manage-1].abilities) > 5:
+                    print("\nDo you want to change a move (1) or Soul Swap (2) or go back to the map (3)?")
+                    change = getch()
+                    while change != "1" and change != "2" and change != "3":
+                        change = getch()
+                        
+                    if change == "1":
+                        self.summons[manage-1].learn()
+                    elif change == "2":
+                        print(f"You haved swapped souls with {self.summon[manage-1].name}")
+                        self.change_soul(self.summon[manage-1])
+                        self.summons.remove(self.summon[manage-1])
+                else:
+                    print("\nDo you want to Soul Swap (1) or go back to the map (2)?")
+                    swap = getch()
+                    while swap != "1" and swap != "2":
+                        swap = getch()
+                        
+                    if swap == "1":
+                        print(f"You haved swapped souls with {self.summon[manage-1].name}")
+                        self.change_soul(self.summon[manage-1])
+                        self.summons.remove(self.summon[manage-1])
+                    elif swap == "2":
+                        pass
+
+            else:
+                print("You have no summons!")
+            print("\nPress space to go back")
+            back = getch()
+            while back != " ":
+                back = getch()
+        elif opt == "3":
+            os.system("clear")
+            print(f"Inventory: {', '.join(self.inventory)}")
+            print("\nPress space to go back")
+            back = getch()
+            while back != " ":
+                back = getch()
 
 class NPC:
     def __init__(self, names:list, reputation:int, reward: Item, cost:int, intro:str):
@@ -568,7 +690,7 @@ class NPC:
     def interact(self, player, location):
         name = choice(self.names)
         if player.reputation >= 30:
-            dprint({self.intro})
+            dprint(f'{name}: "{self.intro}"')
             dprint(f"{name} is offering a {self.reward.name} for {self.cost} health")
             print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
             option = getch()
