@@ -87,7 +87,7 @@ class Maze(Location):
         for i in range(self.size*7):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
-            if randint(1, 25) == 1 and self.room[y][x] == " ":
+            if randint(1, 15) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("e", 'light_yellow')
 
 class Minigame(Location):
