@@ -552,12 +552,12 @@ class Player(Entity):
         print(f"+{floor(enemy.health[0]*0.25)} health")
         print(f"+{floor(enemy.atk*0.25)} attack")
         print(f"+{floor(enemy.speed*0.25)} speed")
-        print(f"+{floor(enemy.sp[0]*0.25)} sp\n")
+        print(f"+{floor(enemy.sp[0]*0.25)} sp")
 
         for ability in enemy.abilities:
             if ability not in self.abilityList.values() and randint(1,2) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
-                print(f"You have successfully gained {ability.name}")
+                print(f"\nYou have successfully gained {ability.name}")
                 self.learn(ability)
 
         self.health[0] += floor(enemy.health[0]*0.25)
