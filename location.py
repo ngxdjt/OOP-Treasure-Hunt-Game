@@ -63,28 +63,28 @@ class Maze(Location):
         for enemy in self.enemyList:
             for i in range(floor(self.roomNumber**1.8)):
                 enemy.levelUp(True)
-        for i in range(self.size*7):
+        for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("E", 'light_magenta')
                 
     def load_items(self):
-        for i in range(self.size*7):
+        for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("I", 'light_blue')
 
     def load_npcs(self):
-        for i in range(self.size*7):
+        for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
             if randint(1, 10) == 1 and self.room[y][x] == " ":
                 self.room[y][x] = colored("N", 'light_green')
 
     def load_explosives(self):
-        for i in range(self.size*7):
+        for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
             if randint(1, 15) == 1 and self.room[y][x] == " ":
@@ -744,7 +744,7 @@ def main():
     item = Item("Potion", "healing", 20, 0)
     npc = NPC(["John"], 10, item, 20, "I am John")
 
-    maze = Maze(31, [enemy], [item], [npc])
+    maze = Maze(13, [enemy], [item], [npc])
     maze.generate_maze(player)
     maze.load_enemies()
     maze.load_items()
