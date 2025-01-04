@@ -65,13 +65,28 @@ class Combat:
                     os.system("clear")
                     show_info()
                     self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
-                    sleep(1.5)
+                    print("\nPress space to continue")
+                    opt = getch()
+                    while opt != " ":
+                        print("\033[K\033[F")
+                        opt = getch()
+                    os.system("clear")
                 elif action == "2":
                     self.player.wait()
-                    sleep(1.5)
+                    print("\nPress space to continue")
+                    opt = getch()
+                    while opt != " ":
+                        print("\033[K\033[F")
+                        opt = getch()
+                    os.system("clear")
                 elif action == "3":
                     self.player.rest()
-                    sleep(1.5)
+                    print("\nPress space to continue")
+                    opt = getch()
+                    while opt != " ":
+                        print("\033[K\033[F")
+                        opt = getch()
+                    os.system("clear")
                 elif action == "4":
                     if len(self.player.inventory) > 0:
                         for number, item in enumerate(current.inventory):
@@ -92,14 +107,24 @@ class Combat:
                         current.use_item(self.player.inventory.pop(num-1))
                     else:
                         print("Your inventory is empty")
-                    sleep(1.5)
+                    print("\nPress space to continue")
+                    opt = getch()
+                    while opt != " ":
+                        print("\033[K\033[F")
+                        opt = getch()
+                    os.system("clear")
             else:
                 shuffle(current.abilities)
                 for move in current.abilities:
                     if move.cost <= current.sp[1]:
                         if current.isSummon:
                             self.enemy = current.attack(self.enemy, move)
-                            sleep(1.5)
+                            print("\nPress space to continue")
+                            opt = getch()
+                            while opt != " ":
+                                print("\033[K\033[F")
+                                opt = getch()
+                            os.system("clear")
                             break
                         else:
                             target = choice(turnOrder)
@@ -108,15 +133,30 @@ class Combat:
                                 print(f"{target} has died.")
                                 turnOrder.remove(target)
                                 self.player.summons.remove(target)
-                            sleep(1.5)
+                            print("\nPress space to continue")
+                            opt = getch()
+                            while opt != " ":
+                                print("\033[K\033[F")
+                                opt = getch()
+                            os.system("clear")
                             break
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
                         current.rest()
-                        sleep(1.5)
+                        print("\nPress space to continue")
+                        opt = getch()
+                        while opt != " ":
+                            print("\033[K\033[F")
+                            opt = getch()
+                        os.system("clear")
                     else:
                         current.wait()
-                        sleep(1.5)
+                        print("\nPress space to continue")
+                        opt = getch()
+                        while opt != " ":
+                            print("\033[K\033[F")
+                            opt = getch()
+                        os.system("clear")
 
             turnOrder.append(current)
 
@@ -592,140 +632,153 @@ class Player(Entity):
             for number, ability in enumerate(self.abilities):
                 print(f"{number+1}:", ability.name)
 
-            print("\nSelect an ability")
+            print("\nSelect an ability or press space to go back")
             ability = getch()
-            while True:
-                try:
-                    ability = int(ability)
-                    if ability in range(1,len(self.abilities)+1):
-                        break
-                except:
-                    pass
-                ability = getch()
-
-            os.system("clear")
-            print(f"Do you want to swap {self.abilities[ability-1].name} (1) or view its details (2)")
-            manage = getch()
-            while manage != "1" and manage != "2":
-                manage = getch()
-            os.system("clear")
-
-            if manage == "1":
-                os.system("clear")
-                for i in self.abilityList:
-                    print(f"{i}:", self.abilityList[i].name)
-                print(f"\nWhat move do you want to replace {self.abilities[ability-1].name} with?")
-                replace = getch()
+            if ability != " ":
                 while True:
                     try:
-                        replace = int(replace)
-                        if replace in range(1,len(self.abilityList)+1):
+                        ability = int(ability)
+                        if ability in range(1,len(self.abilities)+1):
                             break
                     except:
                         pass
-                    replace = getch()
-                    os.system("clear")
+                    ability = getch()
 
                 os.system("clear")
-                print(f"You have forgotten {self.abilities[ability-1].name} and learned {self.abilityList[replace].name}!")
-                self.abilities[ability-1] = self.abilityList[replace]
-            elif manage == "2":
-                print(self.abilities[ability-1].show_info())
+                print(f"Do you want to swap {self.abilities[ability-1].name} (1) or view its details (2)? (Press space to go back)")
+                manage = getch()
+                if manage != " ":
+                    while manage != "1" and manage != "2":
+                        manage = getch()
+                    os.system("clear")
+
+                    if manage == "1":
+                        os.system("clear")
+                        for i in self.abilityList:
+                            print(f"{i}:", self.abilityList[i].name)
+                        print(f"\nWhat move do you want to replace {self.abilities[ability-1].name} with?")
+                        replace = getch()
+                        while True:
+                            try:
+                                replace = int(replace)
+                                if replace in range(1,len(self.abilityList)+1):
+                                    break
+                            except:
+                                pass
+                            replace = getch()
+                            os.system("clear")
+
+                        os.system("clear")
+                        print(f"You have forgotten {self.abilities[ability-1].name} and learned {self.abilityList[replace].name}!")
+                        self.abilities[ability-1] = self.abilityList[replace]
+                    elif manage == "2":
+                        print(self.abilities[ability-1].show_info())
             
-            print("\nPress space to go back")
-            back = getch()
-            while back != " ":
-                back = getch()
+                    print("\nPress space to go back")
+                    back = getch()
+                    while back != " ":
+                        back = getch()
         elif opt == "2":
             os.system("clear")
             if self.summons:
                 for number, summon in enumerate(self.summons):
                     print(f"{number+1}:", summon.name)
-                print("\nWhat summon do you want to manage?")
+                print("\nWhat summon do you want to manage? (Press space to go back)")
                 manage = getch()
-                while True:
-                    try:
-                        manage = int(manage)
-                        if manage in range(1,len(self.summons)+1):
-                            break
-                    except:
-                        pass
-                    manage = getch()
-                os.system("clear")
-                print(self.summons[manage-1].show_details())
-                if len(self.summons[manage-1].abilities) > 5:
-                    print("\nDo you want to change a move (1) or Soul Swap (2) or go back to the map (3)?")
-                    change = getch()
-                    while change != "1" and change != "2" and change != "3":
+                if manage != " ":
+                    while True:
+                        try:
+                            manage = int(manage)
+                            if manage in range(1,len(self.summons)+1):
+                                break
+                        except:
+                            pass
+                        manage = getch()
+                    os.system("clear")
+                    print(self.summons[manage-1].show_details())
+                    if len(self.summons[manage-1].abilities) > 5:
+                        print("\nDo you want to change a move (1) or Soul Swap (2)? (Press space to go back)")
                         change = getch()
-                        
-                    if change == "1":
-                        self.summons[manage-1].learn()
-                    elif change == "2":
-                        print(f"You haved swapped souls with {self.summon[manage-1].name}")
-                        self.change_soul(self.summon[manage-1])
-                        self.summons.remove(self.summon[manage-1])
-                else:
-                    print("\nDo you want to Soul Swap (1) or go back to the map (2)?")
-                    swap = getch()
-                    while swap != "1" and swap != "2":
+                        while change != "1" and change != "2" and change != " ":
+                            change = getch()
+                            
+                        if change == "1":
+                            self.summons[manage-1].learn()
+                        elif change == "2":
+                            print(f"You haved swapped souls with {self.summon[manage-1].name}")
+                            self.change_soul(self.summon[manage-1])
+                            self.summons.remove(self.summon[manage-1])
+                    else:
+                        print("\nDo you want to Soul Swap (1) (Press space to go back)")
                         swap = getch()
-                        
-                    if swap == "1":
-                        print(f"You haved swapped souls with {self.summon[manage-1].name}")
-                        self.change_soul(self.summon[manage-1])
-                        self.summons.remove(self.summon[manage-1])
-                    elif swap == "2":
-                        pass
+                        while swap != "1" and swap != " ":
+                            swap = getch()
+                            
+                        if swap == "1":
+                            print(f"You haved swapped souls with {self.summon[manage-1].name}")
+                            self.change_soul(self.summon[manage-1])
+                            self.summons.remove(self.summon[manage-1])
+                    print("\nPress space to go back")
+                    back = getch()
+                    while back != " ":
+                        back = getch()
 
             else:
                 print("You have no summons!")
-            print("\nPress space to go back")
-            back = getch()
-            while back != " ":
+
+                print("\nPress space to go back")
                 back = getch()
+                while back != " ":
+                    back = getch()
+
         elif opt == "3":
             os.system("clear")
             if self.inventory:
                 for number, item in enumerate(self.inventory):
                     print(f"{number+1}:", item.name.capitalize())
                 
-                print("\nSelect an item")
+                print("\nSelect an item (Press space to go back)")
                 item = getch()
-                while True:
-                    try:
-                        item = int(item)
-                        if item in range(1,len(self.inventory)+1):
-                            break
-                    except:
-                        pass
-                    item = getch()
-                
-                os.system("clear")
-                print(f"Do you want to use {self.inventory[item-1].name.capitalize()} (1) or view its details (2) or discard it (3)?")
-                manage = getch()
-                while manage != "1" and manage != "2" and manage == "3":
+                if item != " ":
+                    while True:
+                        try:
+                            item = int(item)
+                            if item in range(1,len(self.inventory)+1):
+                                break
+                        except:
+                            pass
+                        item = getch()
+                    
+                    os.system("clear")
+                    print(f"Do you want to use {self.inventory[item-1].name.capitalize()} (1) or view its details (2) or discard it (3)? (Press space to go back)")
                     manage = getch()
-                
-                os.system("clear")
-                if manage == "1":
-                    if self.inventory[item-1].type == "Attack":
-                        print("Cannot use attack items outside of battle.")
-                    elif self.inventory[item-1].type == "Special":
-                        print("Cannot use special items outside of battle.")
-                    else:
-                        self.use_item(self.inventory.pop(item-1))
-                elif manage == "2":
-                    print(self.inventory[item-1].show_details())
-                elif manage == "3":
-                    print(f"You discarded {self.inventory.pop(item-1)}")
+                    if manage != " ":
+                        while manage != "1" and manage != "2" and manage == "3":
+                            manage = getch()
+                        
+                        os.system("clear")
+                        if manage == "1":
+                            if self.inventory[item-1].type == "Attack":
+                                print("Cannot use attack items outside of battle.")
+                            elif self.inventory[item-1].type == "Special":
+                                print("Cannot use special items outside of battle.")
+                            else:
+                                self.use_item(self.inventory.pop(item-1))
+                        elif manage == "2":
+                            print(self.inventory[item-1].show_details())
+                        elif manage == "3":
+                            print(f"You discarded {self.inventory.pop(item-1)}")
+                        print("\nPress space to go back")
+                        back = getch()
+                        while back != " ":
+                            back = getch()
 
             else:
                 print("Your inventory is empty!")
-            print("\nPress space to go back")
-            back = getch()
-            while back != " ":
+                print("\nPress space to go back")
                 back = getch()
+                while back != " ":
+                    back = getch()
 
 class NPC:
     def __init__(self, names:list, reputation:int, reward: Item, cost:int, intro:str):

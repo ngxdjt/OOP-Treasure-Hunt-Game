@@ -139,7 +139,12 @@ class ColourSwitch(Minigame):
             print("You succeeded!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
-            sleep(2)
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
         else:
             os.system("clear")
             print(f"You reacted too slowly and lost {self.reward[0]} health and {self.reward[1]} attack")

@@ -201,6 +201,7 @@ class Game():
             dprint("The break damage is how much damage the ability does to the target's weakness bar which can lead to breaks.")
             dprint("The SP cost is the amount of SP the ability takes to use.")
             dprint("The recoil is the percentage of your max health you lose (or gain if negative) upon using the ability.")
+            dprint("If you don't have enough SP when using a move, you will flail instead. Flailing is typeless and has a multiplier of 50% with 10% recoil.")
             print()
             dprint("During you turn you have four actions: attack, wait, rest, use item.")
             dprint("Attacking allows you to use a move on the enemy.")
