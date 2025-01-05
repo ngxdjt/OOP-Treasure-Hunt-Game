@@ -127,7 +127,7 @@ class Game():
         dprint("You are a necromancer wandering down the streets. Such a happy lad you are!")
         dprint("That is until this group of weirdos comes and kidnaps you. Oh no!")
         dprint("So now you are in a labyrinth where you must face off many adversities.")
-        dprint("However, the currency down here seems to be life energy which you have the ability to manipulate due to your necromatic abilities.")
+        dprint("However, the currency down here seems to be life energy which you have the ability to manipulate due to your necromantic abilities.")
         dprint("This is quite convenient, it's almost as if you are the main character!")
         print("\nPress space to continue")
         opt = getch()
