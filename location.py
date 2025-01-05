@@ -134,27 +134,26 @@ class ColourSwitch(Minigame):
         input = getch()
         end = time()
 
-        if end-start < 1:
-            os.system("clear")
+        os.system("clear")
+        if end-start < 0.00015:
+            print("You pressed a button before it changed colour!")
+            print(f"The gods frown upon you and you lose {self.reward[0]*2} health and {self.reward[1]*2} attack")
+            self.lose(player)
+            self.lose(player)
+        elif end-start < 1:
             print("You succeeded!")
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
         else:
-            os.system("clear")
-            print(f"You reacted too slowly and lost {self.reward[0]} health and {self.reward[1]} attack")
+            print(f"You reacted too slowly!")
+            print(f"You lost {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
-            print("\nPress space to continue")
+        print("\nPress space to continue")
+        opt = getch()
+        while opt != " ":
+            print("\033[K\033[F")
             opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+        os.system("clear")
 
         return player
 
