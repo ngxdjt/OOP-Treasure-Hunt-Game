@@ -20,6 +20,7 @@ class Combat:
         turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
         for entity in turnOrder:
             entity.sp[1] = entity.sp[0]
+            entity.weaknessBar[1] = entity.weaknessBar[0]
 
         def show_info():
             print(f"Health: {self.player.health[1]}/{self.player.health[0]}")
@@ -565,7 +566,7 @@ class Player(Entity):
         self.atk += floor(enemy.atk*0.25)
         self.speed += floor(enemy.speed*0.25)
         self.sp[0] += floor(enemy.sp[0]*0.25)
-        self.weaknessBar += floor(enemy.weaknessBar*0.25)
+        self.weaknessBar[0] += floor(enemy.weaknessBar[0]*0.25)
 
     def necromance(self, enemy):
         print(f"You have lost {floor(self.health[0]*0.2)} health to necromance the {enemy.name}")
