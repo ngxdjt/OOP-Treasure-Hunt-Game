@@ -136,7 +136,7 @@ class Game():
             opt = getch()
         os.system("clear")
         name = input("Enter your name: ")
-        player = Player(name, 100, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 10, 20, 100, [Ability("Punch", 1, "Physical", 10, 10, 0)])
+        player = Player(name, 300, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 20, 100, [Ability("Punch", 0.2, "Physical", 10, 10, 0)])
         os.system("clear")
 
         print("Press 1 for the tutorial.\nPress 2 to skip the tutorial.")
@@ -210,10 +210,10 @@ class Game():
             dprint("Using an item allows you to access your inventory and use an item from it.")
             print()
             dprint("After defeating an enemy, there is a 10% chance of an item dropping and you can choose to either absorb or necromance the enemy.")
-            dprint("Absorbing adds a quarter of the ememy's stats to you and you have a 50% chance of gaining each of their abilities.")
+            dprint("Absorbing allows you to gain 25% of the enemy's stats and you inherit their weaknesses and you have a 50% chance of gaining each of their abilities.")
             dprint("Necromancing consumes 20% of you max health but in exchange you get a summon with the exact stats of the enemy you just faced.")
             dprint("Summons attack in battle and can gain levels as you fight more enemies.")
-            dprint("You may also swap your soul with summons at any time to swap your stats with their stats.")
+            dprint("You may also swap your soul with summons at any time to gain their stats and weaknesses while removing them from your party.")
             
             print("\nPress space to get into the game!")
             opt = getch()
@@ -269,7 +269,7 @@ class Game():
                     self.currentPlace.load_explosives()
 
         os.system("clear")
-        if player.health <= 0:
+        if player.health[1] <= 0:
             dprint("You died")
         elif player.reputation >= 50 and "wwssadad" not in ''.join(secretCondition):
             dprint("That's it! The exit!")

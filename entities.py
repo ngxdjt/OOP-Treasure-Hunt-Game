@@ -552,7 +552,7 @@ class Player(Entity):
         print(f"+{floor(enemy.health[0]*0.25)} health")
         print(f"+{floor(enemy.atk*0.25)} attack")
         print(f"+{floor(enemy.speed*0.25)} speed")
-        print(f"+{floor(enemy.sp[0]*0.25)} sp")
+        print(f"+{floor(enemy.sp[0]*0.25)} SP")
 
         for ability in enemy.abilities:
             if ability not in self.abilityList.values() and randint(1,2) == 1:
@@ -565,6 +565,7 @@ class Player(Entity):
         self.atk += floor(enemy.atk*0.25)
         self.speed += floor(enemy.speed*0.25)
         self.sp[0] += floor(enemy.sp[0]*0.25)
+        self.weaknessBar += floor(enemy.weaknessBar*0.25)
 
     def necromance(self, enemy):
         print(f"You have lost {floor(self.health[0]*0.2)} health to necromance the {enemy.name}")
