@@ -16,6 +16,7 @@ class Location:
         self.size = size
         self.room = []
         self.roomNumber = 1
+        self.visited = False
 
     def show_room(self):
         for row in self.room:

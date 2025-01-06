@@ -224,6 +224,7 @@ class Game():
  
         room = 1
         self.currentPlace = self.places[room-1]
+        self.places[room-1].visited = True
         secretCondition = []
 
         if type(self.currentPlace) is Maze:
@@ -249,13 +250,14 @@ class Game():
                     player.currentPos = [1,0]
                     self.currentPlace = self.places[room-1]
                     self.currentPlace.roomNumber = room
-                    if type(self.currentPlace) is Maze:
+                    if type(self.currentPlace) is Maze and not self.places[room-1].visited:
                         self.currentPlace.generate_maze(player)
                         self.currentPlace.load_enemies()
                         self.currentPlace.load_items()
                         self.currentPlace.load_npcs()
                         self.currentPlace.load_explosives()
                     self.currentPlace.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
+                    self.places[room-1].visited = True
                     continue
                 else:
                     secretCondition.append(direction)
