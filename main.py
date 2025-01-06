@@ -136,7 +136,7 @@ class Game():
             opt = getch()
         os.system("clear")
         name = input("Enter your name: ")
-        player = Player(name, 300, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 20, 100, [Ability("Punch", 0.2, "Physical", 10, 10, 0)])
+        player = Player(name, 300, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 20, 100, [Ability("Punch", 0.2, "Physical", 10, 5, 0)])
         os.system("clear")
 
         print("Press 1 for the tutorial.\nPress 2 to skip the tutorial.")
@@ -237,6 +237,58 @@ class Game():
             os.system("clear")
             print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\nReputation: {player.reputation}\n")
             self.currentPlace.show_room()
+            
+            if self.currentPlace.room[-2][-1] == colored("@", 'red') and room < 10:
+                os.system("clear")
+                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\nReputation: {player.reputation}\n")
+                self.currentPlace.show_room()
+                direction = getch()
+                if direction == "d":
+                    secretCondition.append(direction)
+                    room += 1
+                    player.currentPos = [1,0]
+                    self.currentPlace = self.places[room-1]
+                    self.currentPlace.roomNumber = room
+                    if type(self.currentPlace) is Maze:
+                        self.currentPlace.generate_maze(player)
+                        self.currentPlace.load_enemies()
+                        self.currentPlace.load_items()
+                        self.currentPlace.load_npcs()
+                        self.currentPlace.load_explosives()
+                    self.currentPlace.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
+                    continue
+                else:
+                    secretCondition.append(direction)
+                    player.move(direction, self.currentPlace)
+                    continue
+            
+            elif self.currentPlace.room[1][0] == colored("@", 'red') and room > 1:
+                os.system("clear")
+                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\nReputation: {player.reputation}\n")
+                self.currentPlace.show_room()
+                direction = getch()
+                if direction == "a":
+                    secretCondition.append(direction)
+                    room -= 1
+                    self.currentPlace = self.places[room-1]
+                    self.currentPlace.roomNumber = room
+                    player.currentPos = [self.currentPlace.size-2,self.currentPlace.size-1]
+                    self.currentPlace.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
+                    continue
+                else:
+                    secretCondition.append(direction)
+                    player.move(direction, self.currentPlace)
+                    continue
+
+            if room == 10:
+                start = len(secretCondition)
+                if (len(secretCondition) - start) % 30 == 0:
+                    self.currentPlace.generate_maze(player)
+                    self.currentPlace.load_enemies()
+                    self.currentPlace.load_items()
+                    self.currentPlace.load_npcs()
+                    self.currentPlace.load_explosives()
+
             direction = getch()
             if direction == "e":
                 player.place_explosive(self.currentPlace)
@@ -245,28 +297,6 @@ class Game():
             elif direction in ["w","a","s","d"]:
                 secretCondition.append(direction)
                 player.move(direction, self.currentPlace)
-            
-            if self.currentPlace.room[-2][-1] == colored("@", 'red'):
-                os.system("clear")
-                print(f"Controls:\nMovement (wasd)\nPlace Explosive (e)\nManage Player (q)\n\nHealth: {player.health[1]}/{player.health[0]}\nExplosives: {player.explosives}\nReputation: {player.reputation}\n")
-                self.currentPlace.show_room()
-                sleep(0.5)
-                room += 1
-                player.currentPos = [1,0]
-                self.currentPlace = self.places[room-1]
-                self.currentPlace.roomNumber = room
-                if type(self.currentPlace) is Maze:
-                    self.currentPlace.generate_maze(player)
-                    self.currentPlace.load_enemies()
-                    self.currentPlace.load_items()
-                    self.currentPlace.load_npcs()
-                    self.currentPlace.load_explosives()
-                if room == 10 and len(secretCondition) % 30 == 0:
-                    self.currentPlace.generate_maze(player)
-                    self.currentPlace.load_enemies()
-                    self.currentPlace.load_items()
-                    self.currentPlace.load_npcs()
-                    self.currentPlace.load_explosives()
 
         os.system("clear")
         if player.health[1] <= 0:

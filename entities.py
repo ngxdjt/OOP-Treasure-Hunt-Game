@@ -614,13 +614,16 @@ class Player(Entity):
             os.system("clear")
             print("You placed an explosive -20 health")
             self.health[1] -= 20
-            sleep(1)
-            os.system("clear")
             location.room[self.currentPos[0]+1][self.currentPos[1]] = " "
             location.room[self.currentPos[0]-1][self.currentPos[1]] = " "
             location.room[self.currentPos[0]][self.currentPos[1]+1] = " "
             location.room[self.currentPos[0]][self.currentPos[1]-1] = " "
-            location.show_room()
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
 
     def manage(self):
         os.system("clear")

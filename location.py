@@ -92,8 +92,9 @@ class Maze(Location):
 
 class Minigame(Location):
     def __init__(self, reward:tuple):
+        super().__init__(5)
         self.room = [["x", "x", "x", "x", "x"], 
-                     [colored("@", 'red'), " ", colored("P", 'light_yellow'), " ", "x"], 
+                     [" ", " ", colored("P", 'light_yellow'), " ", "x"], 
                      ["x", " ", " ", " ", "x"], 
                      ["x", " ", " ", " ", " "], 
                      ["x", "x", "x", "x", "x"]
