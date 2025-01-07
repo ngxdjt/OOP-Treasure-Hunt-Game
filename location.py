@@ -212,7 +212,7 @@ class BoxPush(Minigame):
                              ["x"," ", " ", " ", " ", " ", "x"],
                              ["x","x", "x", "x", "x", "x", "x"]
                             ]
-                self.player.currentPos = [1,1]
+                player.currentPos = [1,1]
             os.system("clear")
             self.show_room()
 
@@ -542,8 +542,6 @@ class Slot(Minigame):
             print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
             print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
             print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
-            sleep(1)
-            os.system("clear")
 
             if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
                 if wheel1[0] == wheel2[0] == wheel3[0]:
@@ -585,8 +583,6 @@ class Slot(Minigame):
                 print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
                 print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
                 print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
-                sleep(2)
-                os.system("clear")
 
                 print("You won!")
                 player.health[1] += player.health[0]
@@ -628,8 +624,6 @@ class Slot(Minigame):
                 print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
                 print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
                 print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
-                sleep(2)
-                os.system("clear")
                 
                 print("You won big!")
                 player.health[1] += player.health[0]*2
@@ -659,8 +653,6 @@ class Slot(Minigame):
                 print(wheel1[0], wheel2[0], wheel3[0], wheel4[0], wheel5[0])
                 print(wheel1[1], wheel2[1], wheel3[1], wheel4[1], wheel5[1])
                 print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
-                sleep(2)
-                os.system("clear")
 
                 print("You won the jackpot!")
                 player.health[1] += player.health[0]*3
@@ -668,6 +660,13 @@ class Slot(Minigame):
                 player.atk *= 4
                 player.sp[0] *= 4
                 player.sp[1] = player.sp[0]
+            
+            print("\nPress space to continue")
+            opt = getch()
+            while opt != " ":
+                print("\033[K\033[F")
+                opt = getch()
+            os.system("clear")
             
             print(f"Current Health: {player.health[1]}/{player.health[0]}")
             print("Do you want to try again (1) or quit (2)?")
@@ -745,7 +744,7 @@ def main():
     item = Item("Potion", "healing", 20, 0)
     npc = NPC(["John"], 10, item, 20, "I am John")
 
-    maze = Maze(13, [enemy], [item], [npc])
+    maze = Maze(31, [enemy], [item], [npc])
     maze.generate_maze(player)
     maze.load_enemies()
     maze.load_items()
