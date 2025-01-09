@@ -795,7 +795,9 @@ class NPC:
 
     def interact(self, player, location):
         name = choice(self.names)
-        if player.reputation >= 30:
+        if player.reputation <= 30 and randint(1,2) == 1:
+            dprint(f'{name}: "Go die in a ditch."')
+        else:
             dprint(f'{name}: "{self.intro}"')
             print(f"{name} is offering a {self.reward.name} for {self.cost} health")
             print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
@@ -820,7 +822,5 @@ class NPC:
                     player.reputation = 0
                 player.add_item(self.reward)
                 location.npcList.remove(self)
-        else:
-            dprint("Go die in a ditch")
 
         return player
