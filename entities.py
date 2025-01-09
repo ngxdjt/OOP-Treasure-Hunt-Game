@@ -575,7 +575,7 @@ class Player(Entity):
         self.summons.append(enemy.becomeSummon())
 
     def add_item(self, item):
-        if len(self.inventory) < 20:
+        if len(self.inventory) < 9:
             print(f"You added a {item.name} to your inventory")
             self.inventory.append(item)
         else:
