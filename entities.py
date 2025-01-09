@@ -5,7 +5,7 @@ from random import randint, choice, shuffle
 from termcolor import colored
 from item import Item
 import os
-from delayed_print import dprint
+from reusable import dprint, space_to_continue
 from copy import deepcopy
 
 class Combat:
@@ -41,12 +41,20 @@ class Combat:
 
             if current.broken:
                 current.unBreak()
+                turnOrder.append(turnOrder.pop(0))
                 continue
+            
+            current.resting = False
 
             if type(current) is Player:
                 print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
                 action = getch()
                 while action not in ["1","2","3","4"]:
+                    while not self.player.inventory and action == "4":
+                        print("You inventory is empty.")
+                        space_to_continue()
+                        print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
+                        action = getch()
                     action = getch()
                 os.system("clear")
                 show_info()
@@ -66,66 +74,37 @@ class Combat:
                     os.system("clear")
                     show_info()
                     self.enemy = current.attack(self.enemy, self.player.abilities[num-1])
-                    print("\nPress space to continue")
-                    opt = getch()
-                    while opt != " ":
-                        print("\033[K\033[F")
-                        opt = getch()
-                    os.system("clear")
+                    space_to_continue()
                 elif action == "2":
                     self.player.wait()
-                    print("\nPress space to continue")
-                    opt = getch()
-                    while opt != " ":
-                        print("\033[K\033[F")
-                        opt = getch()
-                    os.system("clear")
+                    space_to_continue()
                 elif action == "3":
                     self.player.rest()
-                    print("\nPress space to continue")
-                    opt = getch()
-                    while opt != " ":
-                        print("\033[K\033[F")
-                        opt = getch()
-                    os.system("clear")
+                    space_to_continue()
                 elif action == "4":
-                    if len(self.player.inventory) > 0:
-                        for number, item in enumerate(current.inventory):
-                            print(f"{number+1}:", item.name)
-                        print("What item do you want to use?")
+                    for number, item in enumerate(current.inventory):
+                        print(f"{number+1}:", item.name)
+                    print("What item do you want to use?")
+                    num = getch()
+                    while True:
+                        try:
+                            num = int(num)
+                            if num in range(1,len(self.player.inventory)+1):
+                                break
+                        except:
+                            pass
                         num = getch()
-                        while True:
-                            try:
-                                num = int(num)
-                                if num in range(1,len(self.player.inventory)+1):
-                                    break
-                            except:
-                                pass
-                            num = getch()
-                        os.system("clear")
-                        show_info()
-                        self.itemAtk += self.player.inventory[num-1].attack
-                        current.use_item(self.player.inventory.pop(num-1))
-                    else:
-                        print("Your inventory is empty")
-                    print("\nPress space to continue")
-                    opt = getch()
-                    while opt != " ":
-                        print("\033[K\033[F")
-                        opt = getch()
                     os.system("clear")
+                    show_info()
+                    self.itemAtk += self.player.inventory[num-1].attack
+                    current.use_item(self.player.inventory.pop(num-1))
             else:
                 shuffle(current.abilities)
                 for move in current.abilities:
                     if move.cost <= current.sp[1]:
                         if current.isSummon:
                             self.enemy = current.attack(self.enemy, move)
-                            print("\nPress space to continue")
-                            opt = getch()
-                            while opt != " ":
-                                print("\033[K\033[F")
-                                opt = getch()
-                            os.system("clear")
+                            space_to_continue()
                             break
                         else:
                             target = choice(turnOrder)
@@ -134,30 +113,14 @@ class Combat:
                                 print(f"{target.name} has died.")
                                 turnOrder.remove(target)
                                 self.player.summons.remove(target)
-                            print("\nPress space to continue")
-                            opt = getch()
-                            while opt != " ":
-                                print("\033[K\033[F")
-                                opt = getch()
-                            os.system("clear")
+                            space_to_continue()
                             break
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
                         current.rest()
-                        print("\nPress space to continue")
-                        opt = getch()
-                        while opt != " ":
-                            print("\033[K\033[F")
-                            opt = getch()
-                        os.system("clear")
                     else:
                         current.wait()
-                        print("\nPress space to continue")
-                        opt = getch()
-                        while opt != " ":
-                            print("\033[K\033[F")
-                            opt = getch()
-                        os.system("clear")
+                    space_to_continue()
 
             turnOrder.append(current)
 
@@ -186,18 +149,10 @@ class Combat:
                 self.player.absorb(self.enemy)
             elif input == "2":
                 self.player.necromance(self.enemy)
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
         else:
             print("A fatal hit!")
-            print("\nPress space to go back")
-            back = getch()
-            while back != " ":
-                back = getch()
+            space_to_continue()
 
         return self.player, self.enemy
 
@@ -234,7 +189,6 @@ class Entity:
                     target.Break()
 
             self.sp[1] -= ability.cost
-            self.resting = False
 
             if target.resting:
                 target.health[1] -= floor(floor(ability.multiplier*self.atk)*1.5)
@@ -468,7 +422,7 @@ class Player(Entity):
             item = choice(location.itemList)
             os.system("clear")
             print(f"You encountered a {enemy.name}")
-            sleep(1)
+            sleep(0.5)
             self, enemy = Combat(self, enemy, item).start()
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
@@ -480,12 +434,7 @@ class Player(Entity):
             item = choice(location.itemList)
             print(f"You picked up a {item.name}")
             self.add_item(item)
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("N", 'light_green'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
@@ -498,12 +447,7 @@ class Player(Entity):
                 self = npc.interact(self, location)
             else:
                 print("You killed everyone on this floor")
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("e", 'light_yellow'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             self.explosives += 1

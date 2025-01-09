@@ -6,7 +6,7 @@ from termcolor import colored
 import os
 from ability import Ability
 import pyfiglet as pfg
-from delayed_print import dprint
+from reusable import dprint, space_to_continue
 
 class MazeDimensionError(Exception):
     pass
@@ -150,12 +150,8 @@ class ColourSwitch(Minigame):
             print(f"You reacted too slowly!")
             print(f"You lost {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+
+        space_to_continue()
 
         return player
 
@@ -183,12 +179,7 @@ class BoxPush(Minigame):
         dprint("Push the boxes over the flames to put them out")
         dprint("Be careful as stepping on the flames will kill you")
         dprint("If you make a mistake, press r to reset.")
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
 
         while any("'" in row for row in self.room):
             if self.room[1][5] != "#":
@@ -233,12 +224,7 @@ class BoxPush(Minigame):
             print(f"You gained {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
             player.currentPos = [1,2]
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
 
         self.room = [["x", "x", "x", "x", "x"], 
                      [" ", " ", colored("@", 'red'), " ", "x"], 
@@ -264,12 +250,7 @@ class Buckshot(Minigame):
         dprint("There will always be at least 1 live round and 1 blank round")
         dprint("If you shoot yourself and it is a blank round, you gain an extra turn")
         dprint("Use items to gain an advantage over the dealer")
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
 
         shells = randint(2,8)
         shellList = []
@@ -446,12 +427,7 @@ class Buckshot(Minigame):
             print(f"You receive {self.reward[0]} health and {self.reward[1]} attack")
             player = self.win(player)
         
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
 
         return player
 
@@ -470,12 +446,7 @@ class Slot(Minigame):
         dprint("Getting 3 in a row will double all your stats")
         dprint("Getting 4 in a row will triple all your stats")
         dprint("Getting 5 in a row will quadruple all your stats")
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
 
         print(f"Current Health: {player.health[1]}/{player.health[0]}")
         print("Do you want to play (1) or quit (2)?")
@@ -664,12 +635,7 @@ class Slot(Minigame):
                 player.sp[0] *= 2
                 player.sp[1] *= 2
             
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
             
             print(f"Current Health: {player.health[1]}/{player.health[0]}")
             print("Do you want to try again (1) or quit (2)?")
@@ -691,14 +657,7 @@ class Maths(Minigame):
 
         dprint("You will be presented with a multiplication problem with 5 seconds to solve it")
         dprint("You will only be given one attempt")
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
-        
-        os.system("clear")
+        space_to_continue()
 
         num1 = randint(3,21)
         num2 = randint(3,21)
@@ -730,12 +689,7 @@ class Maths(Minigame):
             print(f"The gods are furious and you lose {self.reward[0]} health and {self.reward[1]} attack")
             player = self.lose(player)
 
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
 
         return player
 
@@ -781,8 +735,8 @@ def main():
         # player.move(direction, maths)
         # player.move(direction, buckshot)
 
-    # # combat = Combat(player, enemy)
-    # # player = combat.start()
+    # combat = Combat(player, enemy)
+    # player = combat.start()
 
 if __name__ == '__main__':
     main()

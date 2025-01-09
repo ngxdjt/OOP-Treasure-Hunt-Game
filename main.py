@@ -2,7 +2,7 @@ from location import *
 from entities import *
 from item import *
 from ability import *
-from delayed_print import dprint
+from reusable import dprint, space_to_continue
 import os
 # Remember to pip install the following:
 # termcolor, getch, pyfiglet
@@ -129,12 +129,7 @@ class Game():
         dprint("So now you are in a labyrinth where you must face off many adversities.")
         dprint("However, the currency down here seems to be life energy which you have the ability to manipulate due to your necromantic abilities.")
         dprint("This is quite convenient, it's almost as if you are the main character!")
-        print("\nPress space to continue")
-        opt = getch()
-        while opt != " ":
-            print("\033[K\033[F")
-            opt = getch()
-        os.system("clear")
+        space_to_continue()
         name = input("Enter your name: ")
         player = Player(name, 300, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 20, 100, [Ability("Punch", 0.2, "Physical", 10, 5, 0)])
         os.system("clear")
@@ -179,12 +174,7 @@ class Game():
             dprint(f"{colored("P", 'light_yellow')} represents the minigame. Stepping on a minigame tile will start the minigame.")
             dprint(f"You will always be able to skip minigames and move onto the next room, however you will miss out on a few rewards.")
             
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
 
             dprint("Let's move onto the combat")
             dprint("You have four main stats: Health, Attack, Speed, and SP.")
@@ -312,12 +302,7 @@ class Game():
             dprint("Who are you to reject a gift from a talking treasure chest so of course you accept it.")
             dprint("You walk out of the labyrinth with the power of the gods.")
 
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
 
             print(pfg.figlet_format("Good Ending",font="larry3d"))
         elif player.reputation < 50 and "wwssadad" not in ''.join(secretCondition):
@@ -332,12 +317,7 @@ class Game():
             dprint("Guess this is it.")
             dprint("Forever until the end of time, until the heat death of the universe, you stay lamenting.")
 
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
 
             print(pfg.figlet_format("Bad Ending",font="larry3d"))
         else:
@@ -356,12 +336,7 @@ class Game():
             dprint("Swimming in treasure chests, this was your dream.")
             dprint("Consumed by bliss, you drown in your own saliva.")
 
-            print("\nPress space to continue")
-            opt = getch()
-            while opt != " ":
-                print("\033[K\033[F")
-                opt = getch()
-            os.system("clear")
+            space_to_continue()
 
             print(pfg.figlet_format("Secret Ending",font="larry3d"))
 
