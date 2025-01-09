@@ -795,12 +795,12 @@ class NPC:
 
     def interact(self, player, location):
         name = choice(self.names)
-        if player.reputation <= 30 and randint(1,2) == 1:
+        if player.reputation <= 30 and randint(1,17+(15-player.reputation)) == 1:
             dprint(f'{name}: "Go die in a ditch."')
         else:
             dprint(f'{name}: "{self.intro}"')
             print(f"{name} is offering a {self.reward.name} for {self.cost} health")
-            print(f"Do you want to accept (1) or decline (2) or kill (3) Current Health: {player.health[1]}/{player.health[0]}")
+            print(f"Current Health: {player.health[1]}/{player.health[0]}\nDo you want to accept (1) or decline (2) or kill (3)")
             option = getch()
             while option != "1" and option != "2" and option != "3":
                 option = getch()
