@@ -227,7 +227,6 @@ class Entity:
     def attack(self, target, ability):
         if self.sp[1] >= ability.cost:
             print(f"{self.name} attacked {target.name} with {ability.name}")
-            print(f"{target.name} took {floor(ability.multiplier*self.atk)} damage!")
 
             if ability.type in target.weaknesses:
                 target.weaknessBar[1] -= ability.breakDamage
@@ -239,8 +238,10 @@ class Entity:
 
             if target.resting:
                 target.health[1] -= floor(floor(ability.multiplier*self.atk)*1.5)
+                print(f"{target.name} took {floor(floor(ability.multiplier*self.atk)*1.5)} damage!")
             else:
                 target.health[1] -= floor(ability.multiplier*self.atk)
+                print(f"{target.name} took {floor(ability.multiplier*self.atk)} damage!")
 
             if ability.recoil > 0:
                 print(f"self.name took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}")
