@@ -544,6 +544,7 @@ class Slot(Minigame):
             print(wheel1[2], wheel2[2], wheel3[2], wheel4[2], wheel5[2])
 
             if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
+                os.system("clear")
                 if wheel1[0] == wheel2[0] == wheel3[0]:
                     wheel1[0] = colored(wheel1[0], 'green')
                     wheel2[0] = colored(wheel2[0], 'green')
@@ -591,6 +592,7 @@ class Slot(Minigame):
                 player.sp[0] *= 2
                 player.sp[1] *= 2
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                os.system("clear")
                 if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0]:
                     wheel1[0] = colored(wheel1[0], 'green')
                     wheel2[0] = colored(wheel2[0], 'green')
@@ -632,6 +634,7 @@ class Slot(Minigame):
                 player.sp[0] *= 3
                 player.sp[1] = player.sp[0]
             if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                os.system("clear")
                 if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0]:
                     wheel1[0] = colored(wheel1[0], 'green')
                     wheel2[0] = colored(wheel2[0], 'green')
@@ -761,20 +764,20 @@ def main():
 
     while player.health[1] > 0:
         os.system("clear")
-        maze.show_room()
+        # maze.show_room()
         # colour.show_room()
         # box.show_room()
         # maths.show_room()
-        # slot.show_room()
+        slot.show_room()
         # buckshot.show_room()
         direction = getch()
-        if direction == "e":
-            player.place_explosive(maze)
-        else:
-            player.move(direction, maze)
+        # if direction == "e":
+        #     player.place_explosive(maze)
+        # else:
+        #     player.move(direction, maze)
         # player.move(direction, colour)
         # player.move(direction, box)
-        # player.move(direction, slot)
+        player.move(direction, slot)
         # player.move(direction, maths)
         # player.move(direction, buckshot)
 
