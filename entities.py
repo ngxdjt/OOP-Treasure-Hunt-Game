@@ -809,6 +809,8 @@ class NPC:
             if option == "1":
                 print("You accepted the offer")
                 print(f"+{self.reputation//2} reputation")
+                if player.reputation > 100:
+                    player.reputation = 100
                 player.health[1] -= self.cost
                 player.reputation += self.reputation//2
                 player.add_item(self.reward)
