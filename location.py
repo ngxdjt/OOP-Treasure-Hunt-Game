@@ -62,8 +62,8 @@ class Maze(Location):
     
     def load_enemies(self):
         for enemy in self.enemyList:
-            for i in range(floor(self.roomNumber**1.8)):
-                enemy.levelUp(True)
+            enemy.lvl = 2**(self.roomNumber-1)
+            enemy.calculate_stats()
         for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)
