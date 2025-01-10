@@ -291,7 +291,7 @@ class Enemy(Entity):
 
         self.health[1] += floor(self.health[0] * 1.05) - self.health[0]
         self.health[0] = floor(self.health[0] * 1.05)
-        self.atk = floor(self.atk * 1.05)
+        self.atk = floor(self.atk * 1.2)
         self.sp[1] += floor(self.sp[0] * 1.05) - self.sp[0]
         self.sp[0] = floor(self.sp[0] * 1.05)
 
@@ -334,11 +334,11 @@ class Enemy(Entity):
                 else:
                     print(f"{self.name} has learned {self.abilityList[self.lvl].name}")
                     self.abilities.append(self.abilityList[self.lvl])
-            else:
-                if self.lvl in self.abilityList:
-                    self.abilities.append(self.abilityList[self.lvl])
-                    if len(self.abilities) > 5:
-                        self.abilities.pop(0)
+        else:
+            if self.lvl in self.abilityList:
+                self.abilities.append(self.abilityList[self.lvl])
+                if len(self.abilities) > 5:
+                    self.abilities.pop(0)
 
     def calculate_stats(self):
         for i in range(self.lvl-1):
