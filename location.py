@@ -237,7 +237,7 @@ class BoxPush(Minigame):
     
 class Buckshot(Minigame):
     def __init__(self):
-        super().__init__((200, 35))
+        super().__init__((500, 50))
 
     def play(self, player):
         os.system("clear")
