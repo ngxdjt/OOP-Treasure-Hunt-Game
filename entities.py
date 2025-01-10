@@ -77,6 +77,8 @@ class Combat:
                     os.system("clear")
                     show_info()
                     print(msg)
+                    if self.enemy.weaknessBar[1] <= 0:
+                        print(f"{self.enemy.name} has been broken! They took {floor(self.enemy.health[0]*0.2)} damage")
                     space_to_continue()
                 elif action == "2":
                     self.player.wait()
@@ -105,6 +107,8 @@ class Combat:
                             os.system("clear")
                             show_info()
                             print(msg)
+                            if target.weaknessBar[1] <= 0:
+                                print(f"{self.enemy.name} has been broken! They took {floor(self.enemy.health[0]*0.2)} damage")
                             space_to_continue()
                             break
                         else:
@@ -117,6 +121,8 @@ class Combat:
                             os.system("clear")
                             show_info()
                             print(msg)
+                            if target.weaknessBar[1] <= 0:
+                                print(f"{target.name} has been broken! They took {floor(target.health[0]*0.2)} damage")
                             space_to_continue()
                             break
                 else:
@@ -194,6 +200,7 @@ class Entity:
             if ability.type in target.weaknesses:
                 target.weaknessBar[1] -= ability.breakDamage
                 if target.weaknessBar[1] <= 0:
+                    target.weaknessBar[1] = 0
                     target.Break()
 
             self.sp[1] -= ability.cost
