@@ -131,7 +131,7 @@ class Game():
         dprint("This is quite convenient, it's almost as if you are the main character!")
         space_to_continue()
         name = input("Enter your name: ")
-        player = Player(name, 150, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 15, 100, [Ability("Punch", 0.2, "Physical", 10, 5, 0)])
+        player = Player(name, 50, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 15, 100, [Ability("Punch", 0.2, "Physical", 10, 5, 0)])
         os.system("clear")
 
         print("Press 1 for the tutorial.\nPress 2 to skip the tutorial.")
