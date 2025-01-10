@@ -274,7 +274,7 @@ class Game():
 
             if room == 10:
                 start = len(secretCondition)
-                if (len(secretCondition) - start) % 30 == 0:
+                if (len(secretCondition) - start) % 15 == 0:
                     self.currentPlace.generate_maze(player)
                     self.currentPlace.load_enemies()
                     self.currentPlace.load_items()

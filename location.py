@@ -442,7 +442,7 @@ class Slot(Minigame):
         sleep(2)
         os.system("clear")
 
-        dprint("Using the slot machine will use 10% of your max health and can kill you")
+        dprint("Using the slot machine will use 24% of your max health and can kill you")
         dprint("Getting 3 in a row will double all your stats")
         dprint("Getting 4 in a row will triple all your stats")
         dprint("Getting 5 in a row will quadruple all your stats")
@@ -455,9 +455,13 @@ class Slot(Minigame):
             decision = getch()
         os.system("clear")
 
-        while decision == "1" and player.health[1] > 0:
+        while decision == "1":
             os.system("clear")
-            player.health[1] = floor(player.health[1] - (0.1*player.health[0]))
+            player.health[1] = floor(player.health[1] - (0.24*player.health[0]))
+            if player.health[1] < 0:
+                print("Your gambling addiction has led to your demise.")
+                space_to_continue()
+                break
             wheel1 = self.items.copy()
             wheel2 = self.items.copy()
             wheel3 = self.items.copy()
@@ -522,13 +526,13 @@ class Slot(Minigame):
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
                     wheel4[0] = colored(wheel4[0], None, 'on_green')
                     wheel5[0] = colored(wheel5[0], None, 'on_green')
-                if wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
+                elif wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
                     wheel1[1] = colored(wheel1[1], None, 'on_green')
                     wheel2[1] = colored(wheel2[1], None, 'on_green')
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
                     wheel4[1] = colored(wheel4[1], None, 'on_green')
                     wheel5[1] = colored(wheel5[1], None, 'on_green')
-                if wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                elif wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
                     wheel1[2] = colored(wheel1[2], None, 'on_green')
                     wheel2[2] = colored(wheel2[2], None, 'on_green')
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
@@ -544,34 +548,34 @@ class Slot(Minigame):
                 player.atk *= 4
                 player.sp[0] *= 4
                 player.sp[1] = player.sp[0]
-            if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+            elif wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0] or wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1] or wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2] or wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
                 os.system("clear")
                 if wheel1[0] == wheel2[0] == wheel3[0] == wheel4[0]:
                     wheel1[0] = colored(wheel1[0], None, 'on_green')
                     wheel2[0] = colored(wheel2[0], None, 'on_green')
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
                     wheel4[0] = colored(wheel4[0], None, 'on_green')
-                if wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0]:
+                elif wheel2[0] == wheel3[0] == wheel4[0] == wheel5[0]:
                     wheel2[0] = colored(wheel2[0], None, 'on_green')
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
                     wheel4[0] = colored(wheel4[0], None, 'on_green')
                     wheel5[0] = colored(wheel5[0], None, 'on_green')
-                if wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1]:
+                elif wheel1[1] == wheel2[1] == wheel3[1] == wheel4[1]:
                     wheel1[1] = colored(wheel1[1], None, 'on_green')
                     wheel2[1] = colored(wheel2[1], None, 'on_green')
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
                     wheel4[1] = colored(wheel4[1], None, 'on_green')
-                if wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
+                elif wheel2[1] == wheel3[1] == wheel4[1] == wheel5[1]:
                     wheel2[1] = colored(wheel2[1], None, 'on_green')
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
                     wheel4[1] = colored(wheel4[1], None, 'on_green')
                     wheel5[1] = colored(wheel5[1], None, 'on_green')
-                if wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2]:
+                elif wheel1[2] == wheel2[2] == wheel3[2] == wheel4[2]:
                     wheel1[2] = colored(wheel1[2], None, 'on_green')
                     wheel2[2] = colored(wheel2[2], None, 'on_green')
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
                     wheel4[2] = colored(wheel4[2], None, 'on_green')
-                if wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
+                elif wheel2[2] == wheel3[2] == wheel4[2] == wheel5[2]:
                     wheel2[2] = colored(wheel2[2], None, 'on_green')
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
                     wheel4[2] = colored(wheel4[2], None, 'on_green')
@@ -586,41 +590,41 @@ class Slot(Minigame):
                 player.atk *= 3
                 player.sp[0] *= 3
                 player.sp[1] = player.sp[0]
-            if wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
+            elif wheel1[0] == wheel2[0] == wheel3[0] or wheel2[0] == wheel3[0] == wheel4[0] or wheel3[0] == wheel4[0] == wheel5[0] or wheel1[1] == wheel2[1] == wheel3[1] or wheel2[1] == wheel3[1] == wheel4[1] or wheel3[1] == wheel4[1] == wheel5[1] or wheel1[2] == wheel2[2] == wheel3[2] or wheel2[2] == wheel3[2] == wheel4[2] or wheel3[2] == wheel4[2] == wheel5[2]:
                 os.system("clear")
                 if wheel1[0] == wheel2[0] == wheel3[0]:
                     wheel1[0] = colored(wheel1[0], None, 'on_green')
                     wheel2[0] = colored(wheel2[0], None, 'on_green')
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
-                if wheel2[0] == wheel3[0] == wheel4[0]:
+                elif wheel2[0] == wheel3[0] == wheel4[0]:
                     wheel2[0] = colored(wheel2[0], None, 'on_green')
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
                     wheel4[0] = colored(wheel4[0], None, 'on_green')
-                if wheel3[0] == wheel4[0] == wheel5[0]:
+                elif wheel3[0] == wheel4[0] == wheel5[0]:
                     wheel3[0] = colored(wheel3[0], None, 'on_green')
                     wheel4[0] = colored(wheel4[0], None, 'on_green')
                     wheel5[0] = colored(wheel5[0], None, 'on_green')
-                if wheel1[1] == wheel2[1] == wheel3[1]:
+                elif wheel1[1] == wheel2[1] == wheel3[1]:
                     wheel1[1] = colored(wheel1[1], None, 'on_green')
                     wheel2[1] = colored(wheel2[1], None, 'on_green')
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
-                if wheel2[1] == wheel3[1] == wheel4[1]:
+                elif wheel2[1] == wheel3[1] == wheel4[1]:
                     wheel2[1] = colored(wheel2[1], None, 'on_green')
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
                     wheel4[1] = colored(wheel4[1], None, 'on_green')
-                if wheel3[1] == wheel4[1] == wheel5[1]:
+                elif wheel3[1] == wheel4[1] == wheel5[1]:
                     wheel3[1] = colored(wheel3[1], None, 'on_green')
                     wheel4[1] = colored(wheel4[1], None, 'on_green')
                     wheel5[1] = colored(wheel5[1], None, 'on_green')
-                if wheel1[2] == wheel2[2] == wheel3[2]:
+                elif wheel1[2] == wheel2[2] == wheel3[2]:
                     wheel1[2] = colored(wheel1[2], None, 'on_green')
                     wheel2[2] = colored(wheel2[2], None, 'on_green')
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
-                if wheel2[2] == wheel3[2] == wheel4[2]:
+                elif wheel2[2] == wheel3[2] == wheel4[2]:
                     wheel2[2] = colored(wheel2[2], None, 'on_green')
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
                     wheel4[2] = colored(wheel4[2], None, 'on_green')
-                if wheel3[2] == wheel4[2] == wheel5[2]:
+                elif wheel3[2] == wheel4[2] == wheel5[2]:
                     wheel3[2] = colored(wheel3[2], None, 'on_green')
                     wheel4[2] = colored(wheel4[2], None, 'on_green')
                     wheel5[2] = colored(wheel5[2], None, 'on_green')
@@ -636,7 +640,7 @@ class Slot(Minigame):
                 player.sp[1] *= 2
             
             space_to_continue()
-            
+
             print(f"Current Health: {player.health[1]}/{player.health[0]}")
             print("Do you want to try again (1) or quit (2)?")
             decision = getch()
