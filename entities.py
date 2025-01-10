@@ -142,7 +142,7 @@ class Combat:
             for summon in self.player.summons:
                 summon.exp[1] += self.exp
                 summon.weaknessBar[1] = summon.weaknessBar[0]
-                while summon.exp[1] > summon.exp[0]:
+                while summon.exp[1] >= summon.exp[0]:
                     summon.levelUp(False)
             print(f"You have defeated the {self.enemy.name}")
             if randint(1,10) == 1:
