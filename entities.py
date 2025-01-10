@@ -81,14 +81,16 @@ class Combat:
                         print(f"{self.enemy.name} has been broken! They took {floor(self.enemy.health[0]*0.2)} damage")
                     space_to_continue()
                 elif action == "2":
-                    self.player.wait()
+                    msg = self.player.wait()
                     os.system("clear")
                     show_info()
+                    print(msg)
                     space_to_continue()
                 elif action == "3":
-                    self.player.rest()
+                    msg = self.player.rest()
                     os.system("clear")
                     show_info()
+                    print(msg)
                     space_to_continue()
                 elif action == "4":
                     item, index = list_select(self.player.inventory, "What item do you want to use?")
@@ -129,13 +131,15 @@ class Combat:
                             break
                 else:
                     if current.sp[1] < 0.1 * current.sp[0]:
-                        current.rest()
+                        msg = current.rest()
                         os.system("clear")
                         show_info()
+                        print(msg)
                     else:
-                        current.wait()
+                        msg = current.wait()
                         os.system("clear")
                         show_info()
+                        print(msg)
                     space_to_continue()
 
             turnOrder.append(turnOrder.pop(0))
@@ -230,18 +234,18 @@ class Entity:
             return target, f"{self.name} attacked {target.name} with {ability.name}\n{target.name} took {floor(ability.multiplier*self.atk)} damage!"
 
     def wait(self):
-        print(f"{self.name} is waiting this turn")
         self.resting = False
         self.sp[1] += floor(0.33*self.sp[0])
         if self.sp[1] > self.sp[0]:
             self.sp[1] = self.sp[0]
+        return f"{self.name} is waiting this turn"
     
     def rest(self):
-        print(f"{self.name} is resting this turn")
         self.resting = True
         self.sp[1] += floor(0.66*self.sp[0])
         if self.sp[1] > self.sp[0]:
             self.sp[1] = self.sp[0]
+        return f"{self.name} is resting this turn"
 
 class Enemy(Entity):
     def __init__(self, name:str, health: int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list, abilityList:dict, exp:int, lvl:int):
