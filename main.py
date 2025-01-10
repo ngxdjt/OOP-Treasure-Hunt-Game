@@ -217,7 +217,7 @@ class Game():
         self.places[room-1].visited = True
         secretCondition = []
 
-        if type(self.currentPlace) is Maze:
+        if isinstance(self.currentPlace, Maze):
             self.currentPlace.generate_maze(player)
             self.currentPlace.load_enemies()
             self.currentPlace.load_items()
@@ -240,7 +240,7 @@ class Game():
                     player.currentPos = [1,0]
                     self.currentPlace = self.places[room-1]
                     self.currentPlace.roomNumber = room
-                    if type(self.currentPlace) is Maze and not self.places[room-1].visited:
+                    if isinstance(self.currentPlace, Maze) and not self.places[room-1].visited:
                         self.currentPlace.generate_maze(player)
                         self.currentPlace.load_enemies()
                         self.currentPlace.load_items()

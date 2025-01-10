@@ -48,7 +48,7 @@ class Combat:
             
             current.resting = False
 
-            if type(current) is Player:
+            if isinstance(current, Player):
                 print("Do you want to attack (1), wait (2), rest (3) or use an item (4)?")
                 action = getch()
                 while action not in ["1","2","3","4"] or (not self.player.inventory and action == "4"):
@@ -115,7 +115,7 @@ class Combat:
                             break
                         else:
                             target = choice(turnOrder)
-                            while (not type(target) is Player) and (not target.isSummon):
+                            while (not isinstance(target, Player)) and (not target.isSummon):
                                 target = choice(turnOrder)
                             target, msg = current.attack(target, move)
                             if target.isSummon and target.health[1] < 0:
