@@ -109,7 +109,7 @@ class Combat:
                             os.system("clear")
                             show_info()
                             print(msg)
-                            if target.weaknessBar[1] <= 0:
+                            if self.enemy.weaknessBar[1] <= 0:
                                 print(f"{self.enemy.name} has been broken! They took {floor(self.enemy.health[0]*0.2)} damage")
                             space_to_continue()
                             break
