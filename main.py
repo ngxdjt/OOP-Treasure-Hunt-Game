@@ -200,7 +200,7 @@ class Game():
             dprint("Using an item allows you to access your inventory and use an item from it.")
             print()
             dprint("After defeating an enemy, there is a 10% chance of an item dropping and you can choose to either absorb or necromance the enemy.")
-            dprint("Absorbing allows you to gain 25% of the enemy's stats and you inherit their weaknesses and you have a 50% chance of gaining each of their abilities.")
+            dprint("Absorbing allows you to gain 50% of the enemy's stats and you inherit their weaknesses and you have a 50% chance of gaining each of their abilities.")
             dprint("Necromancing consumes 20% of you max health but in exchange you get a summon with the exact stats of the enemy you just faced.")
             dprint("Summons attack in battle and can gain levels as you fight more enemies.")
             dprint("You may also swap your soul with summons at any time to gain their stats and weaknesses while removing them from your party.")

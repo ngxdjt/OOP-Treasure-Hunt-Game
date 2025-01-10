@@ -495,10 +495,10 @@ class Player(Entity):
     def absorb(self, enemy):
         print(f"You absorbed the {enemy.name}\n")
         self.weaknesses = enemy.weaknesses
-        print(f"+{floor(enemy.health[0]*0.25)} health")
-        print(f"+{floor(enemy.atk*0.25)} attack")
-        print(f"+{floor(enemy.speed*0.25)} speed")
-        print(f"+{floor(enemy.sp[0]*0.25)} SP")
+        print(f"+{floor(enemy.health[0]*0.5)} health")
+        print(f"+{floor(enemy.atk*0.5)} attack")
+        print(f"+{floor(enemy.speed*0.5)} speed")
+        print(f"+{floor(enemy.sp[0]*0.5)} SP")
 
         for ability in enemy.abilities:
             if ability not in self.abilityList.values() and randint(1,2) == 1:
@@ -506,12 +506,12 @@ class Player(Entity):
                 print(f"\nYou have successfully gained {ability.name}")
                 self.learn(ability)
 
-        self.health[0] += floor(enemy.health[0]*0.25)
-        self.health[1] += floor(enemy.health[0]*0.25)
-        self.atk += floor(enemy.atk*0.25)
-        self.speed += floor(enemy.speed*0.25)
-        self.sp[0] += floor(enemy.sp[0]*0.25)
-        self.weaknessBar[0] += floor(enemy.weaknessBar[0]*0.25)
+        self.health[0] += floor(enemy.health[0]*0.5)
+        self.health[1] += floor(enemy.health[0]*0.5)
+        self.atk += floor(enemy.atk*0.5)
+        self.speed += floor(enemy.speed*0.5)
+        self.sp[0] += floor(enemy.sp[0]*0.5)
+        self.weaknessBar[0] += floor(enemy.weaknessBar[0]*0.5)
 
     def necromance(self, enemy):
         print(f"You have lost {floor(self.health[0]*0.2)} health to necromance the {enemy.name}")
