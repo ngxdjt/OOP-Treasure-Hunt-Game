@@ -113,7 +113,7 @@ class Combat:
                             break
                         else:
                             target = choice(turnOrder)
-                            while not target.isSummon:
+                            while (not type(target) is Player) or (not target.isSummon):
                                 target = choice(turnOrder)
                             target, msg = current.attack(target, move)
                             if target.isSummon and target.health[1] < 0:
