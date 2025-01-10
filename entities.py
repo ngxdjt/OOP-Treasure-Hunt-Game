@@ -90,8 +90,11 @@ class Combat:
                     space_to_continue()
                 elif action == "4":
                     item, index = list_select(self.player.inventory, "What item do you want to use?")
-                    self.itemAtk += item.attack
-                    current.use_item(self.player.inventory.pop(index))
+                    if item == " ":
+                        print("Your indecisiveness has you pondering and you miss your turn.")
+                    else:
+                        self.itemAtk += item.attack
+                        current.use_item(self.player.inventory.pop(index))
                     space_to_continue()
             else:
                 shuffle(current.abilities)
@@ -557,9 +560,9 @@ class Player(Entity):
     def manage(self):
         os.system("clear")
         print(f"{self.name}\nHealth: {self.health[1]}/{self.health[0]}\nWeaknesses: {", ".join(self.weaknesses)}\nAttack: {self.atk}\nSpeed: {self.speed}\nSP: {self.sp[0]}\nAbilities: {", ".join([x.name for x in self.abilities])}\n")
-        print("1: Manage abilities\n2: Manage Summons\n3: View Inventory")
+        print("1: Manage abilities\n2: Manage Summons\n3: View Inventory\n(Press space to go back)")
         opt = getch()
-        while opt != "1" and opt != "2" and opt != "3":
+        while opt != "1" and opt != "2" and opt != "3" and opt != " ":
             opt = getch()
         
         if opt == "1":
