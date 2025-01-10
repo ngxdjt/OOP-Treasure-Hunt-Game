@@ -15,7 +15,7 @@ class Game():
     def setup(self):
         # Starting abilities
 
-        Smack = Ability("Smack", 0.3, "Physical", 5, 5, 0)
+        Smack = Ability("Smack", 0.5, "Physical", 5, 5, 0)
         Fireball = Ability("Fireball", 0.8, "Fire", 25, 20, 0)
         FrostBeam = Ability("Frost Beam", 0.7, "Ice", 20, 15, 0)
         Thunderbolt = Ability("Thunderbolt", 0.65, "Lightning", 10, 10, 0)
@@ -41,7 +41,7 @@ class Game():
 
         # Early enemies (3 Weaknesses, 150 BST, 3 Early Abilities, 2 Middle Abilities, 1 Late Ability)
 
-        Goblin = Enemy("Goblin", 25, ["Physical","Fire","Ice"], 50, 15, 20, 40, [Smack], {1: Smack, 5: StrongAroma, 7: Fireball, 10: Tackle, 20: Incinerate, 27: UnrelentingBarrage}, 100, 1)
+        Goblin = Enemy("Goblin", 30, ["Physical","Fire","Ice"], 50, 10, 20, 40, [Smack], {1: Smack, 5: StrongAroma, 7: Fireball, 10: Tackle, 20: Incinerate, 27: UnrelentingBarrage}, 100, 1)
         Slime = Enemy("Slime", 60, ["Fire","Ice","Lightning"], 25, 5, 10, 50, [FrostBeam], {1: FrostBeam, 5: Thunderbolt, 10: StrongAroma, 15: PurifyingWind, 24: Thunderstorm, 46: PungentOdour}, 100, 1)
 
         # Middle enemies (2 Weaknesses, 300 BST, 3 Early Abilities, 3 Middle Abilities, 2 Late Abilities)
@@ -131,7 +131,7 @@ class Game():
         dprint("This is quite convenient, it's almost as if you are the main character!")
         space_to_continue()
         name = input("Enter your name: ")
-        player = Player(name, 50, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 50, 15, 100, [Ability("Punch", 0.2, "Physical", 10, 5, 0)])
+        player = Player(name, 50, ["Physical", "Fire", "Ice", "Wind", "Lightning"], 100, 25, 15, 100, [Ability("Punch", 0.4, "Physical", 10, 5, 0)])
         os.system("clear")
 
         print("Press 1 for the tutorial.\nPress 2 to skip the tutorial.")
