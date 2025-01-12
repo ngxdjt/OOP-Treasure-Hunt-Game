@@ -44,6 +44,7 @@ class Combat:
             if current.broken:
                 current.unBreak()
                 turnOrder.append(turnOrder.pop(0))
+                space_to_continue()
                 continue
             
             current.resting = False
