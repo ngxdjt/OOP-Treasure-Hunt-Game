@@ -189,6 +189,7 @@ class Game():
             dprint("The multiplier is used to calculate your damage using the formula multiplier*attack")
             dprint("The type influences what weakness damage the ability inflicts. The five weaknesses are Physical, Fire, Ice, Lightning, Wind.")
             dprint("The break damage is how much damage the ability does to the target's weakness bar which can lead to breaks.")
+            dprint("Breaking deals 20% of the target's max hp and skips their next turn.")
             dprint("The SP cost is the amount of SP the ability takes to use.")
             dprint("The recoil is the percentage of your max health you lose (or gain if negative) upon using the ability.")
             dprint("If you don't have enough SP when using a move, you will flail instead. Flailing is typeless and has a multiplier of 50% with 10% recoil.")
