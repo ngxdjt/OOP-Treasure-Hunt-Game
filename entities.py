@@ -222,6 +222,8 @@ class Entity:
             if ability.recoil < 0:
                 print(f"self.name healed {self.health[0] * ability.recoil//100} from using {ability.name}")
             self.health[1] -= self.health[0] * ability.recoil//100
+            if self.health[1] > self.health[0]:
+                self.health[1] = self.health[0]
 
         else:
             print("You flailed out of exhaustion")
