@@ -598,7 +598,7 @@ class Player(Entity):
 
                         os.system("clear")
                         print(f"You have forgotten {select.name} and learned {replace.name}!")
-                        for i in self.abilities:
+                        for i in range(len(self.abilities)):
                             if self.abilities[i] == select:
                                 self.abilities[i] = replace
                                 break
