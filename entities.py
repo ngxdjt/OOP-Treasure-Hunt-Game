@@ -199,6 +199,7 @@ class Entity:
     def unBreak(self):
         print(f"{self.name} has recovered from being broken!")
         self.broken = False
+        self.weaknessBar[1] = self.weaknessBar[0]
 
     def attack(self, target, ability):
         if self.sp[1] >= ability.cost:
