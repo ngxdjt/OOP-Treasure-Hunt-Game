@@ -156,11 +156,11 @@ class Game():
             exampleMaze.load_explosives()
             exampleMaze.show_room()
             print()
-            dprint(f"{colored("@", 'red')} represents you, the player.")
-            dprint(f"{colored("E", 'light_magenta')} represents an enemy. When stepping on an enemy tile, you will be put into combat.")
-            dprint(f"{colored("I", 'light_blue')} represents an item. When stepping on an item tile, you pick up the item. Healing items can be used inside or outside of combat. You can only hold a maximum of 20 items.")
-            dprint(f"{colored("N", 'light_green')} represents an NPC. When stepping on an NPC tile, you interact with an NPC to exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.")
-            dprint(f"{colored("e", 'light_yellow')} represents an explosive. When stepping on an explosive tile, you gain an explosive. On use you lose 20 health and destory adjacent tiles.\n")
+            dprint("@ represents you, the player.", [0], "red")
+            dprint("E represents an enemy. When stepping on an enemy tile, you will be put into combat.", [0], "light_magenta")
+            dprint("I represents an item. When stepping on an item tile, you pick up the item. Healing items can be used inside or outside of combat. You can only hold a maximum of 20 items.", [0], "light_blue")
+            dprint("N represents an NPC. When stepping on an NPC tile, you interact with an NPC to exchange items for your health. You can also kill them to gain the item at the expense of your reputation and their existence on the current room.", [0], "light_green")
+            dprint("e represents an explosive. When stepping on an explosive tile, you gain an explosive. On use you lose 20 health and destory adjacent tiles.\n", [0], "light_yellow")
 
             dprint("The following is an example of a minigame room you may encounter:\n")
             room = [["x", "x", "x", "x", "x"], 

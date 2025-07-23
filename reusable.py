@@ -2,18 +2,22 @@ from time import sleep
 import os
 from getch import getch
 from timedinput import timedinput
+from termcolor import colored
 
-def dprint(string:str):
+def dprint(string:str, cIndex:list=[], colour:str=''):
     n = 0
     for char in string:
-        print(char, end='', flush=True)
+        if n in cIndex:
+            print(colored(char, colour), end='', flush=True)
+        else:
+            print(char, end='', flush=True)
         skip = timedinput("", timeout=0.02, default="continue")
         n += 1
         if char == "\n":
             n = -1
         print(f"\033[1A\033[{n}C", end='')
         if skip == "":
-            print(f"\r{string}", flush=True)
+            print("\r" + ''.join(colored(char, colour) if i in cIndex else char for i, char in enumerate(string)))
             print("\033[K\033[A", end='')
             break
         sleep(0.01)
