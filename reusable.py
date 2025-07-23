@@ -9,9 +9,12 @@ def dprint(string:str):
         print(char, end='', flush=True)
         skip = timedinput("", timeout=0.02, default="continue")
         n += 1
+        if char == "\n":
+            n = -1
         print(f"\033[1A\033[{n}C", end='')
         if skip == "":
-            print(f"\r{string}", end='', flush=True)
+            print(f"\r{string}", flush=True)
+            print("\033[K\033[A", end='')
             break
         sleep(0.01)
     print()

@@ -5,7 +5,7 @@ from ability import *
 from reusable import dprint, space_to_continue
 import os
 # Remember to pip install the following:
-# termcolor, getch, pyfiglet, timedinput
+# termcolor, getch, pyfiglet
 
 class Game():
     def __init__(self):
@@ -142,6 +142,7 @@ class Game():
         os.system("clear")
 
         if tutorial == "1":
+            dprint("Press enter to skip text.\n")
             dprint("This labyrinth comprises of two main rooms: mazes and minigames.")
             dprint("To move around, press w (up), a (left), s (down), and d (right).")
             dprint("To manage your player, press q.")

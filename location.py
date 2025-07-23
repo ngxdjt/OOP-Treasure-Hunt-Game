@@ -129,7 +129,7 @@ class ColourSwitch(Minigame):
         sleep(2)
         os.system("clear")
 
-        print("Press any button when this message changes colour")
+        print("Press enter when this message changes colour")
         sleep(randint(1,5))
         start = time()
         print(colored("\033[FPress any button when this message changes colour", 'red'))
