@@ -1,11 +1,19 @@
 from time import sleep
 import os
 from getch import getch
+from timedinput import timedinput
 
 def dprint(string:str):
+    n = 0
     for char in string:
         print(char, end='', flush=True)
-        sleep(0.03)
+        skip = timedinput("", timeout=0.02, default="continue")
+        n += 1
+        print(f"\033[1A\033[{n}C", end='')
+        if skip == "":
+            print(f"\r{string}", end='', flush=True)
+            break
+        sleep(0.01)
     print()
 
 def space_to_continue():

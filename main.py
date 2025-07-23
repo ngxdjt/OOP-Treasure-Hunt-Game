@@ -5,7 +5,7 @@ from ability import *
 from reusable import dprint, space_to_continue
 import os
 # Remember to pip install the following:
-# termcolor, getch, pyfiglet
+# termcolor, getch, pyfiglet, timedinput
 
 class Game():
     def __init__(self):
