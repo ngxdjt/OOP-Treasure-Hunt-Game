@@ -207,7 +207,7 @@ class Entity:
 
             if ability.type in target.weaknesses:
                 target.weaknessBar[1] -= ability.breakDamage
-                if target.weaknessBar[1] == 0:
+                if target.weaknessBar[1] < 0:
                     target.weaknessBar[1] = 0
 
             self.sp[1] -= ability.cost
@@ -216,6 +216,9 @@ class Entity:
                 target.health[1] -= floor(floor(ability.multiplier*self.atk)*1.5)
             else:
                 target.health[1] -= floor(ability.multiplier*self.atk)
+
+            if target.health[1] < 0:
+                target.health[1] = 0
 
             if ability.recoil > 0:
                 print(f"self.name took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}")
@@ -292,11 +295,11 @@ class Enemy(Entity):
             self.exp[1] = 0
         self.exp[0] = floor(self.exp[0] * 1.1)
 
-        self.health[1] += floor(self.health[0] * 1.05) - self.health[0]
         self.health[0] = floor(self.health[0] * 1.05)
+        self.health[1] += self.health[0]
         self.atk = floor(self.atk * 1.2)
-        self.sp[1] += floor(self.sp[0] * 1.05) - self.sp[0]
         self.sp[0] = floor(self.sp[0] * 1.05)
+        self.sp[1] += self.sp[0]
 
 
         if not hidden:
