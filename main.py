@@ -5,7 +5,7 @@ from ability import *
 from reusable import dprint, space_to_continue
 import os
 # Remember to pip install the following:
-# termcolor, getch, pyfiglet
+# termcolor, getch, pyfiglet, timedinput
 
 class Game():
     def __init__(self):
@@ -172,7 +172,7 @@ class Game():
             for row in room:
                 print(' '.join(row))
             print()
-            dprint(f"{colored("P", 'light_yellow')} represents the minigame. Stepping on a minigame tile will start the minigame.")
+            dprint("P represents the minigame. Stepping on a minigame tile will start the minigame.", [0], "light_yellow")
             dprint(f"You will always be able to skip minigames and move onto the next room, however you will miss out on a few rewards.")
             
             space_to_continue()

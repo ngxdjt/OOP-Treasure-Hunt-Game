@@ -3,19 +3,29 @@ import os
 from getch import getch
 from timedinput import timedinput
 from termcolor import colored
+import shutil
 
 def dprint(string:str, cIndex:list=[], colour:str=''):
     n = 0
-    for char in string:
-        if n in cIndex:
-            print(colored(char, colour), end='', flush=True)
-        else:
-            print(char, end='', flush=True)
+    textWrapped = False
+    for i, char in enumerate(string):
+        if char != " " and not textWrapped:
+            if i in cIndex:
+                print(colored(char, colour), end='', flush=True)
+            else:
+                print(char, end='', flush=True)
         skip = timedinput("", timeout=0.02, default="continue")
-        n += 1
-        if char == "\n":
+        if n > shutil.get_terminal_size().columns - 3 or char == "\n":
+            print()
             n = -1
-        print(f"\033[1A\033[{n}C", end='')
+            textWrapped = True
+        if not textWrapped:
+            print(f"\033[1A\033[{n+1}C", end='')
+        else:
+            print(f"\033[1A", end='')
+        textWrapped = False
+        n += 1
+        textWrapped = False
         if skip == "":
             print("\r" + ''.join(colored(char, colour) if i in cIndex else char for i, char in enumerate(string)))
             print("\033[K\033[A", end='')
@@ -70,3 +80,6 @@ def list_select(lst, msg):
         return (pages[currentPage][num-1], num+(9*currentPage)-1)
     else:
         return " ", "  "
+    
+if __name__ == "__main__":
+    dprint("1234567890 " * 10 + "\nNow we test the new line too.", cIndex=[5, 25, 40], colour='cyan')
