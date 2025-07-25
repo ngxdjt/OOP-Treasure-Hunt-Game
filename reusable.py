@@ -15,8 +15,11 @@ def dprint(string:str, cIndex:list=[], colour:str=''):
             else:
                 print(char, end='', flush=True)
         skip = timedinput("", timeout=0.02, default="continue")
-        if n > shutil.get_terminal_size().columns - 3 or char == "\n":
+        if n > shutil.get_terminal_size().columns - 3:
             print()
+            n = -1
+            textWrapped = True
+        if char == "\n":
             n = -1
             textWrapped = True
         if not textWrapped:
