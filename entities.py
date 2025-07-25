@@ -280,6 +280,7 @@ class Enemy(Entity):
 
     def becomeSummon(self):
         summon = deepcopy(self)
+        summon.health[1] = summon.health[0]
         summon.isSummon = True
         summon.name = "Summoned " + summon.name
 
@@ -504,7 +505,7 @@ class Player(Entity):
         print(f"+{floor(enemy.sp[0]*0.5)} SP")
 
         for ability in enemy.abilities:
-            if ability not in self.abilityList.values() and randint(1,2) == 1:
+            if ability.name not in [x.name for x in self.abilityList.values()] and randint(1,2) == 1:
                 self.abilityList[len(self.abilityList)+1] = ability
                 print(f"\nYou have successfully gained {ability.name}")
                 self.learn(ability)
