@@ -294,10 +294,10 @@ class Enemy(Entity):
         self.exp[0] = floor(self.exp[0] * 1.1)
 
         self.health[0] = floor(self.health[0] * 1.05)
-        self.health[1] += self.health[0]
+        self.health[1] = self.health[0]
         self.atk = floor(self.atk * 1.2)
         self.sp[0] = floor(self.sp[0] * 1.05)
-        self.sp[1] += self.sp[0]
+        self.sp[1] = self.sp[0]
 
 
         if not hidden:
