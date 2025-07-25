@@ -60,10 +60,11 @@ class Maze(Location):
             self.room = maze
             self.room[player.currentPos[0]][player.currentPos[1]] = colored("@", 'red')
     
-    def load_enemies(self):
-        for enemy in self.enemyList:
-            enemy.lvl = floor(1.5**(self.roomNumber-1))
-            enemy.calculate_stats()
+    def load_enemies(self, level=True):
+        if level:
+            for enemy in self.enemyList:
+                enemy.lvl = floor(1.5**(self.roomNumber-1))
+                enemy.calculate_stats()
         for i in range(self.size*4):
             y = randint(1, self.size-2)
             x = randint(1, self.size-2)

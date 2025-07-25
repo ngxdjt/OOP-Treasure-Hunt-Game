@@ -224,7 +224,7 @@ class Entity:
             if ability.recoil > 0:
                 msg += f"\n{self.name} took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}"
             if ability.recoil < 0:
-                msg += f"\n{self.name} healed {self.health[0] * ability.recoil//100} from using {ability.name}"
+                msg += f"\n{self.name} healed {self.health[0] * -ability.recoil//100} from using {ability.name}"
             self.health[1] -= self.health[0] * ability.recoil//100
             if self.health[1] > self.health[0]:
                 self.health[1] = self.health[0]
