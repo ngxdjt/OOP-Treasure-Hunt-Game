@@ -11,7 +11,7 @@ from copy import deepcopy
 class Combat:
     def __init__(self, player, enemy, item):
         self.player = player
-        self.enemy = enemy
+        self.enemy = deepcopy(enemy)
         self.exp = enemy.exp[0]
         self.itemAtk = 0
         self.item = item
@@ -146,9 +146,6 @@ class Combat:
             turnOrder.append(turnOrder.pop(0))
 
         if self.enemy.health[1] <= 0:
-            self.enemy.health[1] = self.enemy.health[0]
-            self.enemy.sp[1] = self.enemy.sp[0]
-            self.enemy.weaknessBar[1] = self.enemy.weaknessBar[0]
             os.system("clear")
             self.player.weaknessBar[1] = self.player.weaknessBar[0]
             self.player.atk -= self.itemAtk
@@ -203,7 +200,10 @@ class Entity:
 
     def attack(self, target, ability):
         if self.sp[1] >= ability.cost:
-            print(f"{self.name} attacked {target.name} with {ability.name}")
+            if target.resting:
+                msg = f"{self.name} attacked {target.name} with {ability.name}\n{target.name} took {floor(floor(ability.multiplier*self.atk)*1.5)} damage!"
+            else:
+                msg = f"{self.name} attacked {target.name} with {ability.name}\n{target.name} took {floor(ability.multiplier*self.atk)} damage!"
 
             if ability.type in target.weaknesses:
                 target.weaknessBar[1] -= ability.breakDamage
@@ -221,23 +221,19 @@ class Entity:
                 target.health[1] = 0
 
             if ability.recoil > 0:
-                print(f"self.name took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}")
+                msg += f"\n{self.name} took {self.health[0] * ability.recoil//100} recoil damage from using {ability.name}"
             if ability.recoil < 0:
-                print(f"self.name healed {self.health[0] * ability.recoil//100} from using {ability.name}")
+                msg += f"\n{self.name} healed {self.health[0] * ability.recoil//100} from using {ability.name}"
             self.health[1] -= self.health[0] * ability.recoil//100
             if self.health[1] > self.health[0]:
                 self.health[1] = self.health[0]
 
         else:
-            print("You flailed out of exhaustion")
-            print(f"{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!")
+            msg = f"{self.name} flailed out of exhaustion\n{self.name} dealt {floor(self.atk*0.5)} to {target.name} and lost {floor(self.health[0]*0.1)} health!"
             target.health[1] -= floor(self.atk*0.5)
             self.health[1] -= floor(self.health[0]*0.1)
 
-        if target.resting:
-            return target, f"{self.name} attacked {target.name} with {ability.name}\n{target.name} took {floor(floor(ability.multiplier*self.atk)*1.5)} damage!"
-        else:
-            return target, f"{self.name} attacked {target.name} with {ability.name}\n{target.name} took {floor(ability.multiplier*self.atk)} damage!"
+        return target, msg
 
     def wait(self):
         self.resting = False

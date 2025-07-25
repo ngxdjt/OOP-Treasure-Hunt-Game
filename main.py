@@ -198,7 +198,7 @@ class Game():
             dprint("During you turn you have four actions: attack, wait, rest, use item.")
             dprint("Attacking allows you to use a move on the enemy.")
             dprint("Waiting recovers 33% of your SP.")
-            dprint("Resting recovers 66& of your SP, however, you will take 1.5x more damage until your next turn.")
+            dprint("Resting recovers 66% of your SP, however, you will take 1.5x more damage until your next turn.")
             dprint("Using an item allows you to access your inventory and use an item from it.")
             print()
             dprint("After defeating an enemy, there is a 10% chance of an item dropping and you can choose to either absorb or necromance the enemy.")
