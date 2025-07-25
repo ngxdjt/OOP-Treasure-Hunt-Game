@@ -175,7 +175,7 @@ class Combat:
             print("A fatal hit!")
             space_to_continue()
 
-        return self.player, self.enemy
+        return self.player
 
 class Entity:
     def __init__(self, name:str, health:int, weaknesses:list, weaknessBar:int, attack:int, speed:int, SP:int, abilities:list, abilityList:dict):
@@ -429,7 +429,7 @@ class Player(Entity):
             os.system("clear")
             print(f"You encountered a {enemy.name}")
             sleep(0.5)
-            self, enemy = Combat(self, enemy, item).start()
+            self = Combat(self, enemy, item).start()
         elif location.room[self.currentPos[0]][self.currentPos[1]] == colored("I", 'light_blue'):
             location.room[self.currentPos[0]][self.currentPos[1]] = colored("@", 'red')
             os.system("clear")
