@@ -18,6 +18,7 @@ class Combat:
 
     def start(self):
         turnOrder = sorted(self.player.summons + [self.player, self.enemy], key=lambda x: x.speed, reverse=True)
+        self.enemy.health[1] = self.enemy.health[0]
         for entity in turnOrder:
             entity.sp[1] = entity.sp[0]
             entity.weaknessBar[1] = entity.weaknessBar[0]
